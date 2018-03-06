@@ -1,0 +1,47 @@
+
+
+	<header class="slide">     <!--	Add "slideRight" class to items that move right when viewing Nav Drawer  -->
+		<ul id="navToggle" class="burger slide close">    <!--	Add "slideRight" class to items that move right when viewing Nav Drawer  -->
+			<li></li><li></li><li></li>
+		</ul>
+		<h1>
+        	<span class="uno">100</span>
+            <span class="dos">%</span>
+            <span class="tres">Folletos</span>
+        </h1>
+	</header>
+
+	<nav class="slide">
+		<ul>
+			<li *ngIf="typeUser === '1'" routerLinkActive="active">
+				<a class="hco" [routerLink]="['/userAuthenticate','users']">USUARIOS</a>
+			</li>
+			<li *ngIf="typeUser === '1' || typeUser === '4'" routerLinkActive="active">
+				<a class="disem"  [routerLink]="['/userAuthenticate','CF']">CF</a>
+			</li>
+      		<li *ngIf="typeUser === '1' || typeUser === '4'" routerLinkActive="active">
+				<a class="disem" [routerLink]="['/userAuthenticate','order', 'old']">NUEVO PEDIDO</a>
+			</li>
+      		<li *ngIf="typeUser === '1'" routerLinkActive="active">
+				<a class="teso" [routerLink]="['/userAuthenticate','prices']">PRECIOS</a>
+			</li>
+			<li *ngIf="typeUser === '1'" routerLinkActive="active">
+				<a class="teso">INGRESO</a>
+			</li>
+			<li *ngIf="typeUser === '1' || typeUser === '2'" routerLinkActive="active">
+				<a class="tech" [routerLink]="['/userAuthenticate','design']">DISEÑOS</a>
+			</li>
+			<li *ngIf="typeUser === '1'" routerLinkActive="active">
+				<a class="tech" [routerLink]="['/userAuthenticate','print']">IMPRESION</a>
+			</li>
+			<li *ngIf="typeUser === '1' || typeUser === '5'" routerLinkActive="active">
+				<a class="qual">ENTREGAS Y COBROS</a>
+			</li>
+			<li *ngIf="typeUser === '1' || typeUser === '3' || typeUser === '4'" routerLinkActive="active">
+				<a class="pub" [routerLink]="['/userAuthenticate','order', 'new']">NUEVO CLIENTE</a>
+			</li>
+			<li><a class="log" (click)="logout()">LOGOUT</a></li>
+		</ul>
+  </nav>
+  
+

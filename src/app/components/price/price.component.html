@@ -1,0 +1,327 @@
+
+  <app-navbar></app-navbar>
+  <div class="content slide data fadeInAnimated fastAnimated"> 
+    <div class="row">
+      <div class="col-12 text-center">
+        <h4>Precios</h4>
+      </div>
+    </div>
+    <div class="row" style="padding:10px">
+      <!-- Seccion 1 -->
+      <div class="search offset-md-1 col-2" style="max-height:75vh">
+        <div>
+          <table class="table table-hover">
+            <tbody *ngIf="show">
+              <tr *ngFor="let price of prices.garnet115.first.oneWeek; let i = index" (click)="showPrice(i)" >
+                <td class="searchTD">{{price.created_at | date}}</td>
+              </tr>        
+            </tbody>
+          </table>
+        </div>
+        <div class="new col-12 text-center" style="cursor:pointer" data-toggle="modal" data-target="#exampleModal">
+          <h4>Nuevos precios  <i class="fas fa-plus-square"></i></h4>
+        </div>
+      </div>
+      <!-- Seccion 2 -->
+      <div class="offset-md-1 col-7" *ngIf="show">
+        <div class="section-info">
+          <div class="text-center separator">
+            <p>115gr</p>
+          </div>
+          <div class="row"  style="padding:10px;">
+            <div class="col-12 table text-center">
+              <table style="width:95%;">
+                <thead class="table-info">
+                  <th>10x7,5 cm</th>
+                  <th>1 semana</th>
+                  <th>3 semanas</th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>5000 volantes</td>
+                    <td>{{prices.garnet115.first.oneWeek[priceIndex].price1}}</td>
+                    <td>{{prices.garnet115.first.threeWeek[priceIndex].price1}}</td>
+                  </tr>
+                  <tr>
+                    <td>10000 volantes</td>
+                    <td>{{prices.garnet115.first.oneWeek[priceIndex].price2}}</td>
+                    <td>{{prices.garnet115.first.threeWeek[priceIndex].price2}}</td>
+                  </tr>
+                  <tr>
+                    <td>15000 volantes</td>
+                    <td>{{prices.garnet115.first.oneWeek[priceIndex].price3}}</td>
+                    <td>{{prices.garnet115.first.threeWeek[priceIndex].price3}}</td>
+                  </tr>
+                  <tr>
+                    <td>20000 volantes</td>
+                    <td>{{prices.garnet115.first.oneWeek[priceIndex].price4}}</td>
+                    <td>{{prices.garnet115.first.threeWeek[priceIndex].price4}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="col-12 table text-center">
+              <table style="width:95%;">
+                <thead class="table-info">
+                  <th>10x15 cm</th>
+                  <th>1 semana</th>
+                  <th>3 semanas</th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>5000 volantes</td>
+                    <td>{{prices.garnet115.second.oneWeek[priceIndex].price1}}</td>
+                    <td>{{prices.garnet115.second.threeWeek[priceIndex].price1}}</td>
+                  </tr>
+                  <tr>
+                    <td>10000 volantes</td>
+                    <td>{{prices.garnet115.second.oneWeek[priceIndex].price2}}</td>
+                    <td>{{prices.garnet115.second.threeWeek[priceIndex].price2}}</td>
+                  </tr>
+                  <tr>
+                    <td>15000 volantes</td>
+                    <td>{{prices.garnet115.second.oneWeek[priceIndex].price3}}</td>
+                    <td>{{prices.garnet115.second.threeWeek[priceIndex].price3}}</td>
+                  </tr>
+                  <tr>
+                    <td>20000 volantes</td>
+                    <td>{{prices.garnet115.second.oneWeek[priceIndex].price4}}</td>
+                    <td>{{prices.garnet115.second.threeWeek[priceIndex].price4}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="col-12 table text-center">
+              <table style="width:95%;">
+                <thead class="table-info">
+                  <th>20x15 cm</th>
+                  <th>1 semana</th>
+                  <th>3 semanas</th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>5000 volantes</td>
+                    <td>{{prices.garnet115.three.oneWeek[priceIndex].price1}}</td>
+                    <td>{{prices.garnet115.three.threeWeek[priceIndex].price1}}</td>
+                  </tr>
+                  <tr>
+                    <td>10000 volantes</td>
+                    <td>{{prices.garnet115.three.oneWeek[priceIndex].price2}}</td>
+                    <td>{{prices.garnet115.three.threeWeek[priceIndex].price2}}</td>
+                  </tr>
+                  <tr>
+                    <td>15000 volantes</td>
+                    <td>{{prices.garnet115.three.oneWeek[priceIndex].price3}}</td>
+                    <td>{{prices.garnet115.three.threeWeek[priceIndex].price3}}</td>
+                  </tr>
+                  <tr>
+                    <td>20000 volantes</td>
+                    <td>{{prices.garnet115.three.oneWeek[priceIndex].price4}}</td>
+                    <td>{{prices.garnet115.three.threeWeek[priceIndex].price4}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="col-12 table text-center">
+              <table style="width:95%;">
+                <thead class="table-info">
+                  <th>20x30 cm</th>
+                  <th>1 semana</th>
+                  <th>3 semanas</th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>5000 volantes</td>
+                    <td>{{prices.garnet115.four.oneWeek[priceIndex].price1}}</td>
+                    <td>{{prices.garnet115.four.threeWeek[priceIndex].price1}}</td>
+                  </tr>
+                  <tr>
+                    <td>10000 volantes</td>
+                    <td>{{prices.garnet115.four.oneWeek[priceIndex].price2}}</td>
+                    <td>{{prices.garnet115.four.threeWeek[priceIndex].price2}}</td>
+                  </tr>
+                  <tr>
+                    <td>15000 volantes</td>
+                    <td>{{prices.garnet115.four.oneWeek[priceIndex].price3}}</td>
+                    <td>{{prices.garnet115.four.threeWeek[priceIndex].price3}}</td>
+                  </tr>
+                  <tr>
+                    <td>20000 volantes</td>
+                    <td>{{prices.garnet115.four.oneWeek[priceIndex].price4}}</td>
+                    <td>{{prices.garnet115.four.threeWeek[priceIndex].price4}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="section-info">
+            <div class="text-center separator">
+              <p>150gr</p>
+            </div>
+            <div class="row"  style="padding:10px;">
+              <div class="col-12 table text-center">
+                <table style="width:95%;">
+                  <thead class="table-info">
+                    <th>10x7,5 cm</th>
+                    <th>1 semana</th>
+                    <th>3 semanas</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>5000 volantes</td>
+                      <td>{{prices.garnet150.first.oneWeek[priceIndex].price1}}</td>
+                      <td>{{prices.garnet150.first.threeWeek[priceIndex].price1}}</td>
+                    </tr>
+                    <tr>
+                      <td>10000 volantes</td>
+                      <td>{{prices.garnet150.first.oneWeek[priceIndex].price2}}</td>
+                      <td>{{prices.garnet150.first.threeWeek[priceIndex].price2}}</td>
+                    </tr>
+                    <tr>
+                      <td>15000 volantes</td>
+                      <td>{{prices.garnet150.first.oneWeek[priceIndex].price3}}</td>
+                      <td>{{prices.garnet150.first.threeWeek[priceIndex].price3}}</td>
+                    </tr>
+                    <tr>
+                      <td>20000 volantes</td>
+                      <td>{{prices.garnet150.first.oneWeek[priceIndex].price4}}</td>
+                      <td>{{prices.garnet150.first.threeWeek[priceIndex].price4}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+  
+              <div class="col-12 table text-center">
+                <table style="width:95%;">
+                  <thead class="table-info">
+                    <th>10x15 cm</th>
+                    <th>1 semana</th>
+                    <th>3 semanas</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>5000 volantes</td>
+                      <td>{{prices.garnet150.second.oneWeek[priceIndex].price1}}</td>
+                      <td>{{prices.garnet150.second.threeWeek[priceIndex].price1}}</td>
+                    </tr>
+                    <tr>
+                      <td>10000 volantes</td>
+                      <td>{{prices.garnet150.second.oneWeek[priceIndex].price2}}</td>
+                      <td>{{prices.garnet150.second.threeWeek[priceIndex].price2}}</td>
+                    </tr>
+                    <tr>
+                      <td>15000 volantes</td>
+                      <td>{{prices.garnet150.second.oneWeek[priceIndex].price3}}</td>
+                      <td>{{prices.garnet150.second.threeWeek[priceIndex].price3}}</td>
+                    </tr>
+                    <tr>
+                      <td>20000 volantes</td>
+                      <td>{{prices.garnet150.second.oneWeek[priceIndex].price4}}</td>
+                      <td>{{prices.garnet150.second.threeWeek[priceIndex].price4}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+  
+              <div class="col-12 table text-center">
+                <table style="width:95%;">
+                  <thead class="table-info">
+                    <th>20x15 cm</th>
+                    <th>1 semana</th>
+                    <th>3 semanas</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>5000 volantes</td>
+                      <td>{{prices.garnet150.three.oneWeek[priceIndex].price1}}</td>
+                      <td>{{prices.garnet150.three.threeWeek[priceIndex].price1}}</td>
+                    </tr>
+                    <tr>
+                      <td>10000 volantes</td>
+                      <td>{{prices.garnet150.three.oneWeek[priceIndex].price2}}</td>
+                      <td>{{prices.garnet150.three.threeWeek[priceIndex].price2}}</td>
+                    </tr>
+                    <tr>
+                      <td>15000 volantes</td>
+                      <td>{{prices.garnet150.three.oneWeek[priceIndex].price3}}</td>
+                      <td>{{prices.garnet150.three.threeWeek[priceIndex].price3}}</td>
+                    </tr>
+                    <tr>
+                      <td>20000 volantes</td>
+                      <td>{{prices.garnet150.three.oneWeek[priceIndex].price4}}</td>
+                      <td>{{prices.garnet150.three.threeWeek[priceIndex].price4}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+  
+              <div class="col-12 table text-center">
+                <table style="width:95%;">
+                  <thead class="table-info">
+                    <th>20x30 cm</th>
+                    <th>1 semana</th>
+                    <th>3 semanas</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>5000 volantes</td>
+                      <td>{{prices.garnet150.four.oneWeek[priceIndex].price1}}</td>
+                      <td>{{prices.garnet150.four.threeWeek[priceIndex].price1}}</td>
+                    </tr>
+                    <tr>
+                      <td>10000 volantes</td>
+                      <td>{{prices.garnet150.four.oneWeek[priceIndex].price2}}</td>
+                      <td>{{prices.garnet150.four.threeWeek[priceIndex].price2}}</td>
+                    </tr>
+                    <tr>
+                      <td>15000 volantes</td>
+                      <td>{{prices.garnet150.four.oneWeek[priceIndex].price3}}</td>
+                      <td>{{prices.garnet150.four.threeWeek[priceIndex].price3}}</td>
+                    </tr>
+                    <tr>
+                      <td>20000 volantes</td>
+                      <td>{{prices.garnet150.four.oneWeek[priceIndex].price4}}</td>
+                      <td>{{prices.garnet150.four.threeWeek[priceIndex].price4}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+  
+            </div>
+          </div>
+
+      </div>
+    </div>
+
+    
+
+    <!--Modals-->
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header text-center">
+            <h4 class="modal-title text-center" id="exampleModalLabel">Precios</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+                
+            </div>  
+          </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+<app-footer></app-footer>

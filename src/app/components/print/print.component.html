@@ -1,0 +1,106 @@
+<app-navbar></app-navbar>
+<div class="content slide data fadeInAnimated fastAnimated"> 
+  <div class="row">
+    <div class="col-12 text-center">
+      <h4>Impresión</h4>
+    </div>
+  </div>
+  
+  <table class="table  table-hover">
+    <thead class="thead-dark">
+      <tr>
+        <th colspan="9" class="text-center">Gramage 115gr</th>
+      </tr>
+      <tr (click)="test()">
+        <th scope="col">Número de cliente</th>
+        <th scope="col">Cliente</th>
+        <th scope="col">Pedido</th>
+        <th scope="col">Producto</th>
+        <th scope="col">Tamaño</th>
+        <th scope="col">Cantidad</th>
+        <th scope="col">Espacios</th>
+        <th scope="col">Fecha del pedido</th>
+        <th scope="col">Entrega</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let order of ordersFirst; let i = index" class="fadeInAnimated" style="cursor:pointer" data-toggle="modal" data-target="#exampleModal" (click)="selectOrder(i)">
+        <th scope="row">{{order.branch.client.id}}</th>
+        <td>{{order.branch.client.name}}</td>
+        <td>{{order.id}}</td>
+        <td>{{order.product}}</td>
+        <td>{{order.size}}</td>
+        <td>{{order.quantity}}</td>
+        <td>{{order.spaces}}</td>
+        <td>{{order.created_at}}</td>
+        <td>{{parseDesign(order.design)}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <table class="table  table-hover">
+      <thead class="thead-dark">
+        <tr>
+          <th colspan="9" class="text-center">Gramage 150gr</th>
+        </tr>
+        <tr (click)="test()">
+          <th scope="col">Número de cliente</th>
+          <th scope="col">Cliente</th>
+          <th scope="col">Pedido</th>
+          <th scope="col">Producto</th>
+          <th scope="col">Tamaño</th>
+          <th scope="col">Cantidad</th>
+          <th scope="col">Espacios</th>
+          <th scope="col">Fecha del pedido</th>
+          <th scope="col">Entrega</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of ordersSecond; let i = index" class="fadeInAnimated" style="cursor:pointer" data-toggle="modal" data-target="#exampleModal" (click)="selectOrder(i)">
+          <th scope="row">{{order.branch.client.id}}</th>
+          <td>{{order.branch.client.name}}</td>
+          <td>{{order.id}}</td>
+          <td>{{order.product}}</td>
+          <td>{{order.size}}</td>
+          <td>{{order.quantity}}</td>
+          <td>{{order.spaces}}</td>
+          <td>{{order.created_at}}</td>
+          <td>{{parseDesign(order.design)}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="table  table-hover">
+        <thead class="thead-dark">
+          <tr>
+            <th colspan="9" class="text-center">Otros productos</th>
+          </tr>
+          <tr (click)="test()">
+            <th scope="col">Número de cliente</th>
+            <th scope="col">Cliente</th>
+            <th scope="col">Pedido</th>
+            <th scope="col">Producto</th>
+            <th scope="col">Tamaño</th>
+            <th scope="col">Cantidad</th>
+            <th scope="col">Espacios</th>
+            <th scope="col">Fecha del pedido</th>
+            <th scope="col">Entrega</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of ordersOthers; let i = index" class="fadeInAnimated" style="cursor:pointer" data-toggle="modal" data-target="#exampleModal" (click)="selectOrder(i)">
+            <th scope="row">{{order.branch.client.id}}</th>
+            <td>{{order.branch.client.name}}</td>
+            <td>{{order.id}}</td>
+            <td>{{order.product}}</td>
+            <td>{{order.size}}</td>
+            <td>{{order.quantity}}</td>
+            <td>{{order.spaces}}</td>
+            <td>{{order.created_at}}</td>
+            <td>{{parseDesign(order.design)}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+</div>
+<app-footer></app-footer>

@@ -1,0 +1,23 @@
+  <div class="col-12 login-bck">
+    <div class="login">
+      <h1>
+        Login
+      </h1>
+      <br><br>
+      <form [formGroup]='forma' (ngSubmit)="login()" novalidate="novalidate">
+        <input type="text" placeholder="Username" formControlName="email"/>
+        <input type="password" placeholder="Password" formControlName="password"/>
+        <button type="submit" class="btn btn-primary btn-block btn-large" *ngIf="forma.valid">Ingresar</button>
+      </form>
+      <div *ngIf="sucess" class="alert alert-success fade fastAnimated" role="alert" style="margin-top:10px">
+          Credenciales verificadas, redireccionando.
+      </div>
+      <div *ngIf="errorInit" class="alert alert-danger fade fastAnimated" role="alert" style="margin-top:10px">
+          Error en las credenciales.
+      </div>
+      <div *ngIf="errorServer" class="alert alert-danger fade fastAnimated" role="alert" style="margin-top:10px">
+        Ha ocurrido un error. por favor intente más tarde.
+      </div>
+    </div>
+  </div>
+
