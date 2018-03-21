@@ -18,6 +18,7 @@ export class NewComponent implements OnInit {
   formaOrder:FormGroup;
   nextView:boolean = false;
   select:any = {}; //Campos para los selects de la vista
+  spaces:string = "0";
 
   constructor(public _http:HttpService) { }
 
@@ -32,6 +33,7 @@ export class NewComponent implements OnInit {
       "size":[{"value":1,"size":"10x7.5"},{"value":2,"size":"10x15"},{"value":3,"size":"15x20"},{"value":4,"size":"15x30"}],
       "garnet":["115gr","150gr"],
       "time":[{"value":7,"text":"1 semana"},{"value":21,"text":"3 semanas"}],
+      "send":[{"value":0,"text":"No"},{"value":1,"text":"Si"}],
       "design":[{"value":1,"text":"Nuevo"},{"value":2,"text":"Correción"},{"value":3,"text":"Ultimo diseño"},{"value":4,"text":"Envia el cliente"}],
       "sides":[{"value":1,"text":"Un solo lado"},{"value":2,"text":"Dos lados diferentes"},{"value":3,"text":"Dos lados iguales"}],
       "mention":[{"value":1,"text":"100%"},{"value":2,"text":"150%"},{"value":3,"text":"No"}],
@@ -68,7 +70,13 @@ export class NewComponent implements OnInit {
         ]),
         'address':new FormArray([
           new FormControl('',Validators.required)
-        ])        
+        ]),
+        'phone':new FormArray([
+          new FormControl('',Validators.required)
+        ]),
+        'isDone':new FormArray([
+          new FormControl(true)
+        ])  
       });
       this.formaOrder = new FormGroup({
         "product":new FormControl('',Validators.required),
@@ -83,14 +91,13 @@ export class NewComponent implements OnInit {
         "mention":new FormControl('',Validators.required),
         "specification":new FormControl('',Validators.required),
         "trace":new FormControl('',Validators.required),
-        "method_payment_trace":new FormControl('',Validators.required),
-        "debit":new FormControl('',Validators.required),
         "method_payment":new FormControl('',Validators.required),
         "price_flyer":new FormControl('default',Validators.required),
         "price_design":new FormControl('0',Validators.required),
         "price_send":new FormControl('0',Validators.required),
         "price_flyer_special":new FormControl(0),
-        "we_send":new FormControl(0,Validators.required),
+        "we_send":new FormControl('',Validators.required),
+        "description_send":new FormControl('',Validators.required),
       });
   
       this.formaOrder.controls['quantity'].setValidators([
@@ -117,6 +124,16 @@ export class NewComponent implements OnInit {
     (<FormArray>this.formaBranch.controls['address']).push(
       new FormControl('', Validators.required)
     );
+    (<FormArray>this.formaBranch.controls['phone']).push(
+      new FormControl('', Validators.required)
+    );
+    (<FormArray>this.formaBranch.controls['isDone']).push(
+      new FormControl(true)
+    );
+  }
+
+  changeSelect(index){
+    this.formaBranch.value.isDone[index]=!this.formaBranch.value.isDone[index];
   }
 
   addEmail(){
@@ -152,12 +169,15 @@ export class NewComponent implements OnInit {
     this.formaBranch.value.name.map((elem,index)=>{
       let body = {
         name: elem,
-        address: this.formaBranch.value.address[index]
+        address: this.formaBranch.value.address[index],
+        phone: this.formaBranch.value.phone[index]
       }
       this._http.postRequest('client/'+clientId+'/branch',body).subscribe(
         (res)=>{
-          this.createOrder(res.data.id,index);
-          this.requestBranch[index]="good";
+          if(this.formaBranch.value.isDone[index]){
+            this.createOrder(res.data.id,index);
+            this.requestBranch[index]="good";
+          }
         },
         (error)=>{
           if(this.verifyError(error.json())){        
@@ -172,18 +192,18 @@ export class NewComponent implements OnInit {
   }
 
   createOrder(branchId,index){
-    this.requestOrder.push("send");
+    this.requestOrder.push({status:"send"});
     
     this._http.postRequest('branch/'+branchId+'/order',this.formaOrder.value).subscribe(
       (res)=>{
         //this.request="finish";
-        this.requestOrder[index]="good";
+        this.requestOrder[index]={status:"good",id:res.data.id};
       },
       (error)=>{
         if(this.verifyError(error.json())){        
           this.createClient();
         }else{
-          this.requestOrder[index]="error";
+          this.requestOrder[index]={status:"error"};
         }
       }
     ) 
@@ -264,7 +284,7 @@ export class NewComponent implements OnInit {
    sizeSpecial(){
      if(this.formaOrder.value.size === "1" || this.formaOrder.value.size === "2" || this.formaOrder.value.size === "3" || this.formaOrder.value.size === "4"){
        this.formaOrder.value.size_special = 0;    
-       this.formaOrder.value.size = parseInt(this.formaOrder.value.size);
+       this.formaOrder.value.size = parseFloat(this.formaOrder.value.size);
      }else{
        this.formaOrder.value.size_special = 1;
      }
@@ -275,7 +295,7 @@ export class NewComponent implements OnInit {
        this.formaOrder.value.special_time = 1;
      }else{
        this.formaOrder.value.special_time = 0;  
-       this.formaOrder.value.time_delivery = parseInt(this.formaOrder.value.time_delivery);     
+       this.formaOrder.value.time_delivery = parseFloat(this.formaOrder.value.time_delivery);     
      }
    }
 
@@ -351,17 +371,46 @@ export class NewComponent implements OnInit {
 
   parsePriceFlyer(){
     if(this.formaOrder.value.price_flyer == "default"){
-      return parseInt(this.select.price[0].text);
+      return parseFloat(this.select.price[0].text);
     }else{
-      return parseInt(this.formaOrder.value.price_flyer);
+      return parseFloat(this.formaOrder.value.price_flyer);
     }
   }
 
   calculateTotal(){
     if(this.formaOrder.value.price_flyer == "default"){
-      return parseInt(this.select.price[0].text) + parseInt(this.formaOrder.value.price_design) + parseInt(this.formaOrder.value.price_send);
+      return parseFloat(this.select.price[0].text) + parseFloat(this.formaOrder.value.price_design) + parseFloat(this.formaOrder.value.price_send);
     }else{
-      return parseInt(this.formaOrder.value.price_flyer) + parseInt(this.formaOrder.value.price_design) + parseInt(this.formaOrder.value.price_send);
+      return parseFloat(this.formaOrder.value.price_flyer) + parseFloat(this.formaOrder.value.price_design) + parseFloat(this.formaOrder.value.price_send);
+    }
+  }
+
+  calculateDebit(){
+    if(this.formaOrder.value.price_flyer == "default"){
+      return parseFloat(this.select.price[0].text) + parseFloat(this.formaOrder.value.price_design) + parseFloat(this.formaOrder.value.price_send) - parseFloat(this.formaOrder.value.trace);
+    }else{
+      return parseFloat(this.formaOrder.value.price_flyer) + parseFloat(this.formaOrder.value.price_design) + parseFloat(this.formaOrder.value.price_send) - parseFloat(this.formaOrder.value.trace);
+    }
+  }
+
+  calculateSpaces(){
+    if(this.formaOrder.value.quantity != "" && this.formaOrder.value.size != ""){
+      let body;
+      if(this.formaOrder.value.size === "1" || this.formaOrder.value.size === "2" || this.formaOrder.value.size === "3" || this.formaOrder.value.size === "4"){
+        body = {size:this.select.size[parseInt(this.formaOrder.value.size)-1].size,quantity:this.formaOrder.value.quantity};
+      }else{
+        body = {size:this.formaOrder.value.size,quantity:this.formaOrder.value.quantity};
+      }
+      this._http.postRequestNotToken('calculateSpaces',body).subscribe(
+        (res)=>{
+          this.spaces = res.space;
+        },
+        (error)=>{
+          this.spaces = "0";
+        }
+      )
+    }else{
+      this.spaces = "0";
     }
   }
 

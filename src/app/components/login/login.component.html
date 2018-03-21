@@ -7,7 +7,10 @@
       <form [formGroup]='forma' (ngSubmit)="login()" novalidate="novalidate">
         <input type="text" placeholder="Username" formControlName="email"/>
         <input type="password" placeholder="Password" formControlName="password"/>
-        <button type="submit" class="btn btn-primary btn-block btn-large" *ngIf="forma.valid">Ingresar</button>
+        <button type="submit" class="btn btn-primary btn-block btn-large" *ngIf="forma.valid && !request && !sucess">Ingresar</button>
+        <div class="col-12 text-center" *ngIf="request">
+          <label ><i class="fas fa-spinner fa-spin"></i></label>
+        </div>
       </form>
       <div *ngIf="sucess" class="alert alert-success fade fastAnimated" role="alert" style="margin-top:10px">
           Credenciales verificadas, redireccionando.

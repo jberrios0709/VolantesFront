@@ -2,7 +2,7 @@
 <div class="content slide data fadeInAnimated fastAnimated"> 
     <div class="offset-md-1  col-10" *ngIf="nextView === false">
       <div class="section-info">
-        <div class="separator text-center"><h4>Cliente</h4></div>
+        <div class="separator text-center" (click)="test()"><h4>Cliente</h4></div>
         <form [formGroup]='formaClient'>
           <div class="row">
             <div class="col-2">
@@ -68,18 +68,25 @@
       </div>
       
       <div class="section-info">
-        <div class="separator text-center"><h4>Sucursal</h4><label (click)="addBranch()"><i class="fas fa-plus-square add" ></i></label></div>
+        <div class="separator text-center"><h4 (click)="test()">Sucursal</h4><label (click)="addBranch()"><i class="fas fa-plus-square add" ></i></label></div>
         
         
         <div class="row">
 
-          <div class="col-6 text-center">
+          <div class="col-3 text-center">
             <label>Nombre</label>
           </div>
-          <div class="col-6 text-center">
+          <div class="col-4 text-center">
             <label>Dirección</label>
           </div>
-          <div class="col-6">
+          <div class="col-3 text-center">
+            <label>Teléfono</label>
+          </div>
+          <div class="col-2 text-center">
+            <label>Seleccionar</label>
+          </div>
+
+          <div class="col-3">
             <form [formGroup]='formaBranch'>
               <div class="row" formArrayName="name">
                 <div class="col-12" *ngFor="let branch of formaBranch.controls['name'].controls; let i = index">
@@ -89,15 +96,35 @@
             </form>
           </div>
 
-          <div class="col-6">
-              <form [formGroup]='formaBranch'>
-                <div class="row" formArrayName="address">
-                  <div class="col-12" *ngFor="let branch of formaBranch.controls['address'].controls; let i = index">
-                    <input type="text" [formControlName]="i">
-                  </div>
+          <div class="col-4">
+            <form [formGroup]='formaBranch'>
+              <div class="row" formArrayName="address">
+                <div class="col-12" *ngFor="let branch of formaBranch.controls['address'].controls; let i = index">
+                  <input type="text" [formControlName]="i">
                 </div>
-              </form>
-            </div>
+              </div>
+            </form>
+          </div>
+
+          <div class="col-3">
+            <form [formGroup]='formaBranch'>
+              <div class="row" formArrayName="phone">
+                <div class="col-12" *ngFor="let branch of formaBranch.controls['phone'].controls; let i = index">
+                  <input type="text" [formControlName]="i">
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div class="col-2 text-center">
+            <form [formGroup]='formaBranch'>
+              <div class="row" formArrayName="isDone">
+                <div class="col-12" *ngFor="let branch of formaBranch.value.isDone; let i = index" style="height:35px">
+                  <input type="checkbox" [checked]="branch" (change)="changeSelect(i)" style="width: 10%;height: 100%;">
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
         
       </div>
@@ -136,7 +163,7 @@
             </div>
             <div class="col-4">
               <div class="div-form form-group">
-                <select formControlName="size" (keyup)="searchPrice()" ng-blur="searchPrice()">
+                <select formControlName="size" (keyup)="searchPrice()" ng-blur="searchPrice()" (blur)="calculateSpaces()">
                   <option *ngFor="let size of select.size"  [value]="size.value">{{size.size}}</option>
                 </select>
               </div>  
@@ -154,13 +181,13 @@
               <label class="big">Cantidad:</label>
             </div>
             <div class="col-4">
-              <div class="div-form"><input type="text" formControlName="quantity"></div>  
+              <div class="div-form"><input type="text" formControlName="quantity" (blur)="calculateSpaces()"></div>  
             </div>
             <div class="col-2">
               <label class="big">Espacios:</label>
             </div>
             <div class="col-4">
-              <div class="div-form"><input type="text"></div>  
+              <div class="div-form"><input type="text" [value]="spaces"></div>  
             </div>
           </div>
 
@@ -250,10 +277,16 @@
             <div class="col-3">
               <div class="div-form form-group">
                 <select formControlName="we_send">
-                  <option  value="0">No</option>
-                  <option  value="1">Si</option>
+                  <option *ngFor="let send of select.send"  [value]="send.value">{{send.text}}</option>
                 </select>
               </div>   
+            </div>
+
+            <div class="col-2">
+              <label class="big">Especifique:</label>
+            </div>
+            <div class="col-4">
+              <input type="text" placeholder="Medio de envío"  class="type2" formControlName="description_send">
             </div>
           </div>
 
@@ -310,20 +343,14 @@
               <input type="text" formControlName="trace">
             </div>
             <div class="col-3">
-              <label class="big">Pago de seña:</label>
+              <label class="big">Deuda:</label>
             </div>
             <div class="col-3">
-              <input type="text" formControlName="method_payment_trace">
+              <input type="text" [value]="calculateDebit()" disabled>
             </div>
           </div>
 
           <div class="row">
-            <div class="col-3">
-              <label class="big">Deuda:</label>
-            </div>
-            <div class="col-3">
-              <input type="text" formControlName="debit">
-            </div>
             <div class="col-3">
               <label class="big">Medio de pago:</label>
             </div>
@@ -420,6 +447,12 @@
                 <div class="col-6 text-center">
                   <label>{{this.formaOrder.value.we_send}}</label>
                 </div>
+                <div class="col-12 text-center confirm">
+                  <strong>Metodo de envío</strong>
+                </div>
+                <div class="col-12 text-center">
+                  <label>{{this.formaOrder.value.description_send}}</label>
+                </div>
                 <div class="col-3 text-center confirm">
                   <strong>Precio base</strong>
                 </div>
@@ -511,9 +544,9 @@
                     <div class="col-6">
                       <h3 *ngFor="let req of requestOrder;let i = index">
                         Pedido
-                        <label *ngIf="req === 'send'"><i class="fas fa-spinner fa-spin"></i></label>
-                        <label *ngIf="req === 'good'"><i class="fas fa-check"></i></label>
-                        <label *ngIf="req === 'error'"><i class="far fa-times"></i></label>
+                        <label *ngIf="req.status === 'send'"><i class="fas fa-spinner fa-spin"></i></label>
+                        <label *ngIf="req.status === 'good'"><i class="fas fa-check"></i> Número {{req.id}}</label>
+                        <label *ngIf="req.status === 'error'"><i class="far fa-times"></i></label>
                       </h3>
                     </div>
                   </div>

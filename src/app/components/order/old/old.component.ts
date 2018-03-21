@@ -22,6 +22,7 @@ export class OldComponent implements OnInit {
   select:any = {}; //Campos para los selects de la vista
   branch:any[]=[]; //Todas las sucursales seleccionadas seran filtradas en este arreglo
   requestSend:any[]=[]; 
+  spaces:string = "0";
 
   constructor(public _http:HttpService, public activatedRoute:ActivatedRoute) {
     this.activatedRoute.params.subscribe((params: Params) => {
@@ -43,6 +44,7 @@ export class OldComponent implements OnInit {
       "size":[{"value":1,"size":"10x7.5"},{"value":2,"size":"10x15"},{"value":3,"size":"15x20"},{"value":4,"size":"15x30"}],
       "garnet":["115gr","150gr"],
       "time":[{"value":7,"text":"1 semana"},{"value":21,"text":"3 semanas"}],
+      "send":[{"value":0,"text":"No"},{"value":1,"text":"Si"}],
       "design":[{"value":1,"text":"Nuevo"},{"value":2,"text":"Correción"},{"value":3,"text":"Ultimo diseño"},{"value":4,"text":"Envia el cliente"}],
       "sides":[{"value":1,"text":"Un solo lado"},{"value":2,"text":"Dos lados diferentes"},{"value":3,"text":"Dos lados iguales"}],
       "mention":[{"value":1,"text":"100%"},{"value":2,"text":"150%"},{"value":3,"text":"No"}],
@@ -64,14 +66,14 @@ export class OldComponent implements OnInit {
       "mention":new FormControl('',Validators.required),
       "specification":new FormControl('',Validators.required),
       "trace":new FormControl('',Validators.required),
-      "method_payment_trace":new FormControl('',Validators.required),
-      "debit":new FormControl('',Validators.required),
+      "debit":new FormControl(''),
       "method_payment":new FormControl('',Validators.required),
       "price_flyer":new FormControl('default',Validators.required),
       "price_design":new FormControl('0',Validators.required),
       "price_send":new FormControl('0',Validators.required),
       "price_flyer_special":new FormControl(0),
-      "we_send":new FormControl(0,Validators.required),
+      "we_send":new FormControl('',Validators.required),
+      "description_send":new FormControl('',Validators.required),
     });
 
     this.forma.controls['quantity'].setValidators([
@@ -118,7 +120,7 @@ export class OldComponent implements OnInit {
     this.selectClient = true;
     this.all = false;
     this.client = this.clientsFilter[index];
-    this.branchSelect = this.clientsFilter[index].branch.map((elem)=>{
+    this.branchSelect = this.clientsFilter[index].branchs.map((elem)=>{
       return {
         "id": elem.id,
         "isDone": false,
@@ -289,7 +291,7 @@ export class OldComponent implements OnInit {
     this.branch.map((elem, index)=>{
       this._http.postRequest('branch/'+elem.id+'/order',this.forma.value).subscribe(
         (res)=>{
-          this.requestSend[index].value = "good";
+          this.requestSend[index] = {value:"good", id:res.data.id};
           console.log(this.requestSend);
         },
         (error)=>{
@@ -351,17 +353,46 @@ export class OldComponent implements OnInit {
 
   parsePriceFlyer(){
     if(this.forma.value.price_flyer == "default"){
-      return parseInt(this.select.price[0].text);
+      return parseFloat(this.select.price[0].text);
     }else{
-      return parseInt(this.forma.value.price_flyer);
+      return parseFloat(this.forma.value.price_flyer);
     }
   }
 
   calculateTotal(){
     if(this.forma.value.price_flyer == "default"){
-      return parseInt(this.select.price[0].text) + parseInt(this.forma.value.price_design) + parseInt(this.forma.value.price_send);
+      return parseFloat(this.select.price[0].text) + parseFloat(this.forma.value.price_design) + parseFloat(this.forma.value.price_send);
     }else{
-      return parseInt(this.forma.value.price_flyer) + parseInt(this.forma.value.price_design) + parseInt(this.forma.value.price_send);
+      return parseFloat(this.forma.value.price_flyer) + parseFloat(this.forma.value.price_design) + parseFloat(this.forma.value.price_send);
+    }
+  }
+
+  calculateDebit(){
+    if(this.forma.value.price_flyer == "default"){
+      return parseFloat(this.select.price[0].text) + parseFloat(this.forma.value.price_design) + parseFloat(this.forma.value.price_send) - parseFloat(this.forma.value.trace);
+    }else{
+      return parseFloat(this.forma.value.price_flyer) + parseFloat(this.forma.value.price_design) + parseFloat(this.forma.value.price_send) - parseFloat(this.forma.value.trace);
+    }
+  }
+
+  calculateSpaces(){
+    if(this.forma.value.quantity != "" && this.forma.value.size != ""){
+      let body;
+      if(this.forma.value.size === "1" || this.forma.value.size === "2" || this.forma.value.size === "3" || this.forma.value.size === "4"){
+        body = {size:this.select.size[parseInt(this.forma.value.size)-1].size,quantity:this.forma.value.quantity};
+      }else{
+        body = {size:this.forma.value.size,quantity:this.forma.value.quantity};
+      }
+      this._http.postRequestNotToken('calculateSpaces',body).subscribe(
+        (res)=>{
+          this.spaces = res.space;
+        },
+        (error)=>{
+          this.spaces = "0";
+        }
+      )
+    }else{
+      this.spaces = "0";
     }
   }
 

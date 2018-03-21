@@ -77,24 +77,21 @@ export class CfComponent implements OnInit {
 
   orderClient(clients){
     let arrayClientsModify = [];
+    let branchs = [];
     for(let client of clients){
-      for(let branch of client.branch){
-        arrayClientsModify.push({
-          "client":client.id,
-          "name":client.name,
-          "name_contact":client.name_contact,
-          "charged":client.charge,
-          "reference:":client.reference,
-          "observations":client.observations,
-          "emails":client.mails,
-          "phones":client.phones,
-          "comments":client.comments,
-          "branch":branch.id,
-          "nameBranch":branch.name,
-          "address":branch.address,
-          "date_init":branch.created_at.substr(0,10)
-        })
-      }
+      arrayClientsModify.push({
+        "client":client.id,
+        "name":client.name,
+        "name_contact":client.name_contact,
+        "charged":client.charge,
+        "reference:":client.reference,
+        "observations":client.observations,
+        "emails":client.mails,
+        "phones":client.phones,
+        "comments":client.comments,
+        "branchs":client.branchs,
+        "date_init":client.created_at
+      })
     }
     return arrayClientsModify;
   }
@@ -103,15 +100,20 @@ export class CfComponent implements OnInit {
     this.selectClient = true;
     this.client = this.clientsFilter[index];
     this.createForma(index);
-    this.searchOrders(this.clientsFilter[index].branch);
+    this.searchOrders(index);
   }
 
-  searchOrders(id){
-    this._http.getRequest('branch/'+id+'/order').subscribe(
-      (res)=>{
-        this.orders = res.data;
-      }
-    )
+  searchOrders(index){
+    this.clientsFilter[index].branchs.map((elem)=>{
+      this._http.getRequest('branch/'+elem.id+'/order').subscribe(
+        (res)=>{
+          res.data.map((order)=>{
+            this.orders.push(order);
+          })
+          
+        }
+      )
+    })
   }
 
   createForma(index){

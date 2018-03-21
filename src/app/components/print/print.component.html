@@ -1,81 +1,27 @@
 <app-navbar></app-navbar>
 <div class="content slide data fadeInAnimated fastAnimated"> 
   <div class="row">
-    <div class="col-12 text-center">
-      <h4>Impresión</h4>
+    <div class="col-6 offset-md-1 text-left">
+      <h4 class="title">Impresión</h4>
     </div>
-  </div>
+  </div> 
   
-  <table class="table  table-hover">
-    <thead class="thead-dark">
-      <tr>
-        <th colspan="9" class="text-center">Gramage 115gr</th>
-      </tr>
-      <tr (click)="test()">
-        <th scope="col">Número de cliente</th>
-        <th scope="col">Cliente</th>
-        <th scope="col">Pedido</th>
-        <th scope="col">Producto</th>
-        <th scope="col">Tamaño</th>
-        <th scope="col">Cantidad</th>
-        <th scope="col">Espacios</th>
-        <th scope="col">Fecha del pedido</th>
-        <th scope="col">Entrega</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let order of ordersFirst; let i = index" class="fadeInAnimated" style="cursor:pointer" data-toggle="modal" data-target="#exampleModal" (click)="selectOrder(i)">
-        <th scope="row">{{order.branch.client.id}}</th>
-        <td>{{order.branch.client.name}}</td>
-        <td>{{order.id}}</td>
-        <td>{{order.product}}</td>
-        <td>{{order.size}}</td>
-        <td>{{order.quantity}}</td>
-        <td>{{order.spaces}}</td>
-        <td>{{order.created_at}}</td>
-        <td>{{parseDesign(order.design)}}</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <table class="table  table-hover">
-      <thead class="thead-dark">
-        <tr>
-          <th colspan="9" class="text-center">Gramage 150gr</th>
-        </tr>
-        <tr (click)="test()">
-          <th scope="col">Número de cliente</th>
-          <th scope="col">Cliente</th>
-          <th scope="col">Pedido</th>
-          <th scope="col">Producto</th>
-          <th scope="col">Tamaño</th>
-          <th scope="col">Cantidad</th>
-          <th scope="col">Espacios</th>
-          <th scope="col">Fecha del pedido</th>
-          <th scope="col">Entrega</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let order of ordersSecond; let i = index" class="fadeInAnimated" style="cursor:pointer" data-toggle="modal" data-target="#exampleModal" (click)="selectOrder(i)">
-          <th scope="row">{{order.branch.client.id}}</th>
-          <td>{{order.branch.client.name}}</td>
-          <td>{{order.id}}</td>
-          <td>{{order.product}}</td>
-          <td>{{order.size}}</td>
-          <td>{{order.quantity}}</td>
-          <td>{{order.spaces}}</td>
-          <td>{{order.created_at}}</td>
-          <td>{{parseDesign(order.design)}}</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <table class="table  table-hover">
+  <div class="row">
+    <div class="view-more">
+      <div class="folios text-center">
+        <div class="col-12" style="margin-top: 20px;font-size: 14px;font-weight: bold;" *ngFor="let folio of folios; let i = index">
+          <div><label>Pliego {{folio.id}}</label></div>
+          <div><label style="cursor:pointer" data-toggle="modal" data-target="#exampleModal" (click)="select(i,'folio',0)">Ver más.</label></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-11 offset-md-1 text-center">
+      <table class="table  table-hover">
         <thead class="thead-dark">
           <tr>
-            <th colspan="9" class="text-center">Otros productos</th>
+            <th colspan="9" class="text-center">Gramage 115gr</th>
           </tr>
-          <tr (click)="test()">
+          <tr >
             <th scope="col">Número de cliente</th>
             <th scope="col">Cliente</th>
             <th scope="col">Pedido</th>
@@ -88,7 +34,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let order of ordersOthers; let i = index" class="fadeInAnimated" style="cursor:pointer" data-toggle="modal" data-target="#exampleModal" (click)="selectOrder(i)">
+          <tr *ngFor="let order of ordersFirst; let i = index" class="fadeInAnimated" style="cursor:pointer" data-toggle="modal" data-target="#exampleModal" (click)="select(i,'order',1)">
             <th scope="row">{{order.branch.client.id}}</th>
             <td>{{order.branch.client.name}}</td>
             <td>{{order.id}}</td>
@@ -96,11 +42,156 @@
             <td>{{order.size}}</td>
             <td>{{order.quantity}}</td>
             <td>{{order.spaces}}</td>
-            <td>{{order.created_at}}</td>
-            <td>{{parseDesign(order.design)}}</td>
+            <td>{{order.created_at  | date}}</td>
+            <td>{{order.date_delivery  | date}}</td>
           </tr>
         </tbody>
       </table>
 
+      <table class="table  table-hover">
+          <thead class="thead-dark">
+            <tr>
+              <th colspan="9" class="text-center">Gramage 150gr</th>
+            </tr>
+            <tr>
+              <th scope="col">Número de cliente</th>
+              <th scope="col">Cliente</th>
+              <th scope="col">Pedido</th>
+              <th scope="col">Producto</th>
+              <th scope="col">Tamaño</th>
+              <th scope="col">Cantidad</th>
+              <th scope="col">Espacios</th>
+              <th scope="col">Fecha del pedido</th>
+              <th scope="col">Entrega</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let order of ordersSecond; let i = index" class="fadeInAnimated" style="cursor:pointer" data-toggle="modal" data-target="#exampleModal" (click)="select(i,'order',2)">
+              <th scope="row">{{order.branch.client.id}}</th>
+              <td>{{order.branch.client.name}}</td>
+              <td>{{order.id}}</td>
+              <td>{{order.product}}</td>
+              <td>{{order.size}}</td>
+              <td>{{order.quantity}}</td>
+              <td>{{order.spaces}}</td>
+              <td>{{order.created_at  | date}}</td>
+              <td>{{order.date_delivery  | date}}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="table  table-hover">
+          <thead class="thead-dark">
+            <tr>
+              <th colspan="9" class="text-center">Otros productos</th>
+            </tr>
+            <tr >
+              <th scope="col">Número de cliente</th>
+              <th scope="col">Cliente</th>
+              <th scope="col">Pedido</th>
+              <th scope="col">Producto</th>
+              <th scope="col">Tamaño</th>
+              <th scope="col">Cantidad</th>
+              <th scope="col">Espacios</th>
+              <th scope="col">Fecha del pedido</th>
+              <th scope="col">Entrega</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let order of ordersOthers; let i = index" class="fadeInAnimated" style="cursor:pointer" data-toggle="modal" data-target="#exampleModal" (click)="select(i,'order',3)">
+              <th scope="row">{{order.branch.client.id}}</th>
+              <td>{{order.branch.client.name}}</td>
+              <td>{{order.id}}</td>
+              <td>{{order.product}}</td>
+              <td>{{order.size}}</td>
+              <td>{{order.quantity}}</td>
+              <td>{{order.spaces}}</td>
+              <td>{{order.created_at  | date}}</td>
+              <td>{{order.date_delivery  | date}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+      <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content ">
+        <div class="modal-header text-center">
+          <h4 class="modal-title text-center" id="exampleModalLabel" *ngIf="show==='folio'">Datos del Pliego</h4>
+          <h4 class="modal-title text-center" id="exampleModalLabel" *ngIf="show==='order'">Datos de la Orden</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" *ngIf="show==='order'">
+          <table class="table  table-hover text-center" *ngIf="requestStatus!='good'">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">Orden</th>
+                <th scope="col">Cliente</th>
+                <th scope="col">Espacios</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Gramage</th>
+                <th scope="col">Fecha de entrega</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="fadeInAnimated">
+                <td scope="row">{{objectShow.id}}</td>
+                <td scope="row">{{objectShow.branch.client.name}}</td>
+                <td scope="row">{{objectShow.spaces}}</td>
+                <td scope="row">{{objectShow.quantity}}</td>
+                <td scope="row">{{objectShow.garnet}}</td>
+                <td scope="row">{{objectShow.date}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="requestStatus === 'good'" class="alert alert-success fade fastAnimated" role="alert" style="margin-top:10px">
+              Datos guardados exitosamente.
+          </div>
+          <div *ngIf="requestStatus === 'error'" class="alert alert-danger fade fastAnimated" role="alert" style="margin-top:10px">
+              Error en la operacion.
+          </div>
+        </div>
+        <div class="modal-body" *ngIf="show==='folio'">
+          <table class="table  table-hover text-center" *ngIf="requestStatus!='good'">
+            <thead class="thead-dark">
+              <tr >
+                <th scope="col">Número de orden</th>
+                <th scope="col">Espacios</th>
+                <th scope="col">Espacios en este pliego</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let order of objectShow.orders_folio; let i = index" class="fadeInAnimated">
+                <td scope="row">{{order.order.id}}</td>
+                <td scope="row">{{order.order.spaces}}</td>
+                <td scope="row">{{order.spaces}}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div *ngIf="requestStatus === 'good'" class="alert alert-success fade fastAnimated" role="alert" style="margin-top:10px">
+              Datos guardados exitosamente.
+          </div>
+          <div *ngIf="requestStatus === 'error'" class="alert alert-danger fade fastAnimated" role="alert" style="margin-top:10px">
+              Error en la operacion.
+          </div>
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-success" *ngIf="show==='folio' && requestStatus!='good'" (click)="jobPrint()">Trabajo impreso</button>
+          <button type="button" class="btn btn-success" *ngIf="show==='order' && requestStatus!='good'" (click)="sendTaller()">Enviar a taller</button>
+        </div>
+      </div>
+    </div>
+  </div>
+    
 </div>
+
+
 <app-footer></app-footer>

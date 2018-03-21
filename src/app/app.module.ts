@@ -23,6 +23,7 @@ import { NewComponent } from './components/order/new/new.component';
 import { OldComponent } from './components/order/old/old.component';
 import { DesignComponent } from './components/design/design.component';
 import { PrintComponent } from './components/print/print.component';
+import { DeliveryComponent } from './components/delivery/delivery.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { PrintComponent } from './components/print/print.component';
     NewComponent,
     OldComponent,
     DesignComponent,
-    PrintComponent
+    PrintComponent,
+    DeliveryComponent
   ],
   imports: [
     BrowserModule,

@@ -66,8 +66,6 @@ export class UserComponent implements OnInit {
         'type':new FormControl(this.users[i].type,Validators.required),
       });
     }else if(action === "create"){
-      console.log("aqui");
-      
       this.forma = new FormGroup({
         'email':new FormControl('',[Validators.required,Validators.email]),
         'name':new FormControl('',Validators.required),
@@ -97,8 +95,6 @@ export class UserComponent implements OnInit {
 
   update(){
     this.forma.value.type = parseInt(this.forma.value.type);
-    console.log('user/'+this.forma.value.id);
-    
     this._http.putRequest('user/'+this.forma.value.id, this.forma.value).subscribe(
       (res)=>{ 
         this.users[this.userPosition] = res.data;
@@ -109,8 +105,6 @@ export class UserComponent implements OnInit {
           this.update();
         }else{
           this.errorInit = true;
-          console.log(error);
-          
         }
       }
     ) 

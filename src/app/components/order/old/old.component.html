@@ -1,5 +1,10 @@
 <app-navbar></app-navbar>
 <div class="content slide data fadeInAnimated fastAnimated"> 
+    <div class="row">
+      <div class="col-6 offset-md-1 text-left">
+        <h4 class="title">Nuevo Pedido</h4>
+      </div>
+    </div>
     <div class="row" style="padding:10px">
       <!-- Seccion 1 -->
       <div class="search offset-md-1 col-2">
@@ -81,7 +86,7 @@
               </div>
               <div class="col-4">
                 <div class="div-form form-group">
-                  <select formControlName="size" (keyup)="searchPrice()" ng-blur="searchPrice()">
+                  <select formControlName="size" (keyup)="searchPrice()" (blur)="calculateSpaces()">
                     <option *ngFor="let size of select.size"  [value]="size.value">{{size.size}}</option>
                   </select>
                 </div>  
@@ -99,13 +104,13 @@
                 <label class="big">Cantidad:</label>
               </div>
               <div class="col-4">
-                <div class="div-form"><input type="text" formControlName="quantity"></div>  
+                <div class="div-form"><input type="text" formControlName="quantity" (blur)="calculateSpaces()"></div>  
               </div>
               <div class="col-2">
                   <label class="big">Espacios:</label>
                 </div>
                 <div class="col-4">
-                  <div class="div-form"><input type="text"></div>  
+                  <div class="div-form"><input type="text" [value]="spaces" disabled></div>  
                 </div>
             </div>
   
@@ -197,10 +202,15 @@
               <div class="col-3">
                 <div class="div-form form-group">
                   <select formControlName="we_send">
-                    <option  value="0">No</option>
-                    <option  value="1">Si</option>
+                    <option *ngFor="let send of select.send"  [value]="send.value">{{send.text}}</option>
                   </select>
                 </div>   
+              </div>
+              <div class="col-2">
+                <label class="big">Especifique:</label>
+              </div>
+              <div class="col-4">
+                <input type="text" placeholder="Medio de envío" class="type2" formControlName="description_send">
               </div>
             </div>
   
@@ -261,20 +271,15 @@
                 <input type="text" formControlName="trace">
               </div>
               <div class="col-3">
-                <label class="big">Pago de seña:</label>
+                <label class="big">Deuda:</label>
               </div>
               <div class="col-3">
-                <input type="text" formControlName="method_payment_trace">
+                <input type="text" [value]="calculateDebit()" disabled>
               </div>
             </div>
   
             <div class="row">
-              <div class="col-3">
-                <label class="big">Deuda:</label>
-              </div>
-              <div class="col-3">
-                <input type="text" formControlName="debit">
-              </div>
+              
               <div class="col-3">
                 <label class="big">Medio de pago:</label>
               </div>
@@ -402,7 +407,12 @@
                   <div class="col-6 text-center">
                     <label>{{this.forma.value.we_send}}</label>
                   </div>
-
+                  <div class="col-12 text-center confirm">
+                    <strong>Metodo de envío</strong>
+                  </div>
+                  <div class="col-12 text-center">
+                    <label>{{this.forma.value.description_send}}</label>
+                  </div>
                   <div class="col-3 text-center confirm">
                     <strong>Precio base</strong>
                   </div>
@@ -486,7 +496,7 @@
               <li *ngFor="let b of branch; let i = index" style="margin: 10px; font-size: 18px;">
                 {{b.name}}
                 <label *ngIf="requestSend[i].value === 'send'"><i class="fas fa-spinner fa-spin"></i></label>
-                <label *ngIf="requestSend[i].value === 'good'"><i class="fas fa-check"></i></label>
+                <label *ngIf="requestSend[i].value === 'good'"><i class="fas fa-check"></i>  Número de pedido {{requestSend[i].id}}</label>
                 <label *ngIf="requestSend[i].value === 'error'"><i class="far fa-times"></i></label>
               </li>
             </ul>

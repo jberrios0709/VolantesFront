@@ -17,7 +17,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let client of clientsFilter; let i = index" (click)="showClient(i)" >
-                <td class="searchTD">{{'#'+client.client+'-'+client.name+'-'+client.nameBranch}}</td>
+                <td class="searchTD">{{'#'+client.client+'-'+client.name}}</td>
               </tr>        
             </tbody>
           </table>
@@ -31,10 +31,10 @@
         <div class="col-md-12 text-center" style="margin-bottom:10px;">
           <div class="row">
             <div class="col-md-6 text-right">
-              <h3>{{client.name+" "+client.nameBranch}}</h3>
+              <h3>{{client.name}}</h3>
             </div>
             <div class="col-md-6 text-left">
-              <h6 style="display:inline-block">Nro de cliente:</h6><h6 style="color:red;display:inline-block">{{client.branch}}</h6>
+              <h6 style="display:inline-block">Nro de cliente:</h6><h6 style="color:red;display:inline-block">{{client.client}}</h6>
               <h6>Inicio: {{client.date_init | date}}</h6>
               <h6>Referencia: {{client.reference}}</h6>
             </div>
@@ -94,14 +94,36 @@
               <div class="div-form"><input type="text" class="big"></div>  
             </div>
           </div>
-          
+        </div>
+
+        <div class="section-info">
+          <div class="separator text-center">
+            <p>Sucursales</p>
+          </div>
+          <div class="col-12 clientOrder" >
+            <table class="table table-striped table-dark table-bordered">
+              <thead >
+                <tr>
+                <td><h1>Nombre</h1></td>
+                <td><h1>Dirección</h1></td>
+                <td><h1>Telefono</h1></td>
+                </tr>
+              </thead>
+              <tbody class="thead-light">
+                <tr *ngFor="let branch of client.branchs; let i = index">
+                  <td class="content"><h1>{{branch.name}}</h1></td>
+                  <td class="content"><h1>{{branch.address}}</h1></td>
+                  <td class="content"><h1></h1></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <div class="section-info">
           <div class="separator text-center">
             <p>Trabajos realizados</p>
           </div>
-
           <div class="col-12 clientOrder" >
             <table class="table table-striped table-dark table-bordered">
               <thead >
@@ -126,14 +148,13 @@
                 </tr>
               </tbody>
             </table>
-            
           </div>
-
           <div class="orderNew text-center" style="margin-top:10px; cursor:pointer"  [routerLink]="['/userAuthenticate','order','old',{q:true,id:client.client}]">
             <h4>Nuevo Pedido  <i class="fas fa-plus-square"></i></h4>
           </div>
-
         </div>
+
+        
       </div>
 
       <!-- Seccion 2 -->

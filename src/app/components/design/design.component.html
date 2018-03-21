@@ -80,7 +80,7 @@
                   <h1>Diseñado:  </h1>
                 </div>
                 <div class="col-6 spacing">
-                  <select formControlName="design">
+                  <select formControlName="design" [ngClass]="{'check' : forma.value.design === '1' || forma.value.design === 1}">
                     <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
                   </select>
                 </div>
@@ -88,7 +88,7 @@
                   <h1>Envío 1:  </h1>
                 </div>
                 <div class="col-6  spacing">
-                  <select formControlName="send1">
+                  <select formControlName="send1" [ngClass]="{'check' : forma.value.send1 === '1' || forma.value.send1 === 1}">
                     <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
                   </select>
                 </div>
@@ -96,7 +96,7 @@
                   <h1>Correción 1:  </h1>
                 </div>
                 <div class="col-6  spacing">
-                  <select formControlName="correction1">
+                  <select formControlName="correction1" [ngClass]="{'check' : forma.value.correction1 === '1' || forma.value.correction1 === 1}">
                     <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
                   </select>
                 </div>
@@ -105,7 +105,7 @@
                   <h1>Envío 2:  </h1>
                 </div>
                 <div class="col-6  spacing">
-                  <select formControlName="send2">
+                  <select formControlName="send2" [ngClass]="{'check' : forma.value.send2 === '1' || forma.value.send2 === 1}">
                     <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
                   </select>
                 </div>
@@ -113,7 +113,7 @@
                   <h1>Correción 2:  </h1>
                 </div>
                 <div class="col-6  spacing">
-                  <select formControlName="correction2">
+                  <select formControlName="correction2" [ngClass]="{'check' : forma.value.correction2 === '1' || forma.value.correction2 === 1}">
                     <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
                   </select>
                 </div>
@@ -122,7 +122,7 @@
                   <h1>Envío 3:  </h1>
                 </div>
                 <div class="col-6  spacing">
-                  <select formControlName="send3">
+                  <select formControlName="send3" [ngClass]="{'check' : forma.value.send3 === '1' || forma.value.send3 === 1}">
                     <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
                   </select>
                 </div>
@@ -130,7 +130,7 @@
                   <h1>Correción 3:  </h1>
                 </div>
                 <div class="col-6  spacing">
-                  <select formControlName="correction3">
+                  <select formControlName="correction3" [ngClass]="{'check' : forma.value.correction3 === '1' || forma.value.correction3 === 1}">
                     <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
                   </select>
                 </div>
@@ -139,7 +139,7 @@
                   <h1>Envío 4:  </h1>
                 </div>
                 <div class="col-6  spacing">
-                  <select formControlName="send4">
+                  <select formControlName="send4" [ngClass]="{'check' : forma.value.send4 === '1' || forma.value.send4 === 1}">
                     <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
                   </select>
                 </div>
@@ -147,7 +147,7 @@
                   <h1>Correción 4:  </h1>
                 </div>
                 <div class="col-6  spacing">
-                  <select formControlName="correction4">
+                  <select formControlName="correction4" [ngClass]="{'check' : forma.value.correction4 === '1' || forma.value.correction4 === 1}">
                     <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
                   </select>
                 </div>
@@ -156,7 +156,7 @@
                   <h1>Envío 5:  </h1>
                 </div>
                 <div class="col-6  spacing">
-                  <select formControlName="send5">
+                  <select formControlName="send5" [ngClass]="{'check' : forma.value.send5 === '1' || forma.value.send1 === 5}">
                     <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>                   
                   </select>
                 </div>
@@ -165,7 +165,7 @@
                   <h1>Correción 5:  </h1>
                 </div>
                 <div class="col-6  spacing">
-                  <select formControlName="correction5">
+                  <select formControlName="correction5" [ngClass]="{'check' : forma.value.correction5 === '1' || forma.value.correction5 === 1}">
                     <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option> 
                   </select>
                 </div>
@@ -174,7 +174,7 @@
                   <h1>Aprovado:  </h1>
                 </div>
                 <div class="col-6  spacing">
-                  <select formControlName="approved">
+                  <select formControlName="approved" [ngClass]="{'check' : forma.value.approved === '1' || forma.value.approved === 1}">
                     <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>                    
                   </select>
                 </div>
@@ -183,7 +183,7 @@
                   <h1>Responsabilidad:  </h1>
                 </div>
                 <div class="col-6  spacing">
-                  <select formControlName="responsibility">
+                  <select formControlName="responsibility" [ngClass]="{'check' : forma.value.responsibility === '1' || forma.value.responsibility === 1}">
                     <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>                    
                   </select>
                 </div>
@@ -192,7 +192,7 @@
                   <h1>Finalizado:  </h1>
                 </div>
                 <div class="col-6  spacing">
-                  <select formControlName="finish">
+                  <select formControlName="finish" [ngClass]="{'check' : forma.value.finish === '1' || forma.value.finish === 1}">
                     <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
                   </select>
                 </div>

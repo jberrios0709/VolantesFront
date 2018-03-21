@@ -69,6 +69,12 @@ export class AuthViewService {
           }else{
             return false;
           }
+      case "userAuthenticate/delivery":
+          if(typeUser === "1" || typeUser === "5"){
+            return true;
+          }else{
+            return false;
+          }
       default:
           return false;
     }

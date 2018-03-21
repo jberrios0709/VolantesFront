@@ -67,7 +67,6 @@ nav {
 }
 nav li {
 	float: left;
-	
 	display: inline-block;
 }
 nav li a {
@@ -155,6 +154,7 @@ li.active > .pub,
 footer{
 	position: absolute;
 	width: 100%;
+	z-index:900;
 }
 
 .header-section,
@@ -163,9 +163,7 @@ footer{
 	padding: 20px;
 	list-style: none;
 }
-.footer-section > li{
-	
-}
+
 
 .header-section {background-color: #ffffff;}
 .body-section {background-color: #f4f5f6;
@@ -311,6 +309,7 @@ header {
 	height: 60px;
 	position: relative;
 	background-color: #060a0c;
+	z-index: 900;
 }
 header h1 {
 	text-align: left;
@@ -351,10 +350,10 @@ nav {
 	position: absolute;
 	top: 0;
 	right: 5px;
+	z-index: 900;
 }
 nav li {
 	float: left;
-	
 	display: inline-block;
 }
 nav li a {
@@ -789,3 +788,43 @@ thead.table-info > th {
 	color: black;
 	font-weight: bold;
 }
+
+select.check{
+	background:#28a745;
+}
+
+div.view-more{
+	top: 0; 
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 850;
+    width: 5%;
+    height: 100%;
+	transition: width 2s;
+	position: fixed;
+
+}
+
+div.view-more:hover{
+	width: 25%;
+	transition: width 2s;
+	background: rgb(218, 216, 217);
+	background: rgb(218, 216, 217);
+	padding-top: 120px;
+	padding-bottom: 120px;
+}
+
+div.view-more div.folios{
+	display: none;
+}
+
+div.view-more:hover div.folios{
+	display: block;
+	transition: display 2s;
+	top: 50%;
+    -ms-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
+

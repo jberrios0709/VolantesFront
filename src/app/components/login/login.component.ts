@@ -16,6 +16,7 @@ export class LoginComponent implements OnInit {
   errorInit:boolean =  false;
   errorServer:boolean =  false;
   sucess:boolean = false;
+  request:boolean = false;
 
   constructor( public _http:HttpService, public _auth:AuthService, public router:Router) { 
     this.forma = new FormGroup({
@@ -27,13 +28,16 @@ export class LoginComponent implements OnInit {
   ngOnInit() {}
 
   login(){
+    this.request = true;
     this._http.postRequestNotToken("auth",this.forma.value).subscribe(
       (data)=>{
+        this.request = false;
         this._auth.setUser(data);  
         setTimeout(()=>{  this.router.navigate(['userAuthenticate/home']) }, 3000);
         this.sucess = true;
       },
       (error)=>{
+        this.request = false;
         if(error.status === 401){
           this.errorInit = true;
         }else{

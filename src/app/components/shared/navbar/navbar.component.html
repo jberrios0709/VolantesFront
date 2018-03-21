@@ -35,7 +35,7 @@
 				<a class="tech" [routerLink]="['/userAuthenticate','print']">IMPRESION</a>
 			</li>
 			<li *ngIf="typeUser === '1' || typeUser === '5'" routerLinkActive="active">
-				<a class="qual">ENTREGAS Y COBROS</a>
+				<a class="qual" [routerLink]="['/userAuthenticate','delivery']">ENTREGAS Y COBROS</a>
 			</li>
 			<li *ngIf="typeUser === '1' || typeUser === '3' || typeUser === '4'" routerLinkActive="active">
 				<a class="pub" [routerLink]="['/userAuthenticate','order', 'new']">NUEVO CLIENTE</a>

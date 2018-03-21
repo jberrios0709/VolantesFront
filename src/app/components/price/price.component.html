@@ -2,8 +2,8 @@
   <app-navbar></app-navbar>
   <div class="content slide data fadeInAnimated fastAnimated"> 
     <div class="row">
-      <div class="col-12 text-center">
-        <h4>Precios</h4>
+      <div class="col-6 offset-md-1 text-left">
+        <h4 class="title">Precios</h4>
       </div>
     </div>
     <div class="row" style="padding:10px">
@@ -304,7 +304,7 @@
     <!--Modals-->
 
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
+      <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header text-center">
             <h4 class="modal-title text-center" id="exampleModalLabel">Precios</h4>
@@ -312,16 +312,166 @@
                 <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body">
-            <div class="row">
-                
+          <div class="modal-body" *ngIf="request==='not'">
+            <div class="row" *ngIf="status===0">
+              <div class="col-12 text-center">
+                <h4>Gramage 115gr - 1 Semana</h4>
+              </div>
+              <form [formGroup]='formaFirst'>
+                <table class="table">
+                  <thead>
+                    <tr class="text-center">
+                      <th></th>
+                      <th *ngFor="let t of text; let i = index">{{t}}</th>
+                    </tr>
+                  </thead>
+                  <tbody formArrayName="prices"> 
+                    <tr>
+                      <td>{{measure[0]}}</td>
+                      <td *ngFor="let t of text; let i = index"><input type="text" [formControlName]="i"></td>
+                    </tr>
+                    <tr>
+                      <td>{{measure[1]}}</td>
+                      <td *ngFor="let t of text; let i = index"><input type="text" [formControlName]="i+4"></td>
+                    </tr>
+                    <tr>
+                      <td>{{measure[2]}}</td>
+                      <td *ngFor="let t of text; let i = index"><input type="text" [formControlName]="i+8"></td>
+                    </tr>
+                    <tr>
+                      <td>{{measure[3]}}</td>
+                      <td *ngFor="let t of text; let i = index"><input type="text" [formControlName]="i+12"></td>
+                    </tr>
+                  </tbody>
+                </table> 
+              </form>
             </div>  
-          </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+
+            <div class="row" *ngIf="status===1">
+              <div class="col-12 text-center">
+                <h4>Gramage 115gr - 3 Semanas</h4>
+              </div>
+              <form [formGroup]='formaSecond'>
+                <table class="table">
+                  <thead>
+                    <tr class="text-center">
+                      <th></th>
+                      <th *ngFor="let t of text; let i = index">{{t}}</th>
+                    </tr>
+                  </thead>
+                  <tbody formArrayName="prices"> 
+                    <tr>
+                      <td>{{measure[0]}}</td>
+                      <td *ngFor="let t of text; let i = index"><input type="text" [formControlName]="i"></td>
+                    </tr>
+                    <tr>
+                      <td>{{measure[1]}}</td>
+                      <td *ngFor="let t of text; let i = index"><input type="text" [formControlName]="i+4"></td>
+                    </tr>
+                    <tr>
+                      <td>{{measure[2]}}</td>
+                      <td *ngFor="let t of text; let i = index"><input type="text" [formControlName]="i+8"></td>
+                    </tr>
+                    <tr>
+                      <td>{{measure[3]}}</td>
+                      <td *ngFor="let t of text; let i = index"><input type="text" [formControlName]="i+12"></td>
+                    </tr>
+                  </tbody>
+                </table> 
+              </form>
+            </div>
+
+            <div class="row" *ngIf="status===2">
+              <div class="col-12 text-center">
+                <h4>Gramage 150gr - 1 Semana</h4>
+              </div>
+              <form [formGroup]='formaThree'>
+                <table class="table">
+                  <thead>
+                    <tr class="text-center">
+                      <th></th>
+                      <th *ngFor="let t of text; let i = index">{{t}}</th>
+                    </tr>
+                  </thead>
+                  <tbody formArrayName="prices"> 
+                    <tr>
+                      <td>{{measure[0]}}</td>
+                      <td *ngFor="let t of text; let i = index"><input type="text" [formControlName]="i"></td>
+                    </tr>
+                    <tr>
+                      <td>{{measure[1]}}</td>
+                      <td *ngFor="let t of text; let i = index"><input type="text" [formControlName]="i+4"></td>
+                    </tr>
+                    <tr>
+                      <td>{{measure[2]}}</td>
+                      <td *ngFor="let t of text; let i = index"><input type="text" [formControlName]="i+8"></td>
+                    </tr>
+                    <tr>
+                      <td>{{measure[3]}}</td>
+                      <td *ngFor="let t of text; let i = index"><input type="text" [formControlName]="i+12"></td>
+                    </tr>
+                  </tbody>
+                </table> 
+              </form>
+            </div>
+
+            <div class="row" *ngIf="status===3">
+              <div class="col-12 text-center">
+                <h4>Gramage 150gr - 3 Semanas</h4>
+              </div>
+              <form [formGroup]='formaFour'>
+                <table class="table">
+                  <thead>
+                    <tr class="text-center">
+                      <th></th>
+                      <th *ngFor="let t of text; let i = index">{{t}}</th>
+                    </tr>
+                  </thead>
+                  <tbody formArrayName="prices"> 
+                    <tr>
+                      <td>{{measure[0]}}</td>
+                      <td *ngFor="let t of text; let i = index"><input type="text" [formControlName]="i"></td>
+                    </tr>
+                    <tr>
+                      <td>{{measure[1]}}</td>
+                      <td *ngFor="let t of text; let i = index"><input type="text" [formControlName]="i+4"></td>
+                    </tr>
+                    <tr>
+                      <td>{{measure[2]}}</td>
+                      <td *ngFor="let t of text; let i = index"><input type="text" [formControlName]="i+8"></td>
+                    </tr>
+                    <tr>
+                      <td>{{measure[3]}}</td>
+                      <td *ngFor="let t of text; let i = index"><input type="text" [formControlName]="i+12"></td>
+                    </tr>
+                  </tbody>
+                </table> 
+              </form>
             </div>
           </div>
+
+          <div class="modal-body" *ngIf="request!='not'">
+            <div *ngIf="request==='send'" class="text-center" style="margin-top:10px">
+              <label ><i class="fas fa-spinner fa-spin fa-4x"></i></label>
+            </div>
+            <div *ngIf="request==='good'" class="alert alert-success fade fastAnimated" role="alert" style="margin-top:10px">
+                Datos guardados exitosamente.
+            </div>
+            <div *ngIf="request==='error'" class="alert alert-danger fade fastAnimated" role="alert" style="margin-top:10px">
+                Error en la operacion.
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="test()">Cerrar</button>
+            <button type="button" class="btn btn-primary" (click)="next()" *ngIf="formaFirst.valid && !formaSecond.valid && !formaThree.valid && !formaFour.valid && status === 0">Paso 2</button>
+            <button type="button" class="btn btn-primary" (click)="next()" *ngIf="formaFirst.valid && formaSecond.valid && !formaThree.valid && !formaFour.valid && status === 1">Paso 3</button>
+            <button type="button" class="btn btn-primary" (click)="next()" *ngIf="formaFirst.valid && formaSecond.valid && formaThree.valid && !formaFour.valid && status === 2">Paso 4</button>
+            <button type="button" class="btn btn-success" (click)="createBody()" *ngIf="formaFirst.valid && formaSecond.valid && formaThree.valid && formaFour.valid && request != 'good'">Guardar Precios</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 <app-footer></app-footer>
+
+
