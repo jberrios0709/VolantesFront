@@ -4,11 +4,7 @@
 		<ul id="navToggle" class="burger slide close">    <!--	Add "slideRight" class to items that move right when viewing Nav Drawer  -->
 			<li></li><li></li><li></li>
 		</ul>
-		<h1>
-        	<span class="uno">100</span>
-            <span class="dos">%</span>
-            <span class="tres">Folletos</span>
-        </h1>
+		<img src="./assets/img/logo.png" alt="">
 	</header>
 
 	<nav class="slide">
@@ -26,7 +22,7 @@
 				<a class="teso" [routerLink]="['/userAuthenticate','prices']">PRECIOS</a>
 			</li>
 			<li *ngIf="typeUser === '1'" routerLinkActive="active">
-				<a class="teso">INGRESO</a>
+				<a class="teso" [routerLink]="['/userAuthenticate','in']">INGRESO</a>
 			</li>
 			<li *ngIf="typeUser === '1' || typeUser === '2'" routerLinkActive="active">
 				<a class="tech" [routerLink]="['/userAuthenticate','design']">DISEÑOS</a>

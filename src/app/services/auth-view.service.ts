@@ -75,6 +75,12 @@ export class AuthViewService {
           }else{
             return false;
           }
+      case "userAuthenticate/in":
+          if(typeUser === "1"){
+            return true;
+          }else{
+            return false;
+          }
       default:
           return false;
     }

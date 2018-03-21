@@ -14,9 +14,7 @@ export class CfComponent implements OnInit {
   clientsFilter:any[]=[];
   positionClient:number=0;
   selectClient:boolean=false;
-  client:object={};
-  success:boolean=true;
-  error:boolean=false;
+  client:any;
   formaPhone:FormGroup;
   formaEmail:FormGroup;
   formaClient:FormGroup;
@@ -36,6 +34,11 @@ export class CfComponent implements OnInit {
     });
     this.formaEmail = new FormGroup({
       'email':new FormControl('',[Validators.required,Validators.email])
+    });
+    this.formaBranch = new FormGroup({
+      'name':new FormControl('',Validators.required),
+      'address':new FormControl('',Validators.required),
+      'phone':new FormControl('',Validators.required),
     });
   }
 
@@ -97,9 +100,9 @@ export class CfComponent implements OnInit {
   }
 
   showClient(index){
+    this.orders = [];
     this.selectClient = true;
     this.client = this.clientsFilter[index];
-    this.createForma(index);
     this.searchOrders(index);
   }
 
@@ -116,27 +119,24 @@ export class CfComponent implements OnInit {
     })
   }
 
-  createForma(index){
-    this.success = false;
-    this.error = false;
-    console.log();
-    this.formaBranch = new FormGroup({
-      'name':new FormControl(this.clientsFilter[index].name,Validators.required),
-      'address':new FormControl(this.clientsFilter[index].address,Validators.required)
-    });
+  addBranch(){
+    this.formaBranch.reset({name:"",address:"",phone:""});
+    this.action = "branch";
   }
 
-  createBranch(clientId){    
-    this._http.postRequest('client/'+clientId+'/branch',this.formaBranch.value).subscribe(
+  createBranch(){    
+    this.request = "send";
+    this._http.postRequest('client/'+this.client.client+'/branch',this.formaBranch.value).subscribe(
       (res)=>{
-        this.success = true;
+        this.request = "good";
+        this.client.branchs.push(res.data); 
         this.searchClients();
       },
       (error)=>{
         if(this.verifyError(error.json())){        
-          this.createBranch(clientId);
+          this.createBranch();
         }else{
-          this.error = true;
+          this.request = "error";
         }
       }
     );
@@ -234,8 +234,6 @@ export class CfComponent implements OnInit {
         this.request = "error";
       }
     )
-
-    
   }
 
   

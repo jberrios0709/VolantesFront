@@ -11,6 +11,7 @@ import { NewComponent } from "./components/order/new/new.component";
 import { DesignComponent } from "./components/design/design.component";
 import { PrintComponent } from "./components/print/print.component";
 import { DeliveryComponent } from "./components/delivery/delivery.component";
+import { InComponent } from "./components/in/in.component";
 //Services
 import { AuthGuardService } from "./services/auth-guard.service";
 import { AuthViewService } from "./services/auth-view.service";
@@ -28,6 +29,7 @@ const APP_ROUTES: Routes = [
     {path: 'userAuthenticate/design', component: DesignComponent, canActivate: [AuthGuardService, AuthViewService]},
     {path: 'userAuthenticate/print', component: PrintComponent, canActivate: [AuthGuardService, AuthViewService]},
     {path: 'userAuthenticate/delivery', component: DeliveryComponent, canActivate: [AuthGuardService, AuthViewService]},
+    {path: 'userAuthenticate/in', component: InComponent, canActivate: [AuthGuardService, AuthViewService]},
     {path: '**', pathMatch: 'full', redirectTo: ''}
 ];
 

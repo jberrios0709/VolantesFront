@@ -98,7 +98,7 @@
 
         <div class="section-info">
           <div class="separator text-center">
-            <p>Sucursales</p>
+            <p>Sucursales <label (click)="addBranch()" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-plus-square"></i></label></p>
           </div>
           <div class="col-12 clientOrder" >
             <table class="table table-striped table-dark table-bordered">
@@ -142,7 +142,7 @@
                   <td class="content"><h1>{{order.product}}</h1></td>
                   <td class="content"><h1>{{order.size}}</h1></td>
                   <td class="content"><h1>{{order.quantity}}</h1></td>
-                  <td class="content"><h1>{{order.created_at}}</h1></td>
+                  <td class="content"><h1>{{order.created_at | date}}</h1></td>
                   <td class="content"><h1>Fecha de entrega</h1></td>
                   <td class="view text-center" colspan="6"><h1>Ver más</h1></td>
                 </tr>
@@ -172,6 +172,12 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header text-center">
+            <h4 class="modal-title text-center" id="exampleModalLabel" *ngIf="action==='branch'">
+              Nueva sucursal
+              <label *ngIf="request === 'send'"><i class="fas fa-spinner fa-spin"></i></label>
+              <label *ngIf="request === 'good'"><i class="fas fa-check"></i></label>
+              <label *ngIf="request === 'error'"><i class="far fa-times"></i></label>
+            </h4>
             <h4 class="modal-title text-center" id="exampleModalLabel" *ngIf="action==='email'">
               Nuevo email
               <label *ngIf="request === 'send'"><i class="fas fa-spinner fa-spin"></i></label>
@@ -193,6 +199,30 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
+          </div>
+          <div class="modal-body" *ngIf="action==='branch'">
+            <form [formGroup]='formaBranch'>
+              <div class="row">
+                <div class="col-4">
+                  <h1>Nombre:</h1>
+                </div>
+                <div class="col-6">
+                  <input type="text" formControlName="name">
+                </div>
+                <div class="col-4">
+                  <h1>Dirección</h1>
+                </div>
+                <div class="col-6">
+                  <input type="text" formControlName="address">
+                </div>
+                <div class="col-4">
+                  <h1>Teléfono</h1>
+                </div>
+                <div class="col-6">
+                  <input type="text" formControlName="phone">
+                </div>
+              </div>
+            </form>
           </div>
           <div class="modal-body" *ngIf="action==='phone'">
             <form [formGroup]='formaPhone'>
@@ -226,9 +256,10 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-            <button type="button" class="btn btn-primary" *ngIf="formaPhone.valid && action==='phone'" (click)="createResource()">Guardar</button>
-            <button type="button" class="btn btn-primary" *ngIf="formaEmail.valid && action==='email'" (click)="createResource()">Guardar</button>
-            <button type="button" class="btn btn-danger" *ngIf="action==='remove' && request!='good'" (click)="deleteRequest()">Eliminar</button>
+            <button type="button" class="btn btn-primary" *ngIf="formaBranch.valid && action==='branch' && request!='good' && request!='send'" (click)="createBranch()">Guardar</button>
+            <button type="button" class="btn btn-primary" *ngIf="formaPhone.valid && action==='phone' && request!='good' && request!='send'" (click)="createResource()">Guardar</button>
+            <button type="button" class="btn btn-primary" *ngIf="formaEmail.valid && action==='email' && request!='good' && request!='send'" (click)="createResource()">Guardar</button>
+            <button type="button" class="btn btn-danger" *ngIf="action==='remove' && request!='good' && request!='good' && request!='send'" (click)="deleteRequest()">Eliminar</button>
           </div>
         </div>
       </div>

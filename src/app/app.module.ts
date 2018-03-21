@@ -24,6 +24,7 @@ import { OldComponent } from './components/order/old/old.component';
 import { DesignComponent } from './components/design/design.component';
 import { PrintComponent } from './components/print/print.component';
 import { DeliveryComponent } from './components/delivery/delivery.component';
+import { InComponent } from './components/in/in.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { DeliveryComponent } from './components/delivery/delivery.component';
     OldComponent,
     DesignComponent,
     PrintComponent,
-    DeliveryComponent
+    DeliveryComponent,
+    InComponent
   ],
   imports: [
     BrowserModule,
