@@ -36,10 +36,16 @@
               <input type="text" formControlName="observations">
             </div>
             <div class="col-2">
-              <h1>Comentario</h1>
+              <h1>Dirección</h1>
             </div>
             <div class="col-4">
-              <input type="text" formControlName="comments">
+              <input type="text" formControlName="address">
+            </div>
+            <div class="col-2">
+              <h1>Comentario</h1>
+            </div>
+            <div class="col-10">
+              <textarea type="text" formControlName="comments" style="width:100%"></textarea>
             </div>
             <section class="col-12 text-center">
                 <h5>Teléfonos   <label (click)="addPhone()"><i class="fas fa-plus-square add" ></i></label></h5>
@@ -227,13 +233,11 @@
               </div>   
             </div>
             <div class="col-2">
-              <label class="big">Mensión:</label>
+              <label class="big">Contacto:</label>
             </div>
             <div class="col-4">
               <div class="div-form form-group">
-                <select formControlName="mention">                 
-                  <option *ngFor="let mention of select.mention"  [value]="mention.value">{{mention.text}}</option>
-                </select>
+                <input type="text" formControlName="contact_design">
               </div>   
             </div>
           </div>
@@ -266,7 +270,7 @@
               <label class="big">Especifique:</label>
             </div>
             <div class="col-4">
-              <input type="text" placeholder="Expresado en días" class="type2" (keyup)="addTime($event)">
+              <input type="date" class="form type2" (change)="addTime($event)">
             </div>
           </div>
 
@@ -328,7 +332,7 @@
               <label class="big">Total:</label>
             </div>
             <div class="col-2">
-              <input type="text" [value]="calculateTotal()" disabled>
+              <input type="text" [value]="calculateTotal()  | number:'1.1-2'" disabled>
             </div>
           </div>
 
@@ -346,7 +350,7 @@
               <label class="big">Deuda:</label>
             </div>
             <div class="col-3">
-              <input type="text" [value]="calculateDebit()" disabled>
+              <input type="text" [value]="calculateDebit()  | number:'1.1-2'" disabled>
             </div>
           </div>
 
@@ -380,140 +384,157 @@
             </button>
           </div>
           <div class="modal-body" *ngIf="request=='false'">
-            <div class="row">        
-              <div class="col-3 text-center confirm">
-                <strong>Trabajo</strong>
-              </div>
-              <div class="col-3 text-center confirm">
-                <strong>Medida</strong>
-              </div>
-              <div class="col-3 text-center confirm">
-                <strong>Cantidad</strong>
-              </div>
-              <div class="col-3 text-center confirm">
-                <strong>Lados</strong>
-              </div>
-              <div class="col-3 text-center">
-                <label>{{this.formaOrder.value.product}}</label>
-              </div>
-              <div class="col-3 text-center">
-                <label>{{parseSize()}}</label>
-              </div>
-              <div class="col-3 text-center">
-                <label>{{this.formaOrder.value.quantity}}</label>
-              </div>
-                <div class="col-3 text-center">
-                  <label>{{this.formaOrder.value.sides}}</label>
+            <div class="col-12 text-center">
+              <h5 style="background: black;     color: white;">Especificaciones generales</h5>
+              <div class="row"  style="padding:10px;">
+                <div class="col-3 text-center confirm">
+                  <strong>Trabajo</strong>
+                </div>
+                <div class="col-3 text-center  confirm-elemnt">
+                  <strong>{{this.formaOrder.value.product}}</strong>
+                </div>
+                <div class="col-3 text-center confirm">
+                  <strong>Medida</strong>
+                </div>
+                <div class="col-3 text-center  confirm-elemnt">
+                  <strong>{{parseSize()}}</strong>
+                </div>
+                <div class="col-3 text-center confirm">
+                  <strong>Cantidad</strong>
+                </div>
+                <div class="col-3 text-center  confirm-elemnt">
+                  <strong>{{this.formaOrder.value.quantity  | number:'1.1-2'}}</strong>
+                </div>
+                <div class="col-3 text-center confirm">
+                  <strong>Lados</strong>
+                </div>    
+                <div class="col-3 text-center confirm-elemnt">
+                  <strong>{{this.formaOrder.value.sides}}</strong>
                 </div>
                 <div class="col-3 text-center confirm">
                   <strong>Diseño</strong>
                 </div>
+                <div class="col-3 text-center confirm-elemnt">
+                  <strong>{{parseDesign()}}</strong>
+                </div>
                 <div class="col-3 text-center confirm">
                   <strong>Gramage</strong>
                 </div>
+                <div class="col-3 text-center confirm-elemnt">
+                  <strong>{{parseGarnet()}}</strong>
+                </div>
                 <div class="col-3 text-center confirm">
-                  <strong>Mensión</strong>
+                  <strong>Contacto diseño</strong>
+                </div>
+                <div class="col-3 text-center confirm-elemnt">
+                  <strong>{{this.formaOrder.value.contact_design}}</strong>
                 </div>
                 <div class="col-3 text-center confirm">
                   <strong>Espacios</strong>
                 </div>
-                <div class="col-3 text-center">
-                  <label>{{parseDesign()}}</label>
-                </div>
-                <div class="col-3 text-center">
-                  <label>{{parseGarnet()}}</label>
-                </div>
-                <div class="col-3 text-center">
-                  <label>{{parseMention()}}</label>
-                </div>
-                <div class="col-3 text-center">
-                  <label>{{this.formaOrder.value.spaces}}</label>
+                <div class="col-3 text-center confirm-elemnt">
+                  <strong>{{spaces}}</strong>
                 </div>
                 <div class="col-12 text-center confirm">
                   <strong>Especificaciones</strong>
                 </div>
-                <div class="col-12 text-center">
-                  <label>{{this.formaOrder.value.specification}}</label>
+                <div class="col-12 text-center confirm-elemnt">
+                  <strong>{{this.formaOrder.value.specification}}</strong>
                 </div>
-                <div class="col-6 text-center confirm">
-                  <strong>Tiempo de entrega (Expresado en días)</strong>
+              </div>
+            </div>
+
+
+            <div class="col-12 text-center">
+              <h5 style="background: black;     color: white;">Entrega</h5>
+              <div class="row" style="padding:10px;">
+                <div class="col-3 text-center confirm">
+                  <strong>Tiempo de entrega</strong>
                 </div>
-                <div class="col-6 text-center confirm">
+                <div class="col-3 text-center confirm-elemnt">
+                  <strong>{{this.formaOrder.value.time_delivery}}</strong>
+                </div>
+                <div class="col-3 text-center confirm">
                   <strong>Enviamos</strong>
                 </div>
-                <div class="col-6 text-center">
-                  <label>{{this.formaOrder.value.time_delivery}}</label>
-                </div>
-                <div class="col-6 text-center">
-                  <label>{{this.formaOrder.value.we_send}}</label>
+                <div class="col-3 text-center confirm-elemnt">
+                  <strong *ngIf="formaOrder.value.we_send == 1">Si</strong>
+                  <strong *ngIf="formaOrder.value.we_send == 0">No</strong>
                 </div>
                 <div class="col-12 text-center confirm">
                   <strong>Metodo de envío</strong>
                 </div>
-                <div class="col-12 text-center">
-                  <label>{{this.formaOrder.value.description_send}}</label>
+                <div class="col-12 text-center confirm-elemnt">
+                  <strong>{{this.formaOrder.value.description_send}}</strong>
                 </div>
+              </div>
+            </div>
+
+
+            <div class="col-12 text-center">
+              <h5 style="background: black;     color: white;">Precios</h5>
+              <div class="row" style="padding:10px;">
                 <div class="col-3 text-center confirm">
                   <strong>Precio base</strong>
+                </div>
+                <div class="col-3 text-center confirm-elemnt">
+                  <strong>{{parsePriceFlyer()}}</strong>
                 </div>
                 <div class="col-3 text-center confirm">
                   <strong>Precio diseño</strong>
                 </div>
+                <div class="col-3 text-center confirm-elemnt">
+                  <strong>{{this.formaOrder.value.price_design}}</strong>
+                </div>
                 <div class="col-3 text-center confirm">
                   <strong>Precio envío</strong>
+                </div>
+                <div class="col-3 text-center confirm-elemnt">
+                  <strong>{{this.formaOrder.value.price_send}}</strong>
                 </div>
                 <div class="col-3 text-center confirm">
                   <strong>Precio total</strong>
                 </div>
-                <div class="col-3 text-center">
-                  <label>{{parsePriceFlyer()}}</label>
-                </div>
-                <div class="col-3 text-center">
-                  <label>{{this.formaOrder.value.price_design}}</label>
-                </div>
-                <div class="col-3 text-center">
-                  <label>{{this.formaOrder.value.price_send}}</label>
-                </div>
-                <div class="col-3 text-center">
-                  <label>{{calculateTotal()}}</label>
-                </div>
-                <div class="col-3 text-center confirm">
+                <div class="col-3 text-center confirm-elemnt">
+                  <strong>{{calculateTotal()  | number:'1.1-2'}}</strong>
+                </div> 
+                <div class="col-4 text-center confirm">
                   <strong>Seña</strong>
                 </div>
-                <div class="col-3 text-center confirm">
-                  <strong>Pago de seña</strong>
-                </div>
-                <div class="col-3 text-center confirm">
+                <div class="col-4 text-center confirm">
                   <strong>Deuda</strong>
                 </div>
-                <div class="col-3 text-center confirm">
+                <div class="col-4 text-center confirm">
                   <strong>Medio de pago</strong>
                 </div>
-                <div class="col-3 text-center">
-                  <label>{{this.formaOrder.value.trace}}</label>
+                <div class="col-4 text-center confirm-elemnt">
+                  <strong>{{this.formaOrder.value.trace}}</strong>
                 </div>
-                <div class="col-3 text-center">
-                  <label>{{this.formaOrder.value.method_payment_trace}}</label>
+                <div class="col-4 text-center confirm-elemnt">
+                  <strong>{{calculateDebit()  | number:'1.1-2'}}</strong>
                 </div>
-                <div class="col-3 text-center">
-                  <label>{{this.formaOrder.value.debit}}</label>
-                </div>
-                <div class="col-3 text-center">
-                  <label>{{this.formaOrder.value.method_payment}}</label>
-                </div>
-                <div class="col-12 text-center confirm">
-                  <strong>Caracteristicas especiales</strong>
-                </div>
-                <div class="col-12 alert alert-info alert-dismissible fade show text-center" role="alert" *ngIf="formaOrder.value.price_flyer_special == 1">
-                  <strong>Precio especial.</strong>
-                </div>
-                <div class="col-12 alert alert-info alert-dismissible fade show text-center" role="alert" *ngIf="formaOrder.value.special_time == 1">
-                  <strong>Fecha especial.</strong>
-                </div>
-                <div class="col-12 alert alert-info alert-dismissible fade show text-center" role="alert" *ngIf="formaOrder.value.size_special == 1">
-                  <strong>Medida especial.</strong>
+                <div class="col-4 text-center confirm-elemnt">
+                  <strong>{{this.formaOrder.value.method_payment}}</strong>
                 </div>
               </div>
+            </div>
+
+            <div class="col-12 text-center confirm">
+              <strong>Caracteristicas especiales</strong>
+            </div>
+
+            <div class="col-12 alert alert-info alert-dismissible fade show text-center" role="alert" *ngIf="formaOrder.value.price_flyer_special == 1">
+              <strong>Precio especial.</strong>
+            </div>
+
+            <div class="col-12 alert alert-info alert-dismissible fade show text-center" role="alert" *ngIf="formaOrder.value.special_time == 1">
+              <strong>Fecha especial.</strong>
+            </div>
+
+            <div class="col-12 alert alert-info alert-dismissible fade show text-center" role="alert" *ngIf="formaOrder.value.size_special == 1">
+              <strong>Medida especial.</strong>
+            </div>
+                
               
             <div class="modal-footer">
               <!--Buttons-->

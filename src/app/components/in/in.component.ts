@@ -10,10 +10,26 @@ export class InComponent implements OnInit {
   payments:any[] = [];
   desde:string;
   hasta:string;
+  comment:string;
   constructor(public _http:HttpService) { }
 
   ngOnInit() {
-    this.searchsOrdersDebit();
+    this._http.getRequest('orders?q=date&init=true').subscribe(
+      (res)=>{    
+        console.log(res);
+            
+        this.payments = res.data;
+      },
+      (error)=>{
+        if(this.verifyError(error.json())){        
+          this.searchsOrdersDate();
+        }
+      }
+    )
+  }
+
+  url(){
+    return this._http.getUrl()+'pdf/inForDate?desde='+this.desde+'&hasta='+this.hasta+'&comment='+this.comment;
   }
 
   payment(index){
@@ -32,28 +48,17 @@ export class InComponent implements OnInit {
     }
   }
 
-  searchsOrdersDebit(){
-    this._http.getRequest('orders?q=7').subscribe(
-      (res)=>{
-        this.ordersDebit = res.data;
-      },
-      (error)=>{
-        if(this.verifyError(error.json())){        
-          this.searchsOrdersDebit();
-        }
-      }
-    )
-  }
+
 
   searchsOrdersDate(){
     if(this.desde != undefined && this.hasta != undefined){
-      this._http.getRequest('orders?q=date&desde='+this.desde+'&hasta='+this.hasta).subscribe(
+      this._http.getRequest('orders?q=date&init=false&desde='+this.desde+'&hasta='+this.hasta).subscribe(
         (res)=>{
           this.payments = res.data;
         },
         (error)=>{
           if(this.verifyError(error.json())){        
-            this.searchsOrdersDebit();
+            this.searchsOrdersDate();
           }
         }
       )
@@ -70,27 +75,5 @@ export class InComponent implements OnInit {
     }
   }
 
-  calculateForIndex(index){
-    let abonos = 0;
-    for (let abono of this.ordersDebit[index].abonos) {
-      abonos+=abono.mount;
-    }
-    return this.ordersDebit[index].price_flyer + this.ordersDebit[index].price_design + this.ordersDebit[index].price_send - this.ordersDebit[index].trace - abonos;
-  }
 
-  calculateTotal(index){
-    let total = 0;
-    this.ordersDebit.map((elem,index)=>{
-      total += this.calculateForIndex(index);
-    })
-    return total;
-  }
-
-  calculateClientsDebit(){
-    let clients = [];
-    this.ordersDebit.map((elem)=>{
-      clients.push(elem.branch.client.id);
-    })
-    return clients.length;
-  }
 }

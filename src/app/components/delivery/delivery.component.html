@@ -2,16 +2,62 @@
 <div class="content slide data fadeInAnimated fastAnimated"> 
   <div class="row">
     <div class="col-6 offset-md-1 text-left">
+      <h4 class="title">Pendientes por pagar</h4>
+    </div>
+    <div class="col-4 text-right">
+      <button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" (click)="modalSearch() ">Abonar</button>
+    </div>
+  </div>
+
+  <div class="clientOrder">
+    <table class="table  table-hover" *ngIf="ordersDebit.lentgh != 0">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Número de cliente</th>
+          <th scope="col">Orden</th>
+          <th scope="col">Cliente</th>
+          <th scope="col">Producto</th>
+          <th scope="col">Cantidad</th>
+          <th scope="col">Tamaño</th>
+          <th scope="col">Fecha de entrega</th>
+          <th scope="col">Deuda</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of ordersDebit; let i = index" class="fadeInAnimated" style="cursor:pointer" data-toggle="modal" data-target="#exampleModal" (click)="selectOrder(i,'debit')">
+          <th scope="row">{{order.branch.client.id}}</th>
+          <th>{{order.id}}</th>
+          <td>{{order.branch.client.name}}</td>
+          <td>{{order.product}}</td>
+          <td>{{order.quantity}}</td>
+          <td>{{order.size}}</td>
+          <td>{{order.date_delivery | date}}</td>
+          <td style="color:red; font-weight: bold;">{{calculateForIndex(i,"debit")  | number:'1.1-2'}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="row" style="padding-left:20px;padding-right:20px;">
+    <div class="col-3" style="background:#212529;color:white;padding-top: 10px;padding-bottom: 10px;">Total de pedidos con deudas</div>
+    <div class="col-3" style="padding-top: 10px;padding-bottom: 10px;">{{calculateClientsDebit()   | number:'1.1-2'}}</div>
+    <div class="col-3" style="background:#212529;color:white;padding-top: 10px;padding-bottom: 10px;">Total pendiente por cobrar</div>
+    <div class="col-3" style="padding-top: 10px;padding-bottom: 10px;">{{calculateTotal()   | number:'1.1-2'}}</div>     
+  </div>
+
+  <div class="row">
+    <div class="col-6 offset-md-1 text-left">
       <h4 class="title">Entregas y cobros</h4>
     </div>
   </div> 
 
-  <div *ngIf="orders.lentgh === 0"><h1>Buscando data {{orders.lentgh}}</h1></div>
-  <table class="table  table-hover" *ngIf="orders.lentgh != 0">
+  <div *ngIf="orders.length === 0" class="text-center"><h4>No existen ordenes asociadas al estado "Entrega y cobros".</h4></div>
+  <table class="table  table-hover" *ngIf="orders.length != 0">
     <thead class="thead-dark">
       <tr>
         <th scope="col">Número de cliente</th>
         <th scope="col">Cliente</th>
+        <th scope="col">Orden</th>
         <th scope="col">Nombre del contacto</th>
         <th scope="col">Producto</th>
         <th scope="col">Cantidad</th>
@@ -23,22 +69,25 @@
       </tr>
     </thead>
     <tbody *ngIf="orders.length >= 1">
-      <tr *ngFor="let order of orders; let i = index" class="fadeInAnimated" style="cursor:pointer" data-toggle="modal" data-target="#exampleModal" (click)="selectOrder(i)">
+      <tr *ngFor="let order of orders; let i = index" class="fadeInAnimated" style="cursor:pointer">
         <th scope="row">{{order.branch.client.id}}</th>
         <td>{{order.branch.client.name}}</td>
+        <td>{{order.id}}</td>
         <td>{{order.branch.client.name_contact}}</td>
         <td>{{order.product}}</td>
-        <td>{{order.quantity}}</td>
+        <td>{{order.quantity  | number:'1.0'}}</td>
         <td>{{order.date_delivery | date}}</td>
         <td>{{order.description_send}}</td>
-        <td>{{calculateForIndex(i)}}</td>
+        <td>{{calculateForIndex(i,"normal")  | number:'1.1-2'}}</td>
         <td>{{order.method_payment}}</td>
         <td>
-          <button type="button" class="btn" title="Imprimir">
-            <i class="fas fa-print"></i>
-          </button>
-          <button type="button" class="btn" data-toggle="modal" data-target="#exampleModal" title="Entregar">
-            <i class="fas fa-pencil-alt"></i>
+          <a [href]="_http.getUrl()+'pdf/delivery/'+order.id" target="_blank">
+            <button type="button" class="btn" title="Imprimir">
+              <i class="fas fa-print"></i>
+            </button>
+          </a>
+          <button type="button" class="btn" data-toggle="modal" data-target="#exampleModal" title="Entregar" (click)="selectOrder(i,'normal')">
+            <i class="fas fa-truck"></i>
           </button>
         </td>
       </tr>
@@ -55,11 +104,35 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
+        <div class="modal-body text-center" *ngIf="showSearch">
+            <div class="alert alert-danger fade fastAnimated" role="alert" style="margin-top:10px" *ngIf="empty">
+                No existe orden asociada al id {{numberSearch}}.
+              </div>
+          <h5>Ingresar número de orden</h5>
+          <input type="text" style="width:50px;" [(ngModel)]="numberSearch">
+        </div>        
         <div class="modal-body" *ngIf="show && !confirm">
+          <table class="table  table-hover">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">Número de cliente</th>
+                <th scope="col">Cliente</th>
+                <th scope="col">Orden</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">{{order.branch.client.id}}</th>
+                <td>{{order.branch.client.name}}</td>
+                <td>{{order.id}}</td>
+              </tr>
+            </tbody>
+          </table>
+          
           <form [formGroup]="forma">
             <div class="row">
               <div class="col-2 offset-md-4"><label>Deuda</label></div>
-              <div class="col-4"><input type="text" [value]="calculate(1)" disabled ></div>
+              <div class="col-4"><input type="text" [value]="calculate(1)   | number:'1.1-2'" disabled ></div>
             </div>
             <div class="row">
               <div class="col-2 offset-md-4"><label>Abono</label></div>
@@ -67,7 +140,7 @@
             </div>
             <div class="row">
               <div class="col-2 offset-md-4"><label>Restante</label></div>
-              <div class="col-4"><label><input type="text" [value]="calculate(2)" disabled ></label></div>
+              <div class="col-4"><label><input type="text" [value]="calculate(2)   | number:'1.1-2'" disabled ></label></div>
             </div>
           </form>
         </div>
@@ -91,7 +164,8 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-          <button type="button" class="btn btn-success" *ngIf="!confirm" (click)="confirm = true">Pagar</button>
+          <button class="btn btn-success" *ngIf="showSearch && numberSearch > 0" (click)="searchOrder()">Buscar</button>
+          <button type="button" class="btn btn-success" *ngIf="!confirm && forma.valid && showSearch == false" (click)="confirm = true">Pagar</button>
         </div>
       </div>
     </div>

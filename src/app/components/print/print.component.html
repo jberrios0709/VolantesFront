@@ -2,12 +2,19 @@
 <div class="content slide data fadeInAnimated fastAnimated"> 
   <div class="row">
     <div class="col-6 offset-md-1 text-left">
-      <h4 class="title">Impresión</h4>
+      <h4 class="title" (click)="test()">Impresión</h4>
+    </div>
+    <div class="col-4 offset-md-1 text-left">
+      <label style="font-size: 16px;">Espacios asignados en nuevo pliego: <b>{{spaces}}</b></label>
+      <button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"  (click)="select(0,'confirm')">Crear Pliego</button>
     </div>
   </div> 
   
   <div class="row">
     <div class="view-more">
+      <div class="trace">
+        <i class="fas fa-chevron-right fa-4x"></i>
+      </div>
       <div class="folios text-center">
         <div class="col-12" style="margin-top: 20px;font-size: 14px;font-weight: bold;" *ngFor="let folio of folios; let i = index">
           <div><label>Pliego {{folio.id}}</label></div>
@@ -19,7 +26,7 @@
       <table class="table  table-hover">
         <thead class="thead-dark">
           <tr>
-            <th colspan="9" class="text-center">Gramage 115gr</th>
+            <th colspan="12" class="text-center">Gramage 115gr</th>
           </tr>
           <tr >
             <th scope="col">Número de cliente</th>
@@ -29,12 +36,15 @@
             <th scope="col">Tamaño</th>
             <th scope="col">Cantidad</th>
             <th scope="col">Espacios</th>
+            <th scope="col">Restantes</th>
             <th scope="col">Fecha del pedido</th>
             <th scope="col">Entrega</th>
+            <th scope="col">Sel.</th>
+            <th scope="col">Esp.</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let order of ordersFirst; let i = index" class="fadeInAnimated" style="cursor:pointer" data-toggle="modal" data-target="#exampleModal" (click)="select(i,'order',1)">
+          <tr *ngFor="let order of ordersFirst; let i = index" class="fadeInAnimated" style="cursor:pointer">
             <th scope="row">{{order.branch.client.id}}</th>
             <td>{{order.branch.client.name}}</td>
             <td>{{order.id}}</td>
@@ -42,8 +52,11 @@
             <td>{{order.size}}</td>
             <td>{{order.quantity}}</td>
             <td>{{order.spaces}}</td>
+            <td>{{order.spacesInMissing}}</td>
             <td>{{order.created_at  | date}}</td>
             <td>{{order.date_delivery  | date}}</td>
+            <td><input type="checkbox" (change)="selects(1,i)"></td>
+            <td><input type="number" style="width:45px" (change)="addSpaces(1,i,$event)" [ngClass]="{error:orderFirstSelect[i].spaces > order.spacesInMissing, error_2: (orderFirstSelect[i].isDone && orderFirstSelect[i].spaces <= 0)}"></td>
           </tr>
         </tbody>
       </table>
@@ -51,7 +64,7 @@
       <table class="table  table-hover">
           <thead class="thead-dark">
             <tr>
-              <th colspan="9" class="text-center">Gramage 150gr</th>
+              <th colspan="12" class="text-center">Gramage 150gr</th>
             </tr>
             <tr>
               <th scope="col">Número de cliente</th>
@@ -61,12 +74,15 @@
               <th scope="col">Tamaño</th>
               <th scope="col">Cantidad</th>
               <th scope="col">Espacios</th>
+              <th scope="col">Restantes</th>
               <th scope="col">Fecha del pedido</th>
               <th scope="col">Entrega</th>
+              <th scope="col">Sel.</th>
+              <th scope="col">Esp.</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let order of ordersSecond; let i = index" class="fadeInAnimated" style="cursor:pointer" data-toggle="modal" data-target="#exampleModal" (click)="select(i,'order',2)">
+            <tr *ngFor="let order of ordersSecond; let i = index" class="fadeInAnimated" style="cursor:pointer">
               <th scope="row">{{order.branch.client.id}}</th>
               <td>{{order.branch.client.name}}</td>
               <td>{{order.id}}</td>
@@ -74,8 +90,11 @@
               <td>{{order.size}}</td>
               <td>{{order.quantity}}</td>
               <td>{{order.spaces}}</td>
+              <td>{{order.spacesInMissing}}</td>
               <td>{{order.created_at  | date}}</td>
               <td>{{order.date_delivery  | date}}</td>
+              <td><input type="checkbox" (change)="selects(2,i)"></td>
+              <td><input type="number" style="width:45px" (change)="addSpaces(2,i,$event)" [ngClass]="{error:orderSecondSelect[i].spaces > order.spacesInMissing, error_2: (orderSecondSelect[i].isDone && orderSecondSelect[i].spaces <= 0)}"></td>
             </tr>
           </tbody>
         </table>
@@ -83,7 +102,7 @@
         <table class="table  table-hover">
           <thead class="thead-dark">
             <tr>
-              <th colspan="9" class="text-center">Otros productos</th>
+              <th colspan="10" class="text-center">Otros productos</th>
             </tr>
             <tr >
               <th scope="col">Número de cliente</th>
@@ -95,10 +114,11 @@
               <th scope="col">Espacios</th>
               <th scope="col">Fecha del pedido</th>
               <th scope="col">Entrega</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let order of ordersOthers; let i = index" class="fadeInAnimated" style="cursor:pointer" data-toggle="modal" data-target="#exampleModal" (click)="select(i,'order',3)">
+            <tr *ngFor="let order of ordersOthers; let i = index" class="fadeInAnimated" style="cursor:pointer">
               <th scope="row">{{order.branch.client.id}}</th>
               <td>{{order.branch.client.name}}</td>
               <td>{{order.id}}</td>
@@ -108,6 +128,10 @@
               <td>{{order.spaces}}</td>
               <td>{{order.created_at  | date}}</td>
               <td>{{order.date_delivery  | date}}</td>
+              <td>
+                  <button  data-toggle="modal" data-target="#exampleModal"   (click)="selectOthers(i)" *ngIf="order.status_order[order.status_order.length -1].status == 3">Enviar a taller</button>
+                  <button  data-toggle="modal" data-target="#exampleModal"   (click)="selectOthers(i)" *ngIf="order.status_order[order.status_order.length -1].status == 4">Impreso</button>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -121,34 +145,14 @@
       <div class="modal-content ">
         <div class="modal-header text-center">
           <h4 class="modal-title text-center" id="exampleModalLabel" *ngIf="show==='folio'">Datos del Pliego</h4>
-          <h4 class="modal-title text-center" id="exampleModalLabel" *ngIf="show==='order'">Datos de la Orden</h4>
+          <h4 class="modal-title text-center" id="exampleModalLabel" *ngIf="show==='confirm'">Enviar a taller</h4>
+          <h4 class="modal-title text-center" id="exampleModalLabel" *ngIf="show==='taller'">Confirmar</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body" *ngIf="show==='order'">
-          <table class="table  table-hover text-center" *ngIf="requestStatus!='good'">
-            <thead class="thead-dark">
-              <tr>
-                <th scope="col">Orden</th>
-                <th scope="col">Cliente</th>
-                <th scope="col">Espacios</th>
-                <th scope="col">Cantidad</th>
-                <th scope="col">Gramage</th>
-                <th scope="col">Fecha de entrega</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="fadeInAnimated">
-                <td scope="row">{{objectShow.id}}</td>
-                <td scope="row">{{objectShow.branch.client.name}}</td>
-                <td scope="row">{{objectShow.spaces}}</td>
-                <td scope="row">{{objectShow.quantity}}</td>
-                <td scope="row">{{objectShow.garnet}}</td>
-                <td scope="row">{{objectShow.date}}</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="modal-body" *ngIf="show==='confirm'">
+         <p style="font-size:16px">El pliego actualmente cuenta con {{spaces}} espacios asignados. Por favor confirme el envio de este pliego al taller.</p>
           <div *ngIf="requestStatus === 'good'" class="alert alert-success fade fastAnimated" role="alert" style="margin-top:10px">
               Datos guardados exitosamente.
           </div>
@@ -182,10 +186,24 @@
           </div>
           
         </div>
+
+        <div class="modal-body" *ngIf="show==='taller'">
+            <p *ngIf="objectShow.status_order[objectShow.status_order.length - 1].status == 3" style="font-size:16px;">Al confirmar la transacción la orden Nro {{objectShow.id}} sera enviada al taller para imprimir.</p>
+            <p *ngIf="objectShow.status_order[objectShow.status_order.length - 1].status == 4" style="font-size:16px;">Al confirmar la transacción la orden Nro {{objectShow.id}} sera enviada al departamento de envios y cobros.</p>
+            <div *ngIf="requestStatus === 'good'" class="alert alert-success fade fastAnimated" role="alert" style="margin-top:10px">
+                Datos guardados exitosamente.
+            </div>
+            <div *ngIf="requestStatus === 'error'" class="alert alert-danger fade fastAnimated" role="alert" style="margin-top:10px">
+                Error en la operacion.
+            </div>
+            
+          </div>
+        
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
           <button type="button" class="btn btn-success" *ngIf="show==='folio' && requestStatus!='good'" (click)="jobPrint()">Trabajo impreso</button>
-          <button type="button" class="btn btn-success" *ngIf="show==='order' && requestStatus!='good'" (click)="sendTaller()">Enviar a taller</button>
+          <button type="button" class="btn btn-success" *ngIf="show==='confirm' && requestStatus!='good'" (click)="sendTaller()">Enviar a taller</button>
+          <button type="button" class="btn btn-success" *ngIf="show==='taller' && requestStatus!='good'" (click)="sendTallerOthers()">Continuar</button>
         </div>
       </div>
     </div>

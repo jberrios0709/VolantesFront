@@ -46,7 +46,19 @@ export class DesignComponent implements OnInit {
   searchOrders(){
     this._http.getRequest('orders?q=2').subscribe(
       (res)=>{
-        this.orders = res.data;
+
+        console.log(res.data)
+        res.data.map((elem)=>{
+          if(elem.date_delivery != null){
+            this.orders.push(elem);
+          }
+        });
+        res.data.map((elem)=>{
+          if(elem.date_delivery == null){
+            this.orders.push(elem);
+          }
+        });
+
       },
       (error)=>{
         if(this.verifyError(error.json())){        

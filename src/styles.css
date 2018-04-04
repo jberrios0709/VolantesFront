@@ -91,6 +91,8 @@ nav li a:hover {color:#000;}
 li.active > .hco,
 .hco:hover{
 	background-color:#FC0;
+	color:white;
+	text-decoration: none;
 	}
 .disem{
 	border-bottom-width: 10px;
@@ -100,6 +102,8 @@ li.active > .hco,
 li.active > .disem,
 .disem:hover{
 	background-color:#C0C;
+	color:white;
+	text-decoration: none;
 	}
 .teso{
 	border-bottom-width: 10px;
@@ -109,6 +113,8 @@ li.active > .disem,
 li.active > .teso,
 .teso:hover{
 	background-color:#F6C;
+	color:white;
+	text-decoration: none;
 	}
 .tech{
 	border-bottom-width: 10px;
@@ -118,6 +124,8 @@ li.active > .teso,
 li.active > .tech,
 .tech:hover{
 	background-color:#3C0;
+	color:white;
+	text-decoration: none;
 	}
 .qual{
 	border-bottom-width: 10px;
@@ -127,6 +135,8 @@ li.active > .tech,
 li.active > .qual,
 .qual:hover{
 	background-color:#999;
+	color:white;
+	text-decoration: none;
 	}
 .log{
 	border-bottom-width: 10px;
@@ -136,6 +146,8 @@ li.active > .qual,
 li.active > .log,
 .log:hover{
 	background-color:rgb(250, 2, 2);
+	color:white;
+	text-decoration: none;
 	}
 .pub{
 	border-bottom-width: 10px;
@@ -145,6 +157,8 @@ li.active > .log,
 li.active > .pub,
 .pub:hover{
 	background-color:#FF0;
+	color:white;
+	text-decoration: none;
 	}
 
 
@@ -368,6 +382,10 @@ nav li a {
 	-webkit-transition: .5s;
 }
 
+nav.slide label.menu{
+	display:none;
+}
+
 nav li a:hover {color:#000;}
 
 .hco{
@@ -419,6 +437,68 @@ nav li a:hover {color:#000;}
 	background-color:#FF0;
 	}
 
+	div.nav-responsive{
+		display: none;
+	}
+
+	@media only screen and (max-width: 1045px) {
+		nav li{
+			display: none;
+		}
+
+		nav.slide label.menu{
+			display:block;
+			background: black;
+			margin-right: 10px;
+		}
+
+		div.nav-responsive{
+			width: 40vw;
+			height: 100vh;
+			background:black;
+			position: fixed;
+			z-index: 1000;
+			top:0%;
+			display: block;
+		}
+
+		div.nav-responsive > div{
+			width:100%;
+			height: 10%;
+			border: none;
+			text-align:center;
+			padding-top:8%;
+			transition: backdround 0.5s;
+			
+		}
+
+		div.nav-responsive > div > a{
+			text-decoration: none;
+			color: white;
+		}
+
+
+		.hco:hover{
+			background:#FC0;
+		}
+		.disem:hover{
+			background:#C0C;
+		}
+		.teso:hover{
+			background:#F6C;
+		}
+		.tech:hover{
+			background:#3C0;
+		}
+		.qual:hover{
+			background:#999;
+		}
+		.pub:hover{
+			background:#FF0;
+		}
+
+
+	}
 
 
 /*  cuerpo CSS  */
@@ -507,7 +587,9 @@ display: -webkit-flex;
 .login h1 { color: #fff; text-shadow: 0 0 10px rgba(0,0,0,0.3); letter-spacing:1px; text-align:center; }
 
 input[type="text"],
-input[type="password"]{ 
+input[type="number"],
+input[type="password"],
+input[type="date"].form{ 
 	width: 100%; 
 	margin-bottom: 10px; 
 	background: rgba(0,0,0,0.3);
@@ -661,6 +743,7 @@ h4{
 	overflow: hidden;
 }
 
+
 .separator{
 	background: black;
 	padding: 10px;
@@ -679,7 +762,8 @@ input.searchResults{
 	margin: 0px;
 	border: 2px solid black;
 }
-input.type2{
+input.type2,
+input[type="date"].type2{
 	width:90%;
 }
 input.type2::placeholder { color: white; }
@@ -761,7 +845,9 @@ i.remove, svg.remove{
 
 select.ng-invalid.ng-pristine.ng-touched,
 input.ng-invalid.ng-touched,
-textarea.ng-invalid.ng-pristine.ng-touched{
+textarea.ng-invalid.ng-pristine.ng-touched,
+input.error,
+input.error_2{
 	border: 1px solid red;
 }
 
@@ -776,11 +862,19 @@ textarea.ng-invalid.ng-pristine.ng-touched{
 	margin-bottom: 10px;
 	padding-top: 5px;
 	padding-bottom: 5px;
-    background: dimgray;
+    background: #b9b6b6;
     color: white;
 }
 
-.confirm > strong{
+.confirm-elemnt{
+	margin-top: 10px;
+	margin-bottom: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.confirm > strong,
+.confirm-elemnt > strong{
 	font-size: 16px;
 }
 
@@ -801,23 +895,33 @@ div.view-more{
     z-index: 850;
     width: 5%;
     height: 100%;
-	transition: width 2s;
+	transition: width 0.5s;
 	position: fixed;
-
 }
 
 div.view-more:hover{
 	width: 25%;
-	transition: width 2s;
+	transition: width 0.5s;
 	background: rgb(218, 216, 217);
-	background: rgb(218, 216, 217);
-	padding-top: 120px;
-	padding-bottom: 120px;
 }
 
 div.view-more div.folios{
 	display: none;
 }
+
+div.view-more div.trace{
+	text-align: center;
+	top: 50%;
+	-ms-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+	transform: translateY(-50%);
+	position: relative;
+}
+
+div.view-more:hover div.trace{
+	display: none;
+}
+
 
 div.view-more:hover div.folios{
 	display: block;
@@ -826,5 +930,31 @@ div.view-more:hover div.folios{
     -ms-transform: translateY(-50%);
     -webkit-transform: translateY(-50%);
 	transform: translateY(-50%);
+	position: relative;
+	
 }
+
+div.radio{
+	border-radius: 100%;
+	width: 20px;
+	height: 20px;
+	border: 1px solid black;
+	position: relative;
+	z-index: 20;
+}
+
+div.radio.true div{
+	border-radius: 100%;
+	width: 10px;
+	height: 10px;
+	border: 1px solid black;
+	background: black;
+	top: 50%;
+    -ms-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+	transform: translateY(-50%);
+	position: relative;
+	margin: auto;
+}
+
 

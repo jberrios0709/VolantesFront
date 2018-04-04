@@ -7,7 +7,7 @@
     </div>
     <div class="row" style="padding:10px">
       <!-- Seccion 1 -->
-      <div class="search offset-md-1 col-2">
+      <div class="search offset-md-1 col-md-2 col-sm-3">
         <div>
           <table class="table table-hover">
             <thead class="thead-dark">
@@ -27,7 +27,7 @@
         </div>
       </div>
       <!-- Seccion 2 -->
-      <div class="infoClient offset-md-1 col-7" *ngIf="selectClient">
+      <div class="infoClient offset-md-1 col-md-7 col-sm-9" *ngIf="selectClient">
         <div class="col-md-12 text-center" style="margin-bottom:10px;">
           <div class="row">
             <div class="col-md-6 text-right">
@@ -36,64 +36,73 @@
             <div class="col-md-6 text-left">
               <h6 style="display:inline-block">Nro de cliente:</h6><h6 style="color:red;display:inline-block">{{client.client}}</h6>
               <h6>Inicio: {{client.date_init | date}}</h6>
-              <h6>Referencia: {{client.reference}}</h6>
             </div>
           </div>
         </div>
         <div class="section-info">
           <div class="text-center separator">
-            <p>Datos de contacto</p>
+            <p>Datos de contacto  <label (click)="updateClient()" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-pencil-alt"></i></label></p>
           </div>
         
           <div class="row">
-            <div class="col-2">
+            <div class="col-md-2 col-sm-4">
               <label class="big">Nombre:</label>
             </div>
-            <div class="col-4">
+            <div class="col-md-4 col-sm-8">
               <div class="div-form"><input type="text" disabled [value]="client.name_contact"></div>  
             </div>
-            <div class="col-2">
+            <div class="col-md-2 col-sm-4">
               <label class="big">Cargo:</label>
             </div>
-            <div class="col-4">
+            <div class="col-md-4 col-sm-8">
               <div class="div-form"><input type="text" disabled [value]="client.charged"></div>  
             </div>
           </div>
           
-          
-
-          <div class="row" *ngFor="let phone of client.phones; let i = index">
-            <div class="col-2">
-              <label class="big">Telf:</label><label *ngIf="i=== client.phones.length-1 && client.phones.length < 4" (click)="addPhone()" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-plus-square fa-2x add"></i></label><label *ngIf="i <= client.phones.length-1 " (click)="removePhone(i)" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-times fa-2x remove"></i></label>
+          <div class="row">
+            <div class="col-md-2 col-sm-4">
+              <label class="big">Dirección:</label>
             </div>
-            <div class="col-4">
-              <div class="div-form"><input type="text" disabled [value]="phone.number"></div>  
-            </div>
-            <div class="col-2">
-              <label class="big">Aclaratoria:</label>
-            </div>
-            <div class="col-4">
-              <div class="div-form"><input type="text" disabled [value]="phone.explanatory"></div>  
-            </div>
-          </div>
-
-          <div class="row" *ngFor="let email of client.emails; let i = index">
-            <div class="col-2">
-              <label class="big">Mail:</label>
-            </div>
-            <div class="col-10" >
-              <div class="div-form"><input type="text" [value]="email.email"><label (click)="addEmail()" data-toggle="modal" data-target="#exampleModal" *ngIf="i=== client.emails.length-1 && client.emails.length < 4"><i class="fas fa-plus-square fa-2x add"></i></label><label *ngIf="i <= client.emails.length-1 " (click)="removeMail(i)" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-times fa-2x remove"></i></label></div>  
+            <div class="col-md-10 col-sm-8" >
+              <div class="div-form"><input type="text" [value]="client.address"  style="width:96%"></div>  
             </div>
           </div>
 
           <div class="row">
-            <div class="col-2">
+            <div class="col-md-2 col-sm-4">
               <label class="big">Comentarios:</label>
             </div>
-            <div class="col-10">
-              <div class="div-form"><input type="text" class="big"></div>  
+            <div class="col-md-10 col-sm-8">
+              <div class="div-form"><textarea [value]="client.comments" rows="3" style="width:96%"></textarea></div>  
             </div>
           </div>
+
+
+          <div class="row" *ngFor="let phone of client.phones; let i = index">
+            <div class="col-md-2  col-sm-4">
+              <label class="big">Telf:</label><label *ngIf="i=== client.phones.length-1 && client.phones.length < 4" (click)="addPhone()" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-plus-square fa-2x add"></i></label><label *ngIf="i <= client.phones.length-1 " (click)="removePhone(i)" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-times fa-2x remove"></i></label>
+            </div>
+            <div class="col-md-4 col-sm-8">
+              <div class="div-form"><input type="text" disabled [value]="phone.number"></div>  
+            </div>
+            <div class="col-md-2 col-sm-4">
+              <label class="big">Aclaratoria:</label>
+            </div>
+            <div class="col-md-4 col-sm-8">
+              <div class="div-form"><input type="text" disabled [value]="phone.explanatory"></div>  
+            </div>
+          </div>
+
+          
+          <div class="row" *ngFor="let email of client.emails; let i = index">
+            <div class="col-md-2  col-sm-4">
+              <label class="big">Mail:</label>
+            </div>
+            <div class="col-md-10  col-sm-8" >
+              <div class="div-form"><input type="text" [value]="email.email"><label (click)="addEmail()" data-toggle="modal" data-target="#exampleModal" *ngIf="i=== client.emails.length-1 && client.emails.length < 4"><i class="fas fa-plus-square fa-2x add"></i></label><label *ngIf="i <= client.emails.length-1 " (click)="removeMail(i)" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-times fa-2x remove"></i></label></div>  
+            </div>
+          </div>
+
         </div>
 
         <div class="section-info">
@@ -137,13 +146,13 @@
                 </tr>
               </thead>
               <tbody class="thead-light">
-                <tr *ngFor="let order of orders; let i = index" class="trHover">
+                <tr *ngFor="let order of orders; let i = index" class="trHover" (click)="showOrder(i)" data-toggle="modal" data-target="#Modal1">
                   <td class="content"><h1>{{parseStatus(i)}}</h1></td>
                   <td class="content"><h1>{{order.product}}</h1></td>
                   <td class="content"><h1>{{order.size}}</h1></td>
-                  <td class="content"><h1>{{order.quantity}}</h1></td>
+                  <td class="content"><h1>{{order.quantity  | number:'3.0'}}</h1></td>
                   <td class="content"><h1>{{order.created_at | date}}</h1></td>
-                  <td class="content"><h1>Fecha de entrega</h1></td>
+                  <td class="content"><h1>{{order.date_delivery | date}}</h1></td>
                   <td class="view text-center" colspan="6"><h1>Ver más</h1></td>
                 </tr>
               </tbody>
@@ -168,10 +177,16 @@
 
     <!-- Modals -->
     <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header text-center">
+            <h4 class="modal-title text-center" id="exampleModalLabel" *ngIf="action==='client'">
+             Actualizar datos del cliente
+              <label *ngIf="request === 'send'"><i class="fas fa-spinner fa-spin"></i></label>
+              <label *ngIf="request === 'good'"><i class="fas fa-check"></i></label>
+              <label *ngIf="request === 'error'"><i class="far fa-times"></i></label>
+            </h4>
             <h4 class="modal-title text-center" id="exampleModalLabel" *ngIf="action==='branch'">
               Nueva sucursal
               <label *ngIf="request === 'send'"><i class="fas fa-spinner fa-spin"></i></label>
@@ -199,6 +214,42 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
+          </div>
+          <div class="modal-body" *ngIf="action==='client'">
+            <form [formGroup]='formaClient'>
+              <div class="row">
+                <div class="col-4">
+                  <h1>Nombre:</h1>
+                </div>
+                <div class="col-6">
+                  <input type="text" formControlName="name">
+                </div>
+                <div class="col-4">
+                  <h1>Dirección</h1>
+                </div>
+                <div class="col-6">
+                  <input type="text" formControlName="address">
+                </div>
+                <div class="col-4">
+                  <h1>Contacto</h1>
+                </div>
+                <div class="col-6">
+                  <input type="text" formControlName="name_contact">
+                </div>
+                <div class="col-4">
+                  <h1>Cargo</h1>
+                </div>
+                <div class="col-6">
+                  <input type="text" formControlName="charge">
+                </div>
+                <div class="col-4">
+                  <h1>comentarios</h1>
+                </div>
+                <div class="col-6">
+                  <textarea formControlName="comments" style="width:100%;" rows="5"></textarea>
+                </div>
+              </div>
+            </form>
           </div>
           <div class="modal-body" *ngIf="action==='branch'">
             <form [formGroup]='formaBranch'>
@@ -259,7 +310,151 @@
             <button type="button" class="btn btn-primary" *ngIf="formaBranch.valid && action==='branch' && request!='good' && request!='send'" (click)="createBranch()">Guardar</button>
             <button type="button" class="btn btn-primary" *ngIf="formaPhone.valid && action==='phone' && request!='good' && request!='send'" (click)="createResource()">Guardar</button>
             <button type="button" class="btn btn-primary" *ngIf="formaEmail.valid && action==='email' && request!='good' && request!='send'" (click)="createResource()">Guardar</button>
-            <button type="button" class="btn btn-danger" *ngIf="action==='remove' && request!='good' && request!='good' && request!='send'" (click)="deleteRequest()">Eliminar</button>
+            <button type="button" class="btn btn-danger" *ngIf="action==='remove' && request!='good' && request!='send'" (click)="deleteRequest()">Eliminar</button>
+            <button type="button" class="btn btn-success" *ngIf="formaClient.valid && action==='client' && request!='good' && request!='send'" (click)="update()">Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal LG-->
+
+    <div class="modal fade" id="Modal1" tabindex="-1" role="dialog" aria-labelledby="ModalLabel1" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document" *ngIf="selectOrder">
+        <div class="modal-content">
+          <div class="modal-header text-center">
+            <h4 class="modal-title text-center" id="ModalLabel1" *ngIf="!cancelOrder">
+              Datos de la orden {{order.id}}
+            </h4>
+            <h4 class="modal-title text-center" id="ModalLabel1" *ngIf="cancelOrder">
+              Orden {{order.id}}
+              <label *ngIf="request === 'send'"><i class="fas fa-spinner fa-spin"></i></label>
+              <label *ngIf="request === 'good'"><i class="fas fa-check"></i></label>
+              <label *ngIf="request === 'error'"><i class="far fa-times"></i></label>
+            </h4>
+          </div>
+          <div class="modal-body" *ngIf="!cancelOrder">
+            <table class="table">
+              <thead class="thead-dark">
+                <tr>
+                  <th colspan="9" class="text-center">Datos Generales</th>
+                </tr>
+                <tr>
+                  <th>Producto</th>
+                  <th>Tamaño</th>
+                  <th>Cantidad</th>
+                  <th>Diseño</th>
+                  <th>Fecha de orden</th>
+                  <th>Tiempo de entrega</th>
+                  <th>Fecha de entrega</th>
+                  <th>Enviamos</th>
+                  <th>Medio de envio</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{order.product}}</td>
+                  <td>{{order.size}}</td>
+                  <td>{{order.quantity  | number:'3.0'}}</td>
+                  <td>{{parseDesign(order.design)}}</td>
+                  <td>{{order.created_at | date}}</td>
+                  <td>{{order.time_delivery}}</td>
+                  <td>{{order.date_delivery | date}}</td>
+                  <td>{{order.we_send}}</td>
+                  <td>{{order.description_send}}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="table">
+              <thead class="thead-dark">
+                <tr>
+                  <th class="text-center">Descripcion</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{order.specification}}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="table">
+              <thead class="thead-dark">
+                <tr>
+                  <th colspan="9" class="text-center">Precio de la orden</th>
+                </tr>
+                <tr>
+                  <th>Producto</th>
+                  <th>Envio</th>
+                  <th>Diseño</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{order.price_flyer  | number:'3.1-2'}}</td>
+                  <td>{{order.price_send  | number:'3.1-2'}}</td>
+                  <td>{{order.price_design  | number:'3.1-2'}}</td>
+                  <td>{{order.price_flyer + order.price_send + order.price_design  | number:'3.1-2'}}</td>
+                </tr>
+              </tbody>
+            </table>
+          
+            <table class="table">
+              <thead class="thead-dark">
+                <tr>
+                  <th colspan="9" class="text-center">Pagos realizados en la orden</th>
+                </tr>
+                <tr>
+                  <th>Tipo</th>
+                  <th>Fecha</th>
+                  <th>Monto</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Seña</td>
+                  <td>{{order.created_at | date}}</td>
+                  <td>{{order.trace  | number:'3.1-2'}}</td>
+                </tr>
+                <tr *ngFor="let abono of order.abonos ">
+                  <td>Abono</td>
+                  <td>{{abono.created_at | date}}</td>
+                  <td>{{abono.mount  | number:'3.1-2'}}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="table">
+              <thead class="thead-dark">
+                <tr>
+                  <th colspan="9" class="text-center">Registro de status</th>
+                </tr>
+                <tr>
+                  <th>Usuario</th>
+                  <th>Realizo</th>
+                  <th>Fecha</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let status of order.status_order">
+                   <td>{{status.user.name}}</td>
+                  <td>{{parseStatusLog(status.status)}}</td>
+                  <td>{{status.created_at | date}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="modal-body" *ngIf="cancelOrder">
+            <h5>Está seguro que desea cancelar la orden?</h5>
+          </div>
+          <div class="modal-footer">
+            {{action}}
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-danger" (click)="cancelOrder = !cancelOrder" *ngIf="order.status_order[order.status_order.length-1].status!= 8 && order.status_order[order.status_order.length-1].status!= 7 && order.status_order[order.status_order.length-1].status!= 6 && !cancelOrder">Cancelar orden</button>
+            <button type="button" class="btn btn-primary" (click)="orderCancel()" *ngIf="cancelOrder">Confirmar</button>
           </div>
         </div>
       </div>

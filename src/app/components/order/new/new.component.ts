@@ -36,7 +36,6 @@ export class NewComponent implements OnInit {
       "send":[{"value":0,"text":"No"},{"value":1,"text":"Si"}],
       "design":[{"value":1,"text":"Nuevo"},{"value":2,"text":"Correción"},{"value":3,"text":"Ultimo diseño"},{"value":4,"text":"Envia el cliente"}],
       "sides":[{"value":1,"text":"Un solo lado"},{"value":2,"text":"Dos lados diferentes"},{"value":3,"text":"Dos lados iguales"}],
-      "mention":[{"value":1,"text":"100%"},{"value":2,"text":"150%"},{"value":3,"text":"No"}],
       "price":[{"value":"default", "text": "0"}]
     }
   }
@@ -54,6 +53,7 @@ export class NewComponent implements OnInit {
         'comments':new FormControl('',Validators.required),
         'name_contact':new FormControl('',Validators.required),
         'charge':new FormControl('',Validators.required),
+        'address':new FormControl('',Validators.required),
         'phones':new FormArray([
           new FormControl('',Validators.required)
         ]),
@@ -69,10 +69,10 @@ export class NewComponent implements OnInit {
           new FormControl('',Validators.required)
         ]),
         'address':new FormArray([
-          new FormControl('',Validators.required)
+          new FormControl('')
         ]),
         'phone':new FormArray([
-          new FormControl('',Validators.required)
+          new FormControl('')
         ]),
         'isDone':new FormArray([
           new FormControl(true)
@@ -88,21 +88,34 @@ export class NewComponent implements OnInit {
         "special_time":new FormControl(0,),
         "sides":new FormControl('',Validators.required),
         "design":new FormControl('',Validators.required),
-        "mention":new FormControl('',Validators.required),
+        "contact_design":new FormControl('',Validators.required),
         "specification":new FormControl('',Validators.required),
-        "trace":new FormControl('',Validators.required),
+        "trace":new FormControl(''),
+        "debit":new FormControl(''),
         "method_payment":new FormControl('',Validators.required),
-        "price_flyer":new FormControl('default',Validators.required),
-        "price_design":new FormControl('0',Validators.required),
-        "price_send":new FormControl('0',Validators.required),
-        "price_flyer_special":new FormControl(0),
+        "price_flyer":new FormControl('default'),
+        "price_design":new FormControl('0',[Validators.required,Validators.pattern(/^([0-9]|.)*$/)]),
+        "price_send":new FormControl('0',[Validators.required,Validators.pattern(/^([0-9]|.)*$/)]),
+        "price_flyer_special":new FormControl(false),
         "we_send":new FormControl('',Validators.required),
         "description_send":new FormControl('',Validators.required),
       });
+
+      this.formaOrder.controls['price_flyer'].setValidators([
+        Validators.required,
+        Validators.pattern(/^([0-9]|.)*$/),
+        this.price.bind(this.formaOrder)
+      ]);
   
       this.formaOrder.controls['quantity'].setValidators([
         Validators.required,
+        Validators.pattern(/^([0-9])*$/),
         this.quantity.bind(this.formaOrder)
+      ]);
+  
+      this.formaOrder.controls['trace'].setValidators([
+        Validators.required,
+        this.traceRule.bind(this)
       ]);
   }
 
@@ -272,6 +285,25 @@ export class NewComponent implements OnInit {
       }
       return null;
     }
+
+    price(control: FormControl):{[s:string]:boolean}{
+      if(control.value === "Price special"){
+        return{
+         noPrice:true
+        }
+      }
+      return null;
+    }
+
+    traceRule(control: FormControl):{[s:string]:boolean}{
+      let $this:any = this;
+      if($this.calculateTotal()<control.value || control.value < 0){
+        return{
+         noTraceRule:true
+        }
+      }
+      return null;
+    }
  
     priceSpecial(){
      if(this.formaOrder.value.size_special === 1 || this.formaOrder.value.size_special === 1 || this.formaOrder.value.price_flyer != "default" || this.formaOrder.value.special_time === 1){
@@ -357,15 +389,6 @@ export class NewComponent implements OnInit {
       case 1: return "115gr";
       case 2: return "150gr";
       default: return this.formaOrder.value.garnet;
-    }
-  }
-
-  parseMention(){
-    switch (this.formaOrder.value.mention){
-      case 1: return "100%";
-      case 2: return "150%";
-      case 3: return "No";
-      default: return this.formaOrder.value.mention;
     }
   }
 

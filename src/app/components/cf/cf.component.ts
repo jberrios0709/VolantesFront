@@ -14,12 +14,15 @@ export class CfComponent implements OnInit {
   clientsFilter:any[]=[];
   positionClient:number=0;
   selectClient:boolean=false;
+  selectOrder:boolean=false;
+  cancelOrder:boolean=false;
   client:any;
   formaPhone:FormGroup;
   formaEmail:FormGroup;
   formaClient:FormGroup;
   formaBranch:FormGroup;
   orders:any[]=[];
+  order:any;
   action:string;
   request:string;
   resourceDelete:any;
@@ -37,8 +40,15 @@ export class CfComponent implements OnInit {
     });
     this.formaBranch = new FormGroup({
       'name':new FormControl('',Validators.required),
+      'address':new FormControl(''),
+      'phone':new FormControl(''),
+    });
+    this.formaClient = new FormGroup({
+      'name':new FormControl('',Validators.required),
       'address':new FormControl('',Validators.required),
-      'phone':new FormControl('',Validators.required),
+      'charge':new FormControl('',Validators.required),
+      'name_contact':new FormControl('',Validators.required),
+      'comments':new FormControl(''),
     });
   }
 
@@ -47,7 +57,7 @@ export class CfComponent implements OnInit {
       (res)=>{
         let clients = this.orderClient(res.data);
         this.clients=clients;
-        this.clientsFilter = clients;
+        this.clientsFilter=clients;
       },
       (error)=>{
         if(this.verifyError(error.json())){        
@@ -80,16 +90,15 @@ export class CfComponent implements OnInit {
 
   orderClient(clients){
     let arrayClientsModify = [];
-    let branchs = [];
     for(let client of clients){
       arrayClientsModify.push({
         "client":client.id,
         "name":client.name,
+        "address":client.address,
         "name_contact":client.name_contact,
         "charged":client.charge,
-        "reference:":client.reference,
         "observations":client.observations,
-        "emails":client.mails,
+        "emails":client.emails,
         "phones":client.phones,
         "comments":client.comments,
         "branchs":client.branchs,
@@ -100,20 +109,24 @@ export class CfComponent implements OnInit {
   }
 
   showClient(index){
-    this.orders = [];
     this.selectClient = true;
     this.client = this.clientsFilter[index];
     this.searchOrders(index);
   }
 
+  showOrder(index){
+    this.selectOrder = true;
+    this.order= this.orders[index];
+  }
+
   searchOrders(index){
+    this.orders = [];
     this.clientsFilter[index].branchs.map((elem)=>{
       this._http.getRequest('branch/'+elem.id+'/order').subscribe(
         (res)=>{
           res.data.map((order)=>{
             this.orders.push(order);
           })
-          
         }
       )
     })
@@ -122,6 +135,34 @@ export class CfComponent implements OnInit {
   addBranch(){
     this.formaBranch.reset({name:"",address:"",phone:""});
     this.action = "branch";
+  }
+
+  updateClient(){
+    this.formaClient.reset({name:this.client.name,address:this.client.address,charge:this.client.charged,name_contact:this.client.name_contact,comments:this.client.comments});
+    this.action = "client";
+  }
+
+  update(){
+    this.request = "send";
+    let body = this.formaClient.value;
+    this._http.putRequest("client/"+this.client.client,body).subscribe(
+      (res)=>{
+        this.request = "good";
+        this.client.name =body.name;
+        this.client.address =body.address;
+        this.client.charged =body.charge;
+        this.client.comments =body.comments;
+        this.client.name_contact =body.name_contact;
+        this.searchClients();
+      },
+      (error)=>{
+        if(this.verifyError(error.json())){        
+          this.update();
+        }else{
+          this.request = "error";
+        }
+      }
+    )
   }
 
   createBranch(){    
@@ -187,12 +228,35 @@ export class CfComponent implements OnInit {
 
   parseStatus(index){
     switch(this.orders[index].status_order[this.orders[index].status_order.length - 1].status){
+      case 1: return "Venta";
       case 2: return "Diseño";
       case 3: return "Impresion";
       case 4: return "Taller";
       case 5: return "Entrega";
       case 6: return "Terminado";
       case 7: return "Deudor";
+      case 8: return "Cancelada";
+    }
+  }
+
+  parseStatusLog(value){
+    switch(value){
+      case 1: return "Venta";
+      case 2: return "Diseño";
+      case 3: return "Impresion";
+      case 4: return "Taller";
+      case 5: return "Entrega";
+      case 6: return "Terminado";
+      case 7: return "Deudor";
+    }
+  }
+
+  parseDesign(value){
+    switch (value){
+      case 1: return "Nuevo";
+      case 2: return "Correción";
+      case 3: return "Ultimo diseño";
+      case 4: return "Envia el cliente";
     }
   }
 
@@ -229,6 +293,21 @@ export class CfComponent implements OnInit {
         }
         this.request = "good";
         this.resourceDelete={};
+      },
+      (error)=>{
+        this.request = "error";
+      }
+    )
+  }
+
+
+  orderCancel(){
+    this.request = "send";
+    this._http.postRequest("order/"+this.order.id+"/cancel",{}).subscribe(
+      (res)=>{
+        this.request = "good";
+        this.order.status_order.push(res.data);        
+        
       },
       (error)=>{
         this.request = "error";

@@ -10,6 +10,10 @@ export class HttpService {
 
   constructor( public http:Http, public _auth:AuthService ) { }
 
+  getUrl(){
+    return this.url;
+  }
+  
   postRequest(uri:string, body){
     let headers = new Headers();
     headers.append("Authorization","Bearer"+this._auth.getTokem());

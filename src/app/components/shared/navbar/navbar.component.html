@@ -8,7 +8,7 @@
 	</header>
 
 	<nav class="slide">
-		<ul>
+		<ul >
 			<li *ngIf="typeUser === '1'" routerLinkActive="active">
 				<a class="hco" [routerLink]="['/userAuthenticate','users']">USUARIOS</a>
 			</li>
@@ -38,6 +38,52 @@
 			</li>
 			<li><a class="log" (click)="logout()">LOGOUT</a></li>
 		</ul>
+		<label type="button" class="menu" data-toggle="modal" data-target="#miModal">
+			<i class="fas fa-bars fa-5x"></i>
+		</label>
   </nav>
+
+  
+
+
+	<div class="modal fade" id="miModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		
+				<div class="nav-responsive">
+					<div class="hco" *ngIf="typeUser === '1'" routerLinkActive="active"  data-dismiss="modal">
+						<a [routerLink]="['/userAuthenticate','users']">USUARIOS</a>
+					</div>
+					<div class="disem" *ngIf="typeUser === '1' || typeUser === '4'" routerLinkActive="active"   data-dismiss="modal">
+						<a [routerLink]="['/userAuthenticate','CF']">CF</a>
+					</div>
+					  <div class="disem" *ngIf="typeUser === '1' || typeUser === '4'" routerLinkActive="active"  data-dismiss="modal">
+						<a [routerLink]="['/userAuthenticate','order', 'old']">NUEVO PEDIDO</a>
+					</div>
+					  <div class="teso" *ngIf="typeUser === '1'" routerLinkActive="active"  data-dismiss="modal">
+						<a [routerLink]="['/userAuthenticate','prices']">PRECIOS</a>
+					</div>
+					<div class="teso" *ngIf="typeUser === '1'" routerLinkActive="active"  data-dismiss="modal">
+						<a [routerLink]="['/userAuthenticate','in']">INGRESO</a>
+					</div>
+					<div class="tech" *ngIf="typeUser === '1' || typeUser === '2'" routerLinkActive="active"  data-dismiss="modal">
+						<a [routerLink]="['/userAuthenticate','design']">DISEÑOS</a>
+					</div>
+					<div class="tech" *ngIf="typeUser === '1'" routerLinkActive="active"  data-dismiss="modal">
+						<a [routerLink]="['/userAuthenticate','print']">IMPRESION</a>
+					</div>
+					<div class="qual" *ngIf="typeUser === '1' || typeUser === '5'" routerLinkActive="active"  data-dismiss="modal">
+						<a [routerLink]="['/userAuthenticate','delivery']">ENTREGAS Y COBROS</a>
+					</div>
+					<div class="pub" *ngIf="typeUser === '1' || typeUser === '3' || typeUser === '4'" routerLinkActive="active"  data-dismiss="modal">
+						<a [routerLink]="['/userAuthenticate','order', 'new']">NUEVO CLIENTE</a>
+					</div>
+					<div class="log"><a (cdivck)="logout()"  data-dismiss="modal">LOGOUT</a></div>
+		  		</div>
+		  
+			<div class="modal-dialog" role="document">
+		</div>
+	</div>
+
+
+
   
 
