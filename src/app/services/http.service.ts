@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 @Injectable()
 export class HttpService {
 
-  url:String = "http://127.0.0.1/volantes/public/api/1.0/";
+  url:String = "http://cienporcientofolletos.com.ar/volantes/public/api/1.0/";
 
   constructor( public http:Http, public _auth:AuthService ) { }
 

@@ -44,11 +44,11 @@ console.log(this.forma)   }
   initSelect(){
     this.select = {
       "product":["Volantes"],
-      "size":[{"value":1,"size":"10x7.5"},{"value":2,"size":"10x15"},{"value":3,"size":"15x20"},{"value":4,"size":"15x30"}],
+      "size":[{"value":1,"size":"10x7.5"},{"value":2,"size":"10x15"},{"value":3,"size":"20x15"},{"value":4,"size":"20x30"}],
       "garnet":["115gr","150gr"],
       "time":[{"value":7,"text":"1 semana"},{"value":21,"text":"3 semanas"}],
       "send":[{"value":0,"text":"No"},{"value":1,"text":"Si"}],
-      "design":[{"value":1,"text":"Nuevo"},{"value":2,"text":"Correción"},{"value":3,"text":"Ultimo diseño"},{"value":4,"text":"Envia el cliente"}],
+      "design":[{"value":1,"text":"Nuevo"},{"value":2,"text":"Correción"},{"value":3,"text":"Mismo"},{"value":4,"text":"Envia el cliente"}],
       "sides":[{"value":1,"text":"Un solo lado"},{"value":2,"text":"Dos lados diferentes"},{"value":3,"text":"Dos lados iguales"}],
       "price":[{"value":"default", "text": "0"}]
     }
@@ -70,9 +70,9 @@ console.log(this.forma)   }
       "trace":new FormControl(''),
       "debit":new FormControl(''),
       "method_payment":new FormControl('',Validators.required),
-      "price_flyer":new FormControl('default'),
-      "price_design":new FormControl('0',[Validators.required,Validators.pattern(/^([0-9]|.)*$/)]),
-      "price_send":new FormControl('0',[Validators.required,Validators.pattern(/^([0-9]|.)*$/)]),
+      "price_flyer":new FormControl('',Validators.required),
+      "price_design":new FormControl('',[Validators.required,Validators.pattern(/^([0-9]|.)*$/)]),
+      "price_send":new FormControl('',[Validators.required,Validators.pattern(/^([0-9]|.)*$/)]),
       "price_flyer_special":new FormControl(false),
       "we_send":new FormControl('',Validators.required),
       "description_send":new FormControl('',Validators.required),
@@ -168,7 +168,7 @@ console.log(this.forma)   }
         this.selectClient = true;
         this.all = false;
         this.client = res.data;
-        this.branchSelect = res.data.branch.map((elem)=>{
+        this.branchSelect = res.data.branchs.map((elem)=>{
           return {
             "id": elem.id,
             "isDone": false,
@@ -194,9 +194,9 @@ console.log(this.forma)   }
 
   addSize(event){
     if(this.select.size.length === 5){
-     this.select.size[4] = {"value": event.target.value, "size": event.target.value};
+     this.select.size[4] = {"value": event.target.value.replace(',','.'), "size": event.target.value.replace(',','.')};
     }else if(this.select.size.length === 4){
-     this.select.size.push({"value": event.target.value, "size": event.target.value});
+     this.select.size.push({"value": event.target.value.replace(',','.'), "size": event.target.value.replace(',','.')});
     }
    }
 
@@ -318,7 +318,6 @@ console.log(this.forma)   }
   }
 
   createOrder(){
-    
     this.requestSend = this.branch.map(()=>{
       return {value:"send"};
     })
@@ -326,7 +325,6 @@ console.log(this.forma)   }
       this._http.postRequest('branch/'+elem.id+'/order',this.forma.value).subscribe(
         (res)=>{
           this.requestSend[index] = {value:"good", id:res.data.id};
-          console.log(this.requestSend);
         },
         (error)=>{
           this.requestSend[index].value = "error";
@@ -336,20 +334,30 @@ console.log(this.forma)   }
   }
 
   reset(){
-    this.selectClient=false;
-    this.client={};
-    this.branchSelect=[];
-    this.all=false;
-    this.branch=[];
-    this.requestSend=[];
-    this.createForma();
-    this.initSelect();
+    setTimeout(()=>{  
+      this.selectClient=false;
+      this.client={};
+      this.branchSelect=[];
+      this.all=false;
+      this.branch=[];
+      this.requestSend=[];
+      this.createForma();
+      this.initSelect();
+     }, 500);
+    
   }
 
   //Parses views
+  parseSides(){
+    switch(parseInt(this.forma.value.sides)){
+      case 1: return "Un solo lado";
+      case 2: return "Dos lados diferentes" ;
+      case 3: return "Dos lados iguales";
+    }
+  }
 
   parseSize(){
-    switch (this.forma.value.size){
+    switch (parseInt(this.forma.value.size)){
       case 1: return "10x7.5";
       case 2: return "10x15";
       case 3: return "15x20";
@@ -359,10 +367,10 @@ console.log(this.forma)   }
   }
 
   parseDesign(){
-    switch (this.forma.value.design){
+    switch (parseInt(this.forma.value.design)){
       case 1: return "Nuevo";
       case 2: return "Correción";
-      case 3: return "Ultimo diseño";
+      case 3: return "Mismo";
       case 4: return "Envia el cliente";
       default: return this.forma.value.design;
     }

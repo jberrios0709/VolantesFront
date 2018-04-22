@@ -10,16 +10,17 @@
   </div>
 
   <div class="clientOrder">
-    <table class="table  table-hover" *ngIf="ordersDebit.lentgh != 0">
+    <table class="table  table-hover" *ngIf="ordersDebit.length != 0">
       <thead class="thead-dark">
         <tr>
-          <th scope="col">Número de cliente</th>
-          <th scope="col">Orden</th>
+          <th scope="col">N° cliente</th>
+          <th scope="col">N° pedido</th>
           <th scope="col">Cliente</th>
+          <th scope="col">Sucursal</th>
           <th scope="col">Producto</th>
           <th scope="col">Cantidad</th>
           <th scope="col">Tamaño</th>
-          <th scope="col">Fecha de entrega</th>
+          <th scope="col">Fecha de entregado</th>
           <th scope="col">Deuda</th>
         </tr>
       </thead>
@@ -28,11 +29,12 @@
           <th scope="row">{{order.branch.client.id}}</th>
           <th>{{order.id}}</th>
           <td>{{order.branch.client.name}}</td>
+          <td>{{order.branch.name}}</td>
           <td>{{order.product}}</td>
-          <td>{{order.quantity}}</td>
+          <td>{{order.quantity | number:'1.0'}}</td>
           <td>{{order.size}}</td>
-          <td>{{order.date_delivery | date}}</td>
-          <td style="color:red; font-weight: bold;">{{calculateForIndex(i,"debit")  | number:'1.1-2'}}</td>
+          <td>{{order.status_order[order.status_order.length -1].created_at| date}}</td>
+          <td style="color:red; font-weight: bold;">${{calculateForIndex(i,"debit")  | number:'1.1-2'}}</td>
         </tr>
       </tbody>
     </table>
@@ -51,13 +53,14 @@
     </div>
   </div> 
 
-  <div *ngIf="orders.length === 0" class="text-center"><h4>No existen ordenes asociadas al estado "Entrega y cobros".</h4></div>
+  <div *ngIf="orders.length === 0" class="text-center"><h4>No existen pedidos asociados al estado "Entrega y cobros".</h4></div>
   <table class="table  table-hover" *ngIf="orders.length != 0">
     <thead class="thead-dark">
       <tr>
-        <th scope="col">Número de cliente</th>
+        <th scope="col">N° cliente</th>
         <th scope="col">Cliente</th>
-        <th scope="col">Orden</th>
+        <th scope="col">Sucursal</th>
+        <th scope="col">N° pedido</th>
         <th scope="col">Nombre del contacto</th>
         <th scope="col">Producto</th>
         <th scope="col">Cantidad</th>
@@ -70,16 +73,17 @@
     </thead>
     <tbody *ngIf="orders.length >= 1">
       <tr *ngFor="let order of orders; let i = index" class="fadeInAnimated" style="cursor:pointer">
-        <th scope="row">{{order.branch.client.id}}</th>
-        <td>{{order.branch.client.name}}</td>
-        <td>{{order.id}}</td>
-        <td>{{order.branch.client.name_contact}}</td>
-        <td>{{order.product}}</td>
-        <td>{{order.quantity  | number:'1.0'}}</td>
-        <td>{{order.date_delivery | date}}</td>
-        <td>{{order.description_send}}</td>
-        <td>{{calculateForIndex(i,"normal")  | number:'1.1-2'}}</td>
-        <td>{{order.method_payment}}</td>
+        <td data-toggle="modal" data-target="#exampleModal2" (click)="selectOrder(i,'normal')">{{order.branch.client.id}}</td>
+        <td data-toggle="modal" data-target="#exampleModal2" (click)="selectOrder(i,'normal')">{{order.branch.client.name}}</td>
+        <td data-toggle="modal" data-target="#exampleModal2" (click)="selectOrder(i,'normal')">{{order.branch.name}}</td>
+        <td data-toggle="modal" data-target="#exampleModal2" (click)="selectOrder(i,'normal')">{{order.id}}</td>
+        <td data-toggle="modal" data-target="#exampleModal2" (click)="selectOrder(i,'normal')">{{order.branch.client.name_contact}}</td>
+        <td data-toggle="modal" data-target="#exampleModal2" (click)="selectOrder(i,'normal')">{{order.product}}</td>
+        <td data-toggle="modal" data-target="#exampleModal2" (click)="selectOrder(i,'normal')">{{order.quantity  | number:'1.0'}}</td>
+        <td data-toggle="modal" data-target="#exampleModal2" (click)="selectOrder(i,'normal')">{{order.date_delivery | date}}</td>
+        <td data-toggle="modal" data-target="#exampleModal2" (click)="selectOrder(i,'normal')">{{order.description_send}}</td>
+        <td data-toggle="modal" data-target="#exampleModal2" (click)="selectOrder(i,'normal')">${{calculateForIndex(i,"normal")  | number:'1.1-2'}}</td>
+        <td data-toggle="modal" data-target="#exampleModal2" (click)="selectOrder(i,'normal')">{{order.method_payment}}</td>
         <td>
           <a [href]="_http.getUrl()+'pdf/delivery/'+order.id" target="_blank">
             <button type="button" class="btn" title="Imprimir">
@@ -96,7 +100,7 @@
     
    <!-- Modal -->
   <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header text-center">
           <h4 class="modal-title text-center" id="exampleModalLabel">Pago</h4>
@@ -106,50 +110,61 @@
         </div>
         <div class="modal-body text-center" *ngIf="showSearch">
             <div class="alert alert-danger fade fastAnimated" role="alert" style="margin-top:10px" *ngIf="empty">
-                No existe orden asociada al id {{numberSearch}}.
+                No existe pedido asociado al id {{numberSearch}}.
               </div>
           <h5>Ingresar número de orden</h5>
           <input type="text" style="width:50px;" [(ngModel)]="numberSearch">
         </div>        
         <div class="modal-body" *ngIf="show && !confirm">
-          <table class="table  table-hover">
-            <thead class="thead-dark">
-              <tr>
-                <th scope="col">Número de cliente</th>
-                <th scope="col">Cliente</th>
-                <th scope="col">Orden</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">{{order.branch.client.id}}</th>
-                <td>{{order.branch.client.name}}</td>
-                <td>{{order.id}}</td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="section-info">
+            <div class="separator text-center"><p>Datos del Cliente</p></div>
+            <div class="col-12">
+              <div class="row" style="padding:10px;">
+                <div class="col-md-6 confirm">
+                  <p>Número de cliente: <b>{{order.branch.client.id}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Cliente: <b class="red">{{order.branch.client.name}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>N° de pedido: <b>{{order.id}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Contacto: <b>{{order.branch.client.name_contact}}</b></p>
+                </div>
+                <div class="col-md-12 confirm">
+                  <p *ngFor="let phone of order.branch.client.phones">Telefono: <b>{{phone.number}} / {{phone.explanatory}}</b></p>
+                </div>
+              </div>
+            </div>
+            <form [formGroup]="forma">
+                <div class="row">
+                  <div class="col-2 offset-md-4"><label>Deuda</label></div>
+                  <div class="col-4"><input type="text" [value]="calculate(1)   | number:'1.1-2'" disabled ></div>
+                </div>
+                <div class="row">
+                  <div class="col-2 offset-md-4"><label>Abono</label></div>
+                  <div class="col-4"><label><input type="text" formControlName="mount"></label></div>
+                </div>
+                <div class="row">
+                  <div class="col-2 offset-md-4"><label>Metódo de pago</label></div>
+                  <div class="col-4"><label><input type="text" formControlName="method_payment"></label></div>
+                </div>
+                <div class="row">
+                  <div class="col-2 offset-md-4"><label>Restante</label></div>
+                  <div class="col-4"><label><input type="text" [value]="calculate(2)   | number:'1.1-2'" disabled ></label></div>
+                </div>
+              </form>
+          </div>
           
-          <form [formGroup]="forma">
-            <div class="row">
-              <div class="col-2 offset-md-4"><label>Deuda</label></div>
-              <div class="col-4"><input type="text" [value]="calculate(1)   | number:'1.1-2'" disabled ></div>
-            </div>
-            <div class="row">
-              <div class="col-2 offset-md-4"><label>Abono</label></div>
-              <div class="col-4"><label><input type="text" formControlName="mount"></label></div>
-            </div>
-            <div class="row">
-              <div class="col-2 offset-md-4"><label>Restante</label></div>
-              <div class="col-4"><label><input type="text" [value]="calculate(2)   | number:'1.1-2'" disabled ></label></div>
-            </div>
-          </form>
+          
         </div>
         <div class="modal-body text-center" *ngIf="show && confirm">
           <p *ngIf="calculate(1)==forma.value.mount && statusRequest == 'not'" style="font-weight:bold; color:black">
-            De continuar la orden sera confirmada como pagada en su totalidad. <br> ¿Desea continuar?<br><br>
+            De continuar el pedido sera confirmado como pagado en su totalidad. <br> ¿Desea continuar?<br><br>
           </p>
           <p *ngIf="calculate(1)>forma.value.mount  && statusRequest == 'not'"  style="font-weight:bold; color:black">
-            De continuar la orden quedara con un saldo deudor a favor de la compañia. <br> ¿Desea continuar?<br><br>
+            De continuar el pedido quedara con un saldo deudor a favor de la compañia. <br> ¿Desea continuar?<br><br>
           </p>
           <button *ngIf="statusRequest == 'not'" type="button" class="btn btn-primary" (click)="createAbono()">Confirmar pago</button>
           <div style="margin-top:10px" *ngIf="statusRequest == 'send'">
@@ -165,11 +180,154 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
           <button class="btn btn-success" *ngIf="showSearch && numberSearch > 0" (click)="searchOrder()">Buscar</button>
-          <button type="button" class="btn btn-success" *ngIf="!confirm && forma.valid && showSearch == false" (click)="confirm = true">Pagar</button>
+          <button type="button" class="btn btn-success" *ngIf="!confirm && forma.valid && showSearch == false && delivery" (click)="confirm = true">Pagar y entregar</button>
+          <button type="button" class="btn btn-success" *ngIf="!confirm && forma.valid && showSearch == false && !delivery" (click)="confirm = true">Pagar</button>
         </div>
       </div>
     </div>
   </div>
+
+
+  <!---->
+
+  <div *ngIf="!showAbono" class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header text-center">
+          <h4 class="modal-title text-center" id="exampleModalLabel">Datos del pedido</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        
+        <div class="modal-body" *ngIf="show">
+          <div class="row" style="margin-bottom:20px">
+            <div class="col-md-6">
+              <div class="col-md-12">
+                <p>Deuda: <b style="font-size:30px" class="red">${{calculate(1) | number:'1.1-2'}}</b></p>
+              </div>
+              <div class="col-md-12">
+                <p>Total: <b>${{calculateTotalShow() | number:'1.1-2'}}</b></p>
+              </div>
+              <div class="col-md-12">
+                <p>Nro de pedido: <b>{{order.id}}</b></p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="col-md-12">
+                <p>Fecha de pedido: <b>{{order.created_at | date}}</b></p>
+              </div>
+              <div class="col-md-12">
+                <p>Fecha de diseño: <b>{{order.status_order[2].updated_at | date}}</b></p>
+              </div>
+              <div class="col-md-12">
+                <p>Fecha de impresión: <b>{{order.status_order[3].updated_at | date}}</b></p>
+              </div>
+              <div class="col-md-12">
+                <p>Fecha de entrega: <b>{{order.date_delivery | date}}</b></p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="section-info">
+            <div class="separator text-center"><p>Datos del cliente y del envio</p></div>
+            <div class="col-12">
+              <div class="row" style="padding:10px;">
+                <div class="col-md-6 confirm">
+                  <p>Cliente: <b>{{order.branch.client.name}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Sucursal: <b>{{order.branch.name}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Nro de cliente: <b class="red">{{order.branch.client.id}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Nombre: <b>{{order.branch.client.name_contact}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Teléfono: <b>{{order.branch.client.phones[0].number}}</b></p>
+                </div>
+                <div class="col-md-12 confirm">
+                  <p>Mail: <b>{{order.branch.client.emails[0].email}}</b></p>
+                </div>
+                <div class="col-md-12 confirm">
+                  <p>Dirección: <b>{{order.branch.client.address}}</b></p>
+                </div>
+                <div class="col-md-12 confirm">
+                  <p>Medio de envío: <b class="red">{{order.description_send}}</b></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-info">
+            <div class="separator text-center"><p>Datos del trabajo</p></div>
+            <div class="col-12">
+              <div class="row" style="padding:10px;">
+                <div class="col-md-6 confirm">
+                  <p>Producto: <b>{{order.product}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Tamaño: <b class="red">{{order.size}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Gramage: <b>{{order.garnet}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Cantidad: <b>{{order.quantity | number:'1.0'}}</b></p>
+                </div>
+                <div class="col-md-12 confirm">
+                  <p>Lados: <b>{{parseSides(order.sides)}}</b></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-info">
+            <div class="separator text-center"><p>Resumen del pago</p></div>
+            <div class="col-12">
+              <div class="row" style="padding:10px;">
+                <div class="col-md-6 confirm">
+                  <p>Precio diseño: <b>${{order.price_design | number:'1.1-2'}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Seña: <b class="red">${{order.trace | number:'1.1-2'}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Precio impresión: <b>${{order.price_flyer | number:'1.1-2'}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Medio de pago: <b>{{order.method_payment}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Precio envío: <b>${{order.price_send | number:'1.1-2'}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Fecha de la seña: <b>{{order.created_at | date}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Total: <b>${{calculateTotalShow() | number:'1.1-2'}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Deuda: <b>${{calculate(1) | number:'1.1-2'}}</b></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p>Vendedor: <b>{{order.status_order[0].user.name | json}}</b></p>
+
+          
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+    
 
 
 </div>

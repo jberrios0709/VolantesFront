@@ -11,11 +11,22 @@
   </div>
   <table class="table  table-hover">
     <thead class="thead-dark">
-      <tr class="text-center">
+      <tr class="text-center max-width">
         <th scope="col" colspan="4"><p>Seleccione el rango de fecha</p></th>
-        <th scope="col" colspan="4">
-          Desde <input [(ngModel)]="desde" name="desde" type="date" style="background:#212529;color:white;border:none">
-          Hasta <input [(ngModel)]="hasta" [min]="desde" name="hasta" type="date" style="background:#212529;color:white;border:none">
+        <th scope="col" colspan="5">
+          Desde <input [(ngModel)]="desde" name="desde" type="date" style="background:white;color:black;border:none">
+          Hasta <input [(ngModel)]="hasta" [min]="desde" name="hasta" type="date" style="background:white;color:black;border:none">
+          <button (click)="searchsOrdersDate()">Buscar</button>
+          <button type="button" *ngIf="desde != undefined && hasta != undefined" title="Imprimir" data-toggle="modal" data-target="#exampleModal">Imprimir</button>
+        </th>
+      </tr>
+      <tr class="text-center min-width">
+        <th scope="col" colspan="9"><p>Seleccione el rango de fecha</p></th>
+      </tr>
+      <tr class="text-center min-width">
+        <th scope="col" colspan="9">
+          Desde <input [(ngModel)]="desde" name="desde" type="date" style="background:white;color:black;border:none">
+          Hasta <input [(ngModel)]="hasta" [min]="desde" name="hasta" type="date" style="background:white;color:black;border:none">
           <button (click)="searchsOrdersDate()">Buscar</button>
           <button type="button" *ngIf="desde != undefined && hasta != undefined" title="Imprimir" data-toggle="modal" data-target="#exampleModal">Imprimir</button>
         </th>
@@ -24,6 +35,7 @@
         <th scope="col">Fecha</th>
         <th scope="col">Número de cliente</th>
         <th scope="col">Cliente</th>
+        <th scope="col">Sucursal</th>
         <th scope="col">Producto</th>
         <th scope="col">Cantidad</th>
         <th scope="col">Monto</th>
@@ -36,11 +48,16 @@
         <td>{{order.date_sell.date | date}}</td>
         <td>{{order.branch.client.id}}</td>
         <td>{{order.branch.client.name}}</td>
+        <td>{{order.branch.name}}</td>
         <td>{{order.product}}</td>
-        <td>{{order.quantity}}</td>
+        <td>{{order.quantity | number:'1.0'}}</td>
         <td>{{payment(i)  | number:'3.1-2'}}</td>
         <td>{{paymentWhere(i)}}</td>
         <td>{{order.method_payment}}</td>
+      </tr>
+      <tr class="text-center" style="background:#212529; color:white">
+        <td colspan="5">Total ingresos</td>
+        <td colspan="4">${{total()  | number:'3.1-2'}}</td>
       </tr>
     </tbody>
   </table>

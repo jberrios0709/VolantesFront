@@ -46,19 +46,17 @@ export class DesignComponent implements OnInit {
   searchOrders(){
     this._http.getRequest('orders?q=2').subscribe(
       (res)=>{
-
-        console.log(res.data)
+        let data = []
         res.data.map((elem)=>{
           if(elem.date_delivery != null){
             this.orders.push(elem);
+          }else{
+            data.push(elem)
           }
         });
-        res.data.map((elem)=>{
-          if(elem.date_delivery == null){
-            this.orders.push(elem);
-          }
-        });
-
+        this.orderArray(data).map((elem)=>{
+          this.orders.push(elem);
+        })
       },
       (error)=>{
         if(this.verifyError(error.json())){        
@@ -66,6 +64,24 @@ export class DesignComponent implements OnInit {
         }
       }
     )
+  }
+
+  parseSides(value){
+    switch(parseInt(value)){
+      case 1: return "Un solo lado";
+      case 2: return "Dos lados diferentes" ;
+      case 3: return "Dos lados iguales";
+    }
+  }
+
+  orderArray(tmp){
+    return tmp.sort((a,b)=>{
+      if (a.id > b.id) {
+        return 1;
+      }else if (a.id < b.id) {
+        return -1;
+      }
+    })
   }
 
   verifyError(typeError){
@@ -79,7 +95,7 @@ export class DesignComponent implements OnInit {
   }
 
   parseDesign(value){
-    switch (value){
+    switch (parseInt(value)){
       case 1: return "Nuevo";
       case 2: return "Correción";
       case 3: return "Ultimo diseño";
@@ -91,6 +107,7 @@ export class DesignComponent implements OnInit {
     this.order = this.orders[index];
     this.orderSelect = true;
     this.indexSelect = index;
+    this.request = "false";
     
     this.forma = new FormGroup({
       "design": new FormControl(this.order.status_design.design,Validators.required),
@@ -119,7 +136,11 @@ export class DesignComponent implements OnInit {
           this.orders[this.indexSelect].status_design=res.data;
           this.request="good";        
         }else{
-          this.orders.splice(this.indexSelect);
+          this.orders = this.orders.filter((elem)=>{
+            if(elem.id!=this.order["id"]){
+              return elem;
+            }
+          });
           this.request="next";   
           this.initForma();     
         }
@@ -149,5 +170,12 @@ export class DesignComponent implements OnInit {
     this.forma.value.approved = parseInt(this.forma.value.approved);
     this.forma.value.finish = parseInt(this.forma.value.finish);
     this.forma.value.responsibility = parseInt(this.forma.value.responsibility);
+  }
+
+  showButton(){
+    if(this.forma.value.finish == 1 && this.forma.value.responsibility == 1){
+      return true;
+    }
+    return false;
   }
 }

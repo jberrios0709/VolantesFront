@@ -1,10 +1,11 @@
 <app-navbar></app-navbar>
 <div class="content slide data fadeInAnimated fastAnimated"> 
   <div class="row">
-    <div class="col-6 offset-md-1 text-left">
-      <h4 class="title" (click)="test()">Impresión</h4>
+    <div class="col-md-6 offset-md-1 text-left">
+      <h4 class="title">Impresión</h4>
+      <h5>Espacios totales que faltan por enviar a taller: {{countSpacesTotal()}}</h5>
     </div>
-    <div class="col-4 offset-md-1 text-left">
+    <div class="col-md-4 offset-md-1 text-left">
       <label style="font-size: 16px;">Espacios asignados en nuevo pliego: <b>{{spaces}}</b></label>
       <button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"  (click)="select(0,'confirm')">Crear Pliego</button>
     </div>
@@ -16,23 +17,24 @@
         <i class="fas fa-chevron-right fa-4x"></i>
       </div>
       <div class="folios text-center">
-        <div class="col-12" style="margin-top: 20px;font-size: 14px;font-weight: bold;" *ngFor="let folio of folios; let i = index">
+        <div class="col-md-12" style="margin-top: 20px;font-size: 14px;font-weight: bold;" *ngFor="let folio of folios; let i = index">
           <div><label>Pliego {{folio.id}}</label></div>
           <div><label style="cursor:pointer" data-toggle="modal" data-target="#exampleModal" (click)="select(i,'folio',0)">Ver más.</label></div>
         </div>
       </div>
     </div>
-    <div class="col-11 offset-md-1 text-center">
-      <table class="table  table-hover">
+    <div class="col-md-11 offset-md-1 text-center ">
+      <table class="table  table-hover max-width">
         <thead class="thead-dark">
           <tr>
-            <th colspan="12" class="text-center">Gramage 115gr</th>
+            <th colspan="13" class="text-center">Gramage 115gr</th>
           </tr>
           <tr >
-            <th scope="col">Número de cliente</th>
+            <th scope="col">N° cliente</th>
             <th scope="col">Cliente</th>
-            <th scope="col">Pedido</th>
-            <th scope="col">Producto</th>
+            <th scope="col">Sucursal</th>
+            <th scope="col">N° Pedido</th>
+            <th scope="col">Lados</th>
             <th scope="col">Tamaño</th>
             <th scope="col">Cantidad</th>
             <th scope="col">Espacios</th>
@@ -44,33 +46,35 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let order of ordersFirst; let i = index" class="fadeInAnimated" style="cursor:pointer">
-            <th scope="row">{{order.branch.client.id}}</th>
-            <td>{{order.branch.client.name}}</td>
-            <td>{{order.id}}</td>
-            <td>{{order.product}}</td>
-            <td>{{order.size}}</td>
-            <td>{{order.quantity}}</td>
-            <td>{{order.spaces}}</td>
-            <td>{{order.spacesInMissing}}</td>
-            <td>{{order.created_at  | date}}</td>
-            <td>{{order.date_delivery  | date}}</td>
+          <tr *ngFor="let order of ordersFirst; let i = index" class="fadeInAnimated" style="cursor:pointer" [ngClass]="{none: order.spacesInMissing == null}">
+            <th scope="row" data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.branch.client.id}}</th>
+            <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.branch.client.name}}</td>
+            <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.branch.name}}</td>
+            <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.id}}</td>
+            <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{parseSides(order.sides)}}</td>
+            <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.size}}</td>
+            <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.quantity | number:'1.0'}}</td>
+            <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.spaces}}</td>
+            <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.spacesInMissing}}</td>
+            <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.created_at  | date}}</td>
+            <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.date_delivery  | date}}</td>
             <td><input type="checkbox" (change)="selects(1,i)"></td>
             <td><input type="number" style="width:45px" (change)="addSpaces(1,i,$event)" [ngClass]="{error:orderFirstSelect[i].spaces > order.spacesInMissing, error_2: (orderFirstSelect[i].isDone && orderFirstSelect[i].spaces <= 0)}"></td>
           </tr>
         </tbody>
       </table>
 
-      <table class="table  table-hover">
+      <table class="table  table-hover max-width">
           <thead class="thead-dark">
             <tr>
-              <th colspan="12" class="text-center">Gramage 150gr</th>
+              <th colspan="13" class="text-center">Gramage 150gr</th>
             </tr>
             <tr>
-              <th scope="col">Número de cliente</th>
+              <th scope="col">N° cliente</th>
               <th scope="col">Cliente</th>
-              <th scope="col">Pedido</th>
-              <th scope="col">Producto</th>
+              <th scope="col">Sucursal</th>
+              <th scope="col">N° Pedido</th>
+              <th scope="col">Lados</th>
               <th scope="col">Tamaño</th>
               <th scope="col">Cantidad</th>
               <th scope="col">Espacios</th>
@@ -82,24 +86,25 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let order of ordersSecond; let i = index" class="fadeInAnimated" style="cursor:pointer">
-              <th scope="row">{{order.branch.client.id}}</th>
-              <td>{{order.branch.client.name}}</td>
-              <td>{{order.id}}</td>
-              <td>{{order.product}}</td>
-              <td>{{order.size}}</td>
-              <td>{{order.quantity}}</td>
-              <td>{{order.spaces}}</td>
-              <td>{{order.spacesInMissing}}</td>
-              <td>{{order.created_at  | date}}</td>
-              <td>{{order.date_delivery  | date}}</td>
+            <tr *ngFor="let order of ordersSecond; let i = index" class="fadeInAnimated" style="cursor:pointer" [ngClass]="{none: order.spacesInMissing == null}">
+              <th scope="row" data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.branch.client.id}}</th>
+              <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.branch.client.name}}</td>
+              <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.branch.name}}</td>
+              <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.id}}</td>
+              <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{parseSides(order.sides)}}</td>
+              <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.size}}</td>
+              <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.quantity | number:'1.0'}}</td>
+              <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.spaces}}</td>
+              <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.spacesInMissing}}</td>
+              <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.created_at  | date}}</td>
+              <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.date_delivery  | date}}</td>
               <td><input type="checkbox" (change)="selects(2,i)"></td>
               <td><input type="number" style="width:45px" (change)="addSpaces(2,i,$event)" [ngClass]="{error:orderSecondSelect[i].spaces > order.spacesInMissing, error_2: (orderSecondSelect[i].isDone && orderSecondSelect[i].spaces <= 0)}"></td>
             </tr>
           </tbody>
         </table>
 
-        <table class="table  table-hover">
+        <table class="table  table-hover max-width">
           <thead class="thead-dark">
             <tr>
               <th colspan="10" class="text-center">Otros productos</th>
@@ -107,11 +112,11 @@
             <tr >
               <th scope="col">Número de cliente</th>
               <th scope="col">Cliente</th>
-              <th scope="col">Pedido</th>
+              <th scope="col">Sucursal</th>
+              <th scope="col">N° Pedido</th>
               <th scope="col">Producto</th>
               <th scope="col">Tamaño</th>
               <th scope="col">Cantidad</th>
-              <th scope="col">Espacios</th>
               <th scope="col">Fecha del pedido</th>
               <th scope="col">Entrega</th>
               <th></th>
@@ -119,15 +124,15 @@
           </thead>
           <tbody>
             <tr *ngFor="let order of ordersOthers; let i = index" class="fadeInAnimated" style="cursor:pointer">
-              <th scope="row">{{order.branch.client.id}}</th>
-              <td>{{order.branch.client.name}}</td>
-              <td>{{order.id}}</td>
-              <td>{{order.product}}</td>
-              <td>{{order.size}}</td>
-              <td>{{order.quantity}}</td>
-              <td>{{order.spaces}}</td>
-              <td>{{order.created_at  | date}}</td>
-              <td>{{order.date_delivery  | date}}</td>
+              <th data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.branch.client.id}}</th>
+              <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.branch.client.name}}</td>
+              <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.branch.name}}</td>
+              <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.id}}</td>
+              <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.product}}</td>
+              <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.size}}</td>
+              <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.quantity | number:'1.0'}}</td>
+              <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.created_at  | date}}</td>
+              <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.date_delivery  | date}}</td>
               <td>
                   <button  data-toggle="modal" data-target="#exampleModal"   (click)="selectOthers(i)" *ngIf="order.status_order[order.status_order.length -1].status == 3">Enviar a taller</button>
                   <button  data-toggle="modal" data-target="#exampleModal"   (click)="selectOthers(i)" *ngIf="order.status_order[order.status_order.length -1].status == 4">Impreso</button>
@@ -144,9 +149,10 @@
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content ">
         <div class="modal-header text-center">
-          <h4 class="modal-title text-center" id="exampleModalLabel" *ngIf="show==='folio'">Datos del Pliego</h4>
+          <h4 class="modal-title text-center" id="exampleModalLabel" *ngIf="show==='folio'">Datos del Pliego {{objectShow.id}}</h4>
           <h4 class="modal-title text-center" id="exampleModalLabel" *ngIf="show==='confirm'">Enviar a taller</h4>
           <h4 class="modal-title text-center" id="exampleModalLabel" *ngIf="show==='taller'">Confirmar</h4>
+          <h4 class="modal-title text-center" id="exampleModalLabel" *ngIf="show==='view'">Pedido Nro {{objectShow.id}}</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -165,13 +171,18 @@
             <thead class="thead-dark">
               <tr >
                 <th scope="col">Número de orden</th>
+                <th scope="col">Cliente</th>
+                <th scope="col">Sucursal</th>
                 <th scope="col">Espacios</th>
                 <th scope="col">Espacios en este pliego</th>
+               
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let order of objectShow.orders_folio; let i = index" class="fadeInAnimated">
                 <td scope="row">{{order.order.id}}</td>
+                <td scope="row">{{order.order.branch.client.name}}</td>
+                <td scope="row">{{order.order.branch.name}}</td>
                 <td scope="row">{{order.order.spaces}}</td>
                 <td scope="row">{{order.spaces}}</td>
               </tr>
@@ -188,16 +199,65 @@
         </div>
 
         <div class="modal-body" *ngIf="show==='taller'">
-            <p *ngIf="objectShow.status_order[objectShow.status_order.length - 1].status == 3" style="font-size:16px;">Al confirmar la transacción la orden Nro {{objectShow.id}} sera enviada al taller para imprimir.</p>
-            <p *ngIf="objectShow.status_order[objectShow.status_order.length - 1].status == 4" style="font-size:16px;">Al confirmar la transacción la orden Nro {{objectShow.id}} sera enviada al departamento de envios y cobros.</p>
-            <div *ngIf="requestStatus === 'good'" class="alert alert-success fade fastAnimated" role="alert" style="margin-top:10px">
-                Datos guardados exitosamente.
-            </div>
-            <div *ngIf="requestStatus === 'error'" class="alert alert-danger fade fastAnimated" role="alert" style="margin-top:10px">
-                Error en la operacion.
-            </div>
-            
+          <p *ngIf="objectShow.status_order[objectShow.status_order.length - 1].status == 3" style="font-size:16px;">Al confirmar la transacción la orden Nro {{objectShow.id}} sera enviada al taller para imprimir.</p>
+          <p *ngIf="objectShow.status_order[objectShow.status_order.length - 1].status == 4" style="font-size:16px;">Al confirmar la transacción la orden Nro {{objectShow.id}} sera enviada al departamento de envios y cobros.</p>
+          <div *ngIf="requestStatus === 'good'" class="alert alert-success fade fastAnimated" role="alert" style="margin-top:10px">
+            Datos guardados exitosamente.
           </div>
+          <div *ngIf="requestStatus === 'error'" class="alert alert-danger fade fastAnimated" role="alert" style="margin-top:10px">
+            Error en la operacion.
+          </div>
+        </div>
+
+        <div class="modal-body" *ngIf="show==='view'">
+          <div class="row">
+            <div class="col-md-6">
+              <p>Cliente: <b>{{objectShow.branch.client.name}}</b></p>
+              <p>Nro de Cliente: <b class="red">{{objectShow.branch.client.id}}</b></p>
+              <p>Nro de pedido: <b>{{objectShow.id}}</b></p>
+            </div>
+            <div class="col-md-6">
+              <p>Fecha de pedido: <b>{{objectShow.created_at | date}}</b></p>
+              <p>Fecha de diseño: <b>{{objectShow.status_order[2].updated_at | date}}</b></p>
+              <p>Fecha de entrega: <b class="red">{{objectShow.date_delivery | date}}</b></p>
+            </div>
+          </div>
+          <div class="section-info" style="margin-top:10px">
+            <div class="separator text-center"><p>Datos del Trabajo</p></div>
+            <div class="col-12">
+              <div class="row" style="padding:10px;">
+                <div class="col-md-6 confirm">
+                  <p>Sucursal: <b>{{objectShow.branch.name}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Producto: <b>{{objectShow.product}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Gramage: <b>{{objectShow.garnet}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Tamaño: <b>{{objectShow.size}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Cantidad: <b>{{objectShow.quantity  | number:'1.1-2'}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Lados: <b>{{parseSides(objectShow.sides)}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Espacios: <b>{{objectShow.spaces}}</b></p>
+                </div>
+                <div class="col-md-12 confirm">
+                  <p>Especificaciones: <b>{{objectShow.specification}}</b></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p>Vendedor: <b>{{objectShow.status_order[0].user.name | json}}</b></p>
+          
+        </div>
+
+        
         
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>

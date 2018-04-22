@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../../services/http.service'
 import { FormGroup, FormControl, FormArray, Validators, FormBuilder } from '@angular/forms';
+import 'rxjs/add/operator/map';
 //import { log } from 'util';
 
 @Component({
@@ -26,6 +27,7 @@ export class CfComponent implements OnInit {
   action:string;
   request:string;
   resourceDelete:any;
+  ordersShowLoading:boolean=false;
 
   constructor(public _http:HttpService) { }
 
@@ -49,12 +51,14 @@ export class CfComponent implements OnInit {
       'charge':new FormControl('',Validators.required),
       'name_contact':new FormControl('',Validators.required),
       'comments':new FormControl(''),
+      'observations':new FormControl(''),
+      'reference':new FormControl(''),
     });
   }
 
   searchClients(){
     this._http.getRequest("client").subscribe(
-      (res)=>{
+      (res)=>{        
         let clients = this.orderClient(res.data);
         this.clients=clients;
         this.clientsFilter=clients;
@@ -80,8 +84,7 @@ export class CfComponent implements OnInit {
   filter(){
     this.clientsFilter = this.clients.filter((client)=>{
       if(client.name.toUpperCase().indexOf(this.terminoSearch.toUpperCase()) != -1 || 
-         client.client.toString().indexOf(this.terminoSearch.toString()) != -1 ||
-         client.nameBranch.toUpperCase().indexOf(this.terminoSearch.toUpperCase()) != -1 
+         client.client.toString().indexOf(this.terminoSearch.toString()) != -1 
       ){
         return true;
       } 
@@ -93,6 +96,7 @@ export class CfComponent implements OnInit {
     for(let client of clients){
       arrayClientsModify.push({
         "client":client.id,
+        "reference":client.reference,
         "name":client.name,
         "address":client.address,
         "name_contact":client.name_contact,
@@ -109,36 +113,67 @@ export class CfComponent implements OnInit {
   }
 
   showClient(index){
+    this.request = "not";
+    this.cancelOrder = false;
     this.selectClient = true;
     this.client = this.clientsFilter[index];
     this.searchOrders(index);
   }
 
   showOrder(index){
+    this.request = "not";
+    this.cancelOrder = false;
     this.selectOrder = true;
     this.order= this.orders[index];
   }
 
   searchOrders(index){
     this.orders = [];
-    this.clientsFilter[index].branchs.map((elem)=>{
-      this._http.getRequest('branch/'+elem.id+'/order').subscribe(
-        (res)=>{
-          res.data.map((order)=>{
-            this.orders.push(order);
-          })
-        }
-      )
+    this.ordersShowLoading = true;
+    let promise = new Promise((resolve, reject)=>{
+      let tmp = [];
+      let count = 0;
+      this.clientsFilter[index].branchs.map((elem)=>{
+        this._http.getRequest('branch/'+elem.id+'/order').subscribe(
+          (res)=>{
+            res.data.map((order)=>{
+              tmp.push(order);
+            })
+            count += 1;
+            if(count == this.clientsFilter[index].branchs.length){
+              resolve(tmp);
+            }
+          }
+        )
+      })
+    })
+    
+    promise.then((data)=>{
+      this.orderArray(data);
     })
   }
 
+  orderArray(tmp){
+    this.orders = tmp.sort((a,b)=>{
+      if (a.created_at > b.created_at) {
+        return 1;
+      }else if (a.created_at < b.created_at) {
+        return -1;
+      }else{
+        return 0;
+      }
+    }).reverse()
+    this.ordersShowLoading = false;
+  }
+
   addBranch(){
+    this.request = "not";
     this.formaBranch.reset({name:"",address:"",phone:""});
     this.action = "branch";
   }
 
   updateClient(){
-    this.formaClient.reset({name:this.client.name,address:this.client.address,charge:this.client.charged,name_contact:this.client.name_contact,comments:this.client.comments});
+    this.formaClient.reset({name:this.client.name,address:this.client.address,charge:this.client.charged,name_contact:this.client.name_contact,comments:this.client.comments,observations:this.client.observations,reference:this.client.reference});
     this.action = "client";
   }
 
@@ -153,6 +188,8 @@ export class CfComponent implements OnInit {
         this.client.charged =body.charge;
         this.client.comments =body.comments;
         this.client.name_contact =body.name_contact;
+        this.client.observations =body.observations;
+        this.client.reference =body.reference;
         this.searchClients();
       },
       (error)=>{
@@ -184,6 +221,7 @@ export class CfComponent implements OnInit {
   }
 
   addPhone(){
+    this.request = "not";
     this.action = "phone";
     this.formaPhone = new FormGroup({
       'number':new FormControl('',Validators.required),
@@ -192,6 +230,7 @@ export class CfComponent implements OnInit {
   }
 
   addEmail(){
+    this.request = "not";
     this.action = "email";
     this.formaEmail = new FormGroup({
       'email':new FormControl('',[Validators.required,Validators.email])
@@ -227,7 +266,7 @@ export class CfComponent implements OnInit {
   }
 
   parseStatus(index){
-    switch(this.orders[index].status_order[this.orders[index].status_order.length - 1].status){
+    switch(parseInt(this.orders[index].status_order[this.orders[index].status_order.length - 1].status)){
       case 1: return "Venta";
       case 2: return "Diseño";
       case 3: return "Impresion";
@@ -240,7 +279,7 @@ export class CfComponent implements OnInit {
   }
 
   parseStatusLog(value){
-    switch(value){
+    switch(parseInt(value)){
       case 1: return "Venta";
       case 2: return "Diseño";
       case 3: return "Impresion";
@@ -252,7 +291,7 @@ export class CfComponent implements OnInit {
   }
 
   parseDesign(value){
-    switch (value){
+    switch (parseInt(value)){
       case 1: return "Nuevo";
       case 2: return "Correción";
       case 3: return "Ultimo diseño";
@@ -261,6 +300,7 @@ export class CfComponent implements OnInit {
   }
 
   removePhone(index){
+    this.request = "not";
     this.action = "remove";
     this.resourceDelete = {
       index:index,
@@ -269,6 +309,7 @@ export class CfComponent implements OnInit {
   }
 
   removeMail(index){
+    this.request = "not";
     this.action = "remove";
     this.resourceDelete = {
       index:index,
@@ -287,9 +328,9 @@ export class CfComponent implements OnInit {
     this._http.deleteRequest(uri).subscribe(
       (res)=>{
         if(this.resourceDelete.resource ==="phone"){
-          this.client["phones"].splice(this.resourceDelete.index);
+          this.client["phones"].splice(this.resourceDelete.index,1);
         }else if(this.resourceDelete.resource ==="email"){
-          this.client["emails"].splice(this.resourceDelete.index);
+          this.client["emails"].splice(this.resourceDelete.index,1);
         }
         this.request = "good";
         this.resourceDelete={};
@@ -313,6 +354,10 @@ export class CfComponent implements OnInit {
         this.request = "error";
       }
     )
+  }
+
+  calculateTotal(){
+    return parseFloat(this.order.price_flyer) + parseFloat(this.order.price_send) + parseFloat(this.order.price_design)
   }
 
   

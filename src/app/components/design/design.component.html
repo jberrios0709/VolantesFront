@@ -6,12 +6,14 @@
     </div>
   </div>
   
-  <div *ngIf="orders.length === 0" class="text-center"><h4>No existen ordenes asociadas al estado "diseño".</h4></div>
+  <div *ngIf="orders.length == 0" class="text-center"><h4>No existen ordenes asociadas al estado "diseño".</h4></div>
   <table class="table  table-hover" *ngIf="orders.length != 0">
     <thead class="thead-dark">
-      <tr (click)="test()">
-        <th scope="col">Número de cliente</th>
+      <tr>
+        <th scope="col">N° cliente</th>
         <th scope="col">Cliente</th>
+        <th scope="col">N° Pedido</th>
+        <th scope="col">Sucursal</th>
         <th scope="col">Producto</th>
         <th scope="col">Gramage</th>
         <th scope="col">Entrega</th>
@@ -24,9 +26,12 @@
       <tr *ngFor="let order of orders; let i = index" class="fadeInAnimated" style="cursor:pointer" data-toggle="modal" data-target="#exampleModal" (click)="selectOrder(i)">
         <th scope="row">{{order.branch.client.id}}</th>
         <td>{{order.branch.client.name}}</td>
+        <td>{{order.id}}</td>
+        <td>{{order.branch.name}}</td>
         <td>{{order.product}}</td>
         <td>{{order.garnet}}</td>
-        <td>{{order.date_delivery | date}}</td>
+        <td *ngIf="order.special_time == '1'">{{order.date_delivery | date}}</td>
+        <td *ngIf="order.special_time == '0'">{{order.time_delivery / 7}} Semana(s)</td>
         <td>{{order.size}}</td>
         <td>{{order.spaces}}</td>
         <td>{{parseDesign(order.design)}}</td>
@@ -40,177 +45,202 @@
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header text-center">
-          <h4 class="modal-title text-center" id="exampleModalLabel" >Datos del pedido</h4>
+          <h4 class="modal-title text-center" id="exampleModalLabel" *ngIf="orderSelect">Datos del pedido Nro {{order.id}}</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body" *ngIf="orderSelect">
-          <table class="table" *ngIf="request != 'next'">
-            <thead class="thead-dark">
-              <tr>
-                <th scope="col">Número de cliente</th>
-                <th scope="col">Cliente</th>
-                <th scope="col">Producto</th>
-                <th scope="col">Gramage</th>
-                <th scope="col">Entrega</th>
-                <th scope="col">Tamaño</th>
-                <th scope="col">Espacios</th>
-                <th scope="col">Diseño</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">{{order.branch.client.id}}</th>
-                <td>{{order.branch.client.name}}</td>
-                <td>{{order.product}}</td>
-                <td>{{order.garnet}}</td>
-                <td>{{order.date_delivery | date}}</td>
-                <td>{{order.size}}</td>
-                <td>{{order.spaces}}</td>
-                <td>{{parseDesign(order.design)}}</td>
-              </tr>
-            </tbody>
-            <thead class="thead-dark">
-              <tr>
-                <th scope="col" colspan="8" class="text-center">Especificaciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td colspan="8">{{order.specification}}</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div class="offset-md-4 col-md-4" *ngIf="request != 'next'">
-            <form [formGroup]="forma">
-              <div class="row">
-                <div class="col-6">
-                  <h1>Diseñado:  </h1>
-                </div>
-                <div class="col-6 spacing">
-                  <select formControlName="design" [ngClass]="{'check' : forma.value.design === '1' || forma.value.design === 1}">
-                    <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
-                  </select>
-                </div>
-                <div class="col-6">
-                  <h1>Envío 1:  </h1>
-                </div>
-                <div class="col-6  spacing">
-                  <select formControlName="send1" [ngClass]="{'check' : forma.value.send1 === '1' || forma.value.send1 === 1}">
-                    <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
-                  </select>
-                </div>
-                <div class="col-6">
-                  <h1>Correción 1:  </h1>
-                </div>
-                <div class="col-6  spacing">
-                  <select formControlName="correction1" [ngClass]="{'check' : forma.value.correction1 === '1' || forma.value.correction1 === 1}">
-                    <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
-                  </select>
-                </div>
-
-                <div class="col-6">
-                  <h1>Envío 2:  </h1>
-                </div>
-                <div class="col-6  spacing">
-                  <select formControlName="send2" [ngClass]="{'check' : forma.value.send2 === '1' || forma.value.send2 === 1}">
-                    <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
-                  </select>
-                </div>
-                <div class="col-6">
-                  <h1>Correción 2:  </h1>
-                </div>
-                <div class="col-6  spacing">
-                  <select formControlName="correction2" [ngClass]="{'check' : forma.value.correction2 === '1' || forma.value.correction2 === 1}">
-                    <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
-                  </select>
-                </div>
-
-                <div class="col-6">
-                  <h1>Envío 3:  </h1>
-                </div>
-                <div class="col-6  spacing">
-                  <select formControlName="send3" [ngClass]="{'check' : forma.value.send3 === '1' || forma.value.send3 === 1}">
-                    <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
-                  </select>
-                </div>
-                <div class="col-6">
-                  <h1>Correción 3:  </h1>
-                </div>
-                <div class="col-6  spacing">
-                  <select formControlName="correction3" [ngClass]="{'check' : forma.value.correction3 === '1' || forma.value.correction3 === 1}">
-                    <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
-                  </select>
-                </div>
-
-                <div class="col-6">
-                  <h1>Envío 4:  </h1>
-                </div>
-                <div class="col-6  spacing">
-                  <select formControlName="send4" [ngClass]="{'check' : forma.value.send4 === '1' || forma.value.send4 === 1}">
-                    <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
-                  </select>
-                </div>
-                <div class="col-6">
-                  <h1>Correción 4:  </h1>
-                </div>
-                <div class="col-6  spacing">
-                  <select formControlName="correction4" [ngClass]="{'check' : forma.value.correction4 === '1' || forma.value.correction4 === 1}">
-                    <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
-                  </select>
-                </div>
-
-                <div class="col-6">
-                  <h1>Envío 5:  </h1>
-                </div>
-                <div class="col-6  spacing">
-                  <select formControlName="send5" [ngClass]="{'check' : forma.value.send5 === '1' || forma.value.send1 === 5}">
-                    <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>                   
-                  </select>
-                </div>
-
-                <div class="col-6">
-                  <h1>Correción 5:  </h1>
-                </div>
-                <div class="col-6  spacing">
-                  <select formControlName="correction5" [ngClass]="{'check' : forma.value.correction5 === '1' || forma.value.correction5 === 1}">
-                    <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option> 
-                  </select>
-                </div>
-
-                <div class="col-6">
-                  <h1>Aprovado:  </h1>
-                </div>
-                <div class="col-6  spacing">
-                  <select formControlName="approved" [ngClass]="{'check' : forma.value.approved === '1' || forma.value.approved === 1}">
-                    <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>                    
-                  </select>
-                </div>
-
-                <div class="col-6">
-                  <h1>Responsabilidad:  </h1>
-                </div>
-                <div class="col-6  spacing">
-                  <select formControlName="responsibility" [ngClass]="{'check' : forma.value.responsibility === '1' || forma.value.responsibility === 1}">
-                    <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>                    
-                  </select>
-                </div>
-
-                <div class="col-6">
-                  <h1>Finalizado:  </h1>
-                </div>
-                <div class="col-6  spacing">
-                  <select formControlName="finish" [ngClass]="{'check' : forma.value.finish === '1' || forma.value.finish === 1}">
-                    <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
-                  </select>
-                </div>
-              </div> 
-            </form>
+          <div class="row">
+            <div class="col-md-6 confirm">
+              <p>Diseño: <b style="font-size:30px">{{parseDesign(order.design)}}</b></p>
+            </div>
+            <div class="col-md-6 confirm">
+              <p>Fecha de pedido: <b>{{order.created_at | date}}</b></p>
+              <p>Fecha de entrega: <b class="red">{{order.date_delivery | date}}</b></p>
+            </div>
           </div>
-          
-              
+          <div class="section-info">
+            <div class="separator text-center"><p>Datos del cliente</p></div>
+            <div class="col-12">
+              <div class="row" style="padding:10px;">
+                <div class="col-md-6 confirm">
+                  <p>Cliente: <b>{{order.branch.client.name}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Sucursal: <b>{{order.branch.name}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Nro de cliente: <b class="red">{{order.branch.client.id}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Nombre: <b>{{order.branch.client.name_contact}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Teléfono: <b>{{order.branch.client.phones[0].number}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Mail: <b>{{order.branch.client.emails[0].email}}</b></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-info">
+            <div class="separator text-center"><p>Datos de diseño</p></div>
+            <div class="col-12">
+              <div class="row" style="padding:10px;">
+                <div class="col-md-6 confirm">
+                  <p>Producto: {{order.product}}<b></b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Gramage: <b>{{order.garnet}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Tamaño: <b>{{order.size}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Lados: <b>{{parseSides(order.sides)}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Espacios: <b>{{order.spaces}}</b></p>
+                </div>
+                <div class="col-md-6 confirm">
+                  <p>Quien Ok: <b>{{order.contact_design}}</b></p>
+                </div>
+                <div class="col-md-12 confirm">
+                  <p>Especificaciones: <b>{{order.specification}}</b></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-info">
+            <div class="separator text-center"><p>Estado del diseño</p></div>
+            <div class="col-12">
+              <div *ngIf="request != 'next'">
+                <form [formGroup]="forma">
+                  <div class="row">
+                    <div class="col-md-3 col-sm-12">
+                      <h1>Diseñado:  </h1>
+                    </div>
+                    <div class="col-md-3 col-sm-12 spacing">
+                      <select formControlName="design" [ngClass]="{'check' : forma.value.design === '1' || forma.value.design === 1}">
+                        <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3 col-sm-12">
+                      <h1>Envío 1:  </h1>
+                    </div>
+                    <div class="col-md-3 col-sm-12  spacing">
+                      <select formControlName="send1" [ngClass]="{'check' : forma.value.send1 === '1' || forma.value.send1 === 1}">
+                        <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3 col-sm-12">
+                      <h1>Correción 1:  </h1>
+                    </div>
+                    <div class="col-md-3 col-sm-12  spacing">
+                      <select formControlName="correction1" [ngClass]="{'check' : forma.value.correction1 === '1' || forma.value.correction1 === 1}">
+                        <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3 col-sm-12">
+                      <h1>Envío 2:  </h1>
+                    </div>
+                    <div class="col-md-3 col-sm-12  spacing">
+                      <select formControlName="send2" [ngClass]="{'check' : forma.value.send2 === '1' || forma.value.send2 === 1}">
+                        <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3 col-sm-12">
+                      <h1>Correción 2:  </h1>
+                    </div>
+                    <div class="col-md-3 col-sm-12  spacing">
+                      <select formControlName="correction2" [ngClass]="{'check' : forma.value.correction2 === '1' || forma.value.correction2 === 1}">
+                        <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
+                      </select>
+                    </div>
+
+                    <div class="col-md-3 col-sm-12">
+                      <h1>Envío 3:  </h1>
+                    </div>
+                    <div class="col-md-3 col-sm-12  spacing">
+                      <select formControlName="send3" [ngClass]="{'check' : forma.value.send3 === '1' || forma.value.send3 === 1}">
+                        <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3 col-sm-12">
+                      <h1>Correción 3:  </h1>
+                    </div>
+                    <div class="col-md-3 col-sm-12  spacing">
+                      <select formControlName="correction3" [ngClass]="{'check' : forma.value.correction3 === '1' || forma.value.correction3 === 1}">
+                        <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3 col-sm-12">
+                      <h1>Envío 4:  </h1>
+                    </div>
+                    <div class="col-md-3 col-sm-12  spacing">
+                      <select formControlName="send4" [ngClass]="{'check' : forma.value.send4 === '1' || forma.value.send4 === 1}">
+                        <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3 col-sm-12">
+                      <h1>Correción 4:  </h1>
+                    </div>
+                    <div class="col-md-3 col-sm-12  spacing">
+                      <select formControlName="correction4" [ngClass]="{'check' : forma.value.correction4 === '1' || forma.value.correction4 === 1}">
+                        <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3 col-sm-12">
+                      <h1>Envío 5:  </h1>
+                    </div>
+                    <div class="col-md-3 col-sm-12  spacing">
+                      <select formControlName="send5" [ngClass]="{'check' : forma.value.send5 === '1' || forma.value.send1 === 5}">
+                        <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>                   
+                      </select>
+                    </div>
+                    <div class="col-md-3 col-sm-12">
+                      <h1>Correción 5:  </h1>
+                    </div>
+                    <div class="col-md-3 col-sm-12  spacing">
+                      <select formControlName="correction5" [ngClass]="{'check' : forma.value.correction5 === '1' || forma.value.correction5 === 1}">
+                        <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option> 
+                      </select>
+                    </div>
+                    <div class="col-md-3 col-sm-12">
+                      <h1>Aprovado:  </h1>
+                    </div>
+                    <div class="col-md-3 col-sm-12  spacing">
+                      <select formControlName="approved" [ngClass]="{'check' : forma.value.approved === '1' || forma.value.approved === 1}">
+                        <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>                    
+                      </select>
+                    </div>
+                    <div class="col-md-3 col-sm-12">
+                      <h1>Responsabilidad:  </h1>
+                    </div>
+                    <div class="col-md-3 col-sm-12  spacing">
+                      <select formControlName="responsibility" [ngClass]="{'check' : forma.value.responsibility === '1' || forma.value.responsibility === 1}">
+                        <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>                    
+                      </select>
+                    </div>
+                    <div class="col-md-3 col-sm-12">
+                      <h1>Finalizado:  </h1>
+                    </div>
+                    <div class="col-md-3 col-sm-12  spacing">
+                      <select formControlName="finish" [ngClass]="{'check' : forma.value.finish === '1' || forma.value.finish === 1}">
+                        <option *ngFor="let op of selects" [value]=op.value>{{op.text}}</option>
+                      </select>
+                    </div>
+                  </div> 
+                </form>
+              </div>              
+            </div>
+          </div>
+
+          <p>Vendedor: <b>{{order.status_order[0].user.name | json}}</b></p>
           
           <div *ngIf="request === 'good'" class="alert alert-success fade fastAnimated" role="alert" style="margin-top:10px">
               Datos guardados exitosamente.
@@ -225,8 +255,8 @@
         <div class="modal-footer">
           <!--Buttons-->
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-          <button type="button" class="btn btn-primary" *ngIf="forma.valid && (!forma.value.finish || !forma.value.responsibility || forma.value.finish === '0' || !forma.value.responsibility === '0') && request != 'next'" (click)="update()">Guardar Cambios</button>
-          <button type="button" class="btn btn-success" *ngIf="forma.valid && (forma.value.finish === 1 || forma.value.finish === '1') && (forma.value.responsibility === 1 || forma.value.responsibility === '1')" (click)="update()">Imprimir</button>
+          <button type="button" class="btn btn-primary" *ngIf="forma.valid && !showButton() && request != 'next'" (click)="update()">Guardar Cambios</button>
+          <button type="button" class="btn btn-success" *ngIf="forma.valid && showButton() && (forma.value.responsibility == 1)" (click)="update()">Imprimir</button>
         </div>
       </div>
     </div>

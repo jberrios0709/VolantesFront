@@ -16,9 +16,10 @@ export class PriceComponent implements OnInit {
   formaThree:FormGroup;
   formaFour:FormGroup;
   text:any [] = ["5000","10000","15000","20000"];
-  measure:any [] = ["15x7.5","15x10","20x15","20x30"];
+  measure:any [] = ["10x7.5","10x15","20x15","20x30"];
   status:number=0;
   request:string="not";
+  loading:boolean = false;
 
   constructor(public _http:HttpService) { 
     this.formaFirst = new FormGroup({
@@ -51,16 +52,17 @@ export class PriceComponent implements OnInit {
         new FormControl('', Validators.required)
       );
     }
-    console.log(this.formaFirst.value);
-    
   }
 
   searchPrices(){
+    this.prices = [];
     this._http.getRequest('price').subscribe(
-      (res)=>{ 
-        this.prices = res.data;
-        this.show = true;
-        this.priceIndex = 0;
+      (res)=>{    
+        if(res.data.register > 0){
+          this.prices = res.data;
+          this.show = true;
+          this.priceIndex = 0;
+        }
       },
       (error)=>{
         if(this.verifyError(error.json())){        
@@ -81,7 +83,12 @@ export class PriceComponent implements OnInit {
   }
 
   showPrice(index){
+    this.loading=true;
     this.priceIndex = index;
+    setTimeout(()=>{
+      this.loading=false;
+    },300)
+    
   }
 
   next(){
@@ -150,6 +157,7 @@ export class PriceComponent implements OnInit {
     this._http.postRequest('price',{prices:body}).subscribe(
       (res)=>{
         this.request = "good";
+        this.searchPrices();
       },
       (error)=>{
         this.request = "error";

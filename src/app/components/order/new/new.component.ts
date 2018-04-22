@@ -19,6 +19,7 @@ export class NewComponent implements OnInit {
   nextView:boolean = false;
   select:any = {}; //Campos para los selects de la vista
   spaces:string = "0";
+  phones:any[] = [];
 
   constructor(public _http:HttpService) { }
 
@@ -30,11 +31,11 @@ export class NewComponent implements OnInit {
   initSelect(){
     this.select = {
       "product":["Volantes"],
-      "size":[{"value":1,"size":"10x7.5"},{"value":2,"size":"10x15"},{"value":3,"size":"15x20"},{"value":4,"size":"15x30"}],
+      "size":[{"value":1,"size":"10x7.5"},{"value":2,"size":"10x15"},{"value":3,"size":"20x15"},{"value":4,"size":"20x30"}],
       "garnet":["115gr","150gr"],
       "time":[{"value":7,"text":"1 semana"},{"value":21,"text":"3 semanas"}],
       "send":[{"value":0,"text":"No"},{"value":1,"text":"Si"}],
-      "design":[{"value":1,"text":"Nuevo"},{"value":2,"text":"Correción"},{"value":3,"text":"Ultimo diseño"},{"value":4,"text":"Envia el cliente"}],
+      "design":[{"value":1,"text":"Nuevo"},{"value":2,"text":"Correción"},{"value":3,"text":"Mismo"},{"value":4,"text":"Envia el cliente"}],
       "sides":[{"value":1,"text":"Un solo lado"},{"value":2,"text":"Dos lados diferentes"},{"value":3,"text":"Dos lados iguales"}],
       "price":[{"value":"default", "text": "0"}]
     }
@@ -50,7 +51,7 @@ export class NewComponent implements OnInit {
         'name':new FormControl('',Validators.required),
         'reference':new FormControl('',Validators.required),
         'observations':new FormControl('',Validators.required),
-        'comments':new FormControl('',Validators.required),
+        'comments':new FormControl(''),
         'name_contact':new FormControl('',Validators.required),
         'charge':new FormControl('',Validators.required),
         'address':new FormControl('',Validators.required),
@@ -75,7 +76,7 @@ export class NewComponent implements OnInit {
           new FormControl('')
         ]),
         'isDone':new FormArray([
-          new FormControl(true)
+          new FormControl(false)
         ])  
       });
       this.formaOrder = new FormGroup({
@@ -93,9 +94,9 @@ export class NewComponent implements OnInit {
         "trace":new FormControl(''),
         "debit":new FormControl(''),
         "method_payment":new FormControl('',Validators.required),
-        "price_flyer":new FormControl('default'),
-        "price_design":new FormControl('0',[Validators.required,Validators.pattern(/^([0-9]|.)*$/)]),
-        "price_send":new FormControl('0',[Validators.required,Validators.pattern(/^([0-9]|.)*$/)]),
+        "price_flyer":new FormControl('',Validators.required),
+        "price_design":new FormControl('',[Validators.required,Validators.pattern(/^([0-9]|.)*$/)]),
+        "price_send":new FormControl('',[Validators.required,Validators.pattern(/^([0-9]|.)*$/)]),
         "price_flyer_special":new FormControl(false),
         "we_send":new FormControl('',Validators.required),
         "description_send":new FormControl('',Validators.required),
@@ -120,14 +121,12 @@ export class NewComponent implements OnInit {
   }
 
   addPhone(){
-    if(this.formaClient.value.phones.length<4){
-      (<FormArray>this.formaClient.controls['phones']).push(
-        new FormControl('', Validators.required)
-      );
-      (<FormArray>this.formaClient.controls['explanatorys']).push(
-        new FormControl('', Validators.required)
-      );
-    }
+    (<FormArray>this.formaClient.controls['phones']).push(
+      new FormControl('', Validators.required)
+    );
+    (<FormArray>this.formaClient.controls['explanatorys']).push(
+      new FormControl('', Validators.required)
+    );
   }
 
   addBranch(){
@@ -141,7 +140,7 @@ export class NewComponent implements OnInit {
       new FormControl('', Validators.required)
     );
     (<FormArray>this.formaBranch.controls['isDone']).push(
-      new FormControl(true)
+      new FormControl(false)
     );
   }
 
@@ -150,11 +149,9 @@ export class NewComponent implements OnInit {
   }
 
   addEmail(){
-    if(this.formaClient.value.emails.length<4){
-      (<FormArray>this.formaClient.controls['emails']).push(
-        new FormControl('', Validators.required)
-      );
-    }
+    (<FormArray>this.formaClient.controls['emails']).push(
+      new FormControl('', Validators.required)
+    );
   }
 
   createClient(){    
@@ -374,11 +371,19 @@ export class NewComponent implements OnInit {
     }
   }
 
+  parseSides(){
+    switch(parseInt(this.formaOrder.value.sides)){
+      case 1: return "Un solo lado";
+      case 2: return "Dos lados diferentes" ;
+      case 3: return "Dos lados iguales";
+    }
+  }
+
   parseDesign(){
-    switch (this.formaOrder.value.design){
+    switch (parseInt(this.formaOrder.value.design)){
       case 1: return "Nuevo";
       case 2: return "Correción";
-      case 3: return "Ultimo diseño";
+      case 3: return "Mismo";
       case 4: return "Envia el cliente";
       default: return this.formaOrder.value.design;
     }
@@ -434,6 +439,20 @@ export class NewComponent implements OnInit {
       )
     }else{
       this.spaces = "0";
+    }
+  }
+
+  deleteAttr(type,index){
+    if(type=="phone"){
+      (<FormArray>this.formaClient.controls['phones']).removeAt(index);
+      (<FormArray>this.formaClient.controls['explanatorys']).removeAt(index);
+    }else if(type=="email"){
+      (<FormArray>this.formaClient.controls['emails']).removeAt(index);
+    }else if(type=="branch"){
+      (<FormArray>this.formaBranch.controls['name']).removeAt(index);
+      (<FormArray>this.formaBranch.controls['address']).removeAt(index);
+      (<FormArray>this.formaBranch.controls['phone']).removeAt(index);
+      (<FormArray>this.formaBranch.controls['isDone']).removeAt(index);
     }
   }
 

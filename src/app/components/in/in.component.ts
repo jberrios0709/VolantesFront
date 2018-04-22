@@ -16,9 +16,7 @@ export class InComponent implements OnInit {
   ngOnInit() {
     this._http.getRequest('orders?q=date&init=true').subscribe(
       (res)=>{    
-        console.log(res);
-            
-        this.payments = res.data;
+        this.payments = res.data.reverse();
       },
       (error)=>{
         if(this.verifyError(error.json())){        
@@ -73,6 +71,14 @@ export class InComponent implements OnInit {
         }
       )
     }
+  }
+
+  total(){
+    let total = 0;
+    this.payments.map((elem,index)=>{
+        total += parseInt(this.payment(index));
+    })
+    return total;
   }
 
 

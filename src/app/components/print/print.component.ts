@@ -18,12 +18,29 @@ export class PrintComponent implements OnInit {
   spaces:number=0;
   orderFirstSelect:any=[];
   orderSecondSelect:any=[];
+  spacesTotal:number = 10;
 
   constructor(public _http:HttpService) { }
 
   ngOnInit() {
-    this.searchOrders();
+    this.searchAndOrderData();
     this.searchFolios();
+  }
+
+  searchAndOrderData(){
+    let promise = new Promise((resolve, reject)=>{           
+      if(this.searchOrders() && this.searchOrdersOtherTaller()){
+        resolve(true);
+      }
+    })
+
+    promise.then((data)=>{
+     
+      this.ordersFirst = this.orderArray(this.ordersFirst);
+      this.ordersSecond = this.orderArray(this.ordersSecond);
+      this.ordersOthers = this.orderArray(this.ordersOthers);
+      
+    })
   }
   
   sendTaller(){
@@ -33,7 +50,7 @@ export class PrintComponent implements OnInit {
       this._http.postRequest("print", body).subscribe(
         (res)=>{
           this.requestStatus='good';
-          this.searchOrders();
+          this.searchAndOrderData();
           this.searchFolios();
         },
         (error)=>{
@@ -58,7 +75,7 @@ export class PrintComponent implements OnInit {
       this._http.postRequest("order/"+this.objectShow.id+"/taller", body).subscribe(
         (res)=>{
           this.requestStatus='good';
-          this.searchOrders();
+          this.searchAndOrderData();
         },
         (error)=>{
           if(this.verifyError(error.json())){        
@@ -67,7 +84,6 @@ export class PrintComponent implements OnInit {
           this.requestStatus='error';
         }
       )
-    
   }
 
   jobPrint(){
@@ -77,6 +93,7 @@ export class PrintComponent implements OnInit {
         (res)=>{
           this.requestStatus='good';
           this.deleteFolio();
+          this.searchAndOrderData();
         },
         (error)=>{
           if(this.verifyError(error.json())){        
@@ -96,15 +113,44 @@ export class PrintComponent implements OnInit {
     })
   }
 
-  select(index,type){
+  select(select,type){
     this.requestStatus="not";
     if(type==="folio"){
-      this.objectShow = this.folios[index];
+      this.objectShow = this.folios[select];
       this.show = "folio";
     }else if(type==="confirm"){
       this.show = "confirm";
+    }else if(type==="view"){
+      this.ordersFirst.map((elem)=>{
+        if(elem.id == parseInt(select)){
+          this.objectShow = elem;
+          this.show = "view";
+        }
+      })
+      this.ordersSecond.map((elem)=>{
+        if(elem.id == parseInt(select)){
+          this.objectShow = elem;
+          this.show = "view";
+        }
+      })
+      this.ordersOthers.map((elem)=>{
+        if(elem.id == parseInt(select)){
+          this.objectShow = elem;
+          this.show = "view";
+        }
+      })
     }
   }
+
+  parseSides(value){
+    switch(parseInt(value)){
+      case 1: return "Un solo lado";
+      case 2: return "Dos lados diferentes" ;
+      case 3: return "Dos lados iguales";
+    }
+  }
+
+  
 
   searchOrders(){
     this._http.getRequest('orders?q=3').subscribe(
@@ -112,8 +158,7 @@ export class PrintComponent implements OnInit {
         this.ordersFirst = [];
         this.ordersSecond = [];
         this.ordersOthers = [];
-        this.filterOrders(res.data);
-        this.searchOrdersOtherTaller();
+        return this.filterOrders(res.data);
       },
       (error)=>{
         if(this.verifyError(error.json())){        
@@ -126,11 +171,11 @@ export class PrintComponent implements OnInit {
   searchOrdersOtherTaller(){
     this._http.getRequest('orders?q=4').subscribe(
       (res)=>{        
-        this.filterOrders(res.data);
+        return this.filterOrders(res.data);
       },
       (error)=>{
         if(this.verifyError(error.json())){        
-          this.searchOrders();
+          this.searchOrdersOtherTaller();
         }
       }
     )
@@ -143,7 +188,7 @@ export class PrintComponent implements OnInit {
       },
       (error)=>{
         if(this.verifyError(error.json())){        
-          this.searchOrders();
+          this.searchFolios();
         }
       }
     )
@@ -160,21 +205,25 @@ export class PrintComponent implements OnInit {
   }
 
   filterOrders(orders){
+    let listArray = {"first":[],"second":[],"others":[]};
     for (let order of orders) {
-      if(order.product == "Volantes"){
+      if(order.product === "Volantes"){
         if(order.garnet == "115gr"){
-          this.ordersFirst.push(order);
+          listArray.first.push(order);
           this.orderFirstSelect.push({isDone:false,spaces:0});
         }else if(order.garnet == "150gr"){
-          this.ordersSecond.push(order);
+          listArray.second.push(order);
           this.orderSecondSelect.push({isDone:false,spaces:0});
         }else{
-          this.ordersOthers.push(order);
+          listArray.others.push(order);
         }
       }else{
-        this.ordersOthers.push(order);
+        listArray.others.push(order);
       }
     }
+    this.ordersFirst = this.orderArray(listArray.first);
+    this.ordersSecond = this.orderArray(listArray.second);
+    this.ordersOthers = this.orderArray(listArray.others);
   }
 
   selects(array,index){
@@ -210,6 +259,17 @@ export class PrintComponent implements OnInit {
     this.spaces = spaces;
   }
 
+  countSpacesTotal(){
+    let spaces = 0;
+    this.ordersFirst.map((elem)=>{
+      spaces = spaces + parseInt(elem.spacesInMissing); 
+    })
+    this.ordersSecond.map((elem)=>{
+      spaces = spaces + parseInt(elem.spacesInMissing);       
+    })
+    return spaces;
+  }
+
   bodySend(){
     let body = [];
     this.orderFirstSelect.map((elem,index)=>{
@@ -231,9 +291,16 @@ export class PrintComponent implements OnInit {
     return body;
   }
 
-  test(){
-    console.log(this.ordersOthers);
-    
+  orderArray(tmp){
+    return tmp.sort((a,b)=>{
+      if (a.date_delivery > b.date_delivery) {
+        return 1;
+      }else if (a.date_delivery < b.date_delivery) {
+        return -1;
+      }else{
+        return 0;
+      }
+    })
   }
 
 }

@@ -1,83 +1,86 @@
 <app-navbar></app-navbar>
 <div class="content slide data fadeInAnimated fastAnimated"> 
-    <div class="offset-md-1  col-10" *ngIf="nextView === false">
+    <div class="offset-md-1  col-md-10" *ngIf="nextView === false">
       <div class="section-info">
         <div class="separator text-center" (click)="test()"><h4>Cliente</h4></div>
         <form [formGroup]='formaClient'>
           <div class="row">
-            <div class="col-2">
+            <div class="col-md-2">
               <h1>Empresa</h1>
             </div>
-            <div class="col-4">
+            <div class="col-md-4">
               <input type="text" formControlName="name">
             </div>
-            <div class="col-2">
-              <h1>Referencia</h1>
+            <div class="col-md-2">
+              <h1>Consiguio</h1>
             </div>
-            <div class="col-4">
+            <div class="col-md-4">
               <input type="text" formControlName="reference">
             </div>
-            <div class="col-2">
+            <div class="col-md-2">
               <h1>Contacto</h1>
             </div>
-            <div class="col-4">
+            <div class="col-md-4">
               <input type="text" formControlName="name_contact">
             </div>
-            <div class="col-2">
+            <div class="col-md-2">
               <h1>Cargo</h1>
             </div>
-            <div class="col-4">
+            <div class="col-md-4">
               <input type="text" formControlName="charge">
             </div>
-            <div class="col-2">
-              <h1>Observaciones</h1>
+            <div class="col-md-2">
+              <h1>Vendedor</h1>
             </div>
-            <div class="col-4">
+            <div class="col-md-4">
               <input type="text" formControlName="observations">
             </div>
-            <div class="col-2">
+            <div class="col-md-2">
               <h1>Dirección</h1>
             </div>
-            <div class="col-4">
+            <div class="col-md-4">
               <input type="text" formControlName="address">
             </div>
-            <div class="col-2">
+            <div class="col-md-2">
               <h1>Comentario</h1>
             </div>
-            <div class="col-10">
+            <div class="col-md-10">
               <textarea type="text" formControlName="comments" style="width:100%"></textarea>
             </div>
             <section class="col-12 text-center">
-                <h5>Teléfonos   <label (click)="addPhone()"><i class="fas fa-plus-square add" ></i></label></h5>
-                <div class="row" formArrayName="phones" style="justify-content:center">
-                  <div class="col-3" *ngFor="let email of formaClient.controls['phones'].controls; let i = index">
-                    <input type="text" placeholder="Número" [formControlName]="i">
+              <h5>Teléfonos   <label (click)="addPhone()"><i class="fas fa-plus-square add" ></i></label></h5>
+              <div class="row" style="justify-content:center">
+                <div class="col-6" formArrayName="phones">
+                  <div class="col-md-12" *ngFor="let email of formaClient.controls['phones'].controls; let i = index">
+                    <label *ngIf="formaClient.value.phones.length > 1" (click)="deleteAttr('phone',i)"><i class="fas fa-times fa-2x remove"></i></label>
+                    <input type="text" placeholder="Número" [formControlName]="i" style="width:90%">
                   </div>
                 </div>
-                <div class="row" formArrayName="explanatorys" style="justify-content:center">
-                  <div class="col-3" *ngFor="let email of formaClient.controls['explanatorys'].controls; let i = index">
+                <div class="col-6" formArrayName="explanatorys">
+                  <div class="col-md-12" *ngFor="let email of formaClient.controls['explanatorys'].controls; let i = index">
                     <input type="text" placeholder="Aclaratoria" [formControlName]="i">
                   </div>
                 </div>
-              </section>
-              <section class="col-12 text-center">
+              </div>
+            </section>
+            <section class="col-12 text-center">
                 <h5>Emails  <label (click)="addEmail()"><i class="fas fa-plus-square add" ></i></label></h5>
-                <div class="row" formArrayName="emails" style="justify-content:center">
-                  <div class="col-3" *ngFor="let email of formaClient.controls['emails'].controls; let i = index">
-                    <input type="text" placeholder="Email" [formControlName]="i">
+                <div class="row" formArrayName="emails">
+                  <div class="col-md-6" *ngFor="let email of formaClient.controls['emails'].controls; let i = index">
+                    <label *ngIf="formaClient.value.emails.length > 1" (click)="deleteAttr('email',i)"><i class="fas fa-times fa-2x remove"></i></label>
+                    <input type="text" placeholder="Email" [formControlName]="i"  style="width:90%">
                   </div>
                 </div>
-              </section>
+            </section>
             
           </div>
         </form>
       </div>
       
       <div class="section-info">
-        <div class="separator text-center"><h4 (click)="test()">Sucursal</h4><label (click)="addBranch()"><i class="fas fa-plus-square add" ></i></label></div>
+        <div class="separator text-center"><h4>Sucursal</h4><label (click)="addBranch()"><i class="fas fa-plus-square add" ></i></label></div>
         
-        
-        <div class="row">
+        <div class="row max-width">
 
           <div class="col-3 text-center">
             <label>Nombre</label>
@@ -91,12 +94,17 @@
           <div class="col-2 text-center">
             <label>Seleccionar</label>
           </div>
-
+          
           <div class="col-3">
             <form [formGroup]='formaBranch'>
               <div class="row" formArrayName="name">
-                <div class="col-12" *ngFor="let branch of formaBranch.controls['name'].controls; let i = index">
-                  <input type="text" [formControlName]="i">
+                <div class="row" *ngFor="let branch of formaBranch.controls['name'].controls; let i = index" style="margin-left:0;margin-right:0">
+                  <div class="col-2">
+                    <label *ngIf="formaBranch.value.name.length > 1" (click)="deleteAttr('branch',i)"><i class="fas fa-times fa-2x remove"></i></label>
+                  </div>
+                  <div class="col-10" >
+                    <input type="text" [formControlName]="i">
+                  </div>
                 </div>
               </div>
             </form>
@@ -125,8 +133,11 @@
           <div class="col-2 text-center">
             <form [formGroup]='formaBranch'>
               <div class="row" formArrayName="isDone">
-                <div class="col-12" *ngFor="let branch of formaBranch.value.isDone; let i = index" style="height:35px">
-                  <input type="checkbox" [checked]="branch" (change)="changeSelect(i)" style="width: 10%;height: 100%;">
+                <div class="col-12" *ngFor="let branch of formaBranch.value.isDone; let i = index" style="margin-bottom:8px;">
+                  <select (change)="changeSelect(i)" style="height:90%;">
+                    <option value="false">No</option>
+                    <option value="false">Si</option>
+                  </select>
                 </div>
               </div>
             </form>
@@ -140,78 +151,78 @@
     </div>
 
     <!--Formulario pedido-->
-    <div class="offset-md-1  col-10" *ngIf="nextView === true">
+    <div class="offset-md-1  col-md-10" *ngIf="nextView === true">
       <div class="section-info">
         <div class="separator text-center"><h4>Datos del pedido</h4></div>
         <form [formGroup]='formaOrder'>
           <div class="row">
-            <div class="col-2" (click)="test()">
+            <div class="col-md-2" (click)="test()">
               <label class="big">Trabajo:</label>
             </div>
-            <div class="col-4">
+            <div class="col-md-4">
               <div class="div-form form-group">
                 <select formControlName="product">
                   <option *ngFor="let product of select.product"  [value]="product">{{product}}</option>
                 </select>
               </div>   
             </div>
-            <div class="col-2">
+            <div class="col-md-2">
               <label class="big">Otro:</label>
             </div>
-            <div class="col-4">
+            <div class="col-md-4">
               <div class="div-form"><input type="text" (keyup)="addProduct($event)"></div>  
             </div>
           </div>
 
           <div class="row">
-            <div class="col-2">
+            <div class="col-md-2">
               <label class="big">Medida:</label>
             </div>
-            <div class="col-4">
+            <div class="col-md-4">
               <div class="div-form form-group">
                 <select formControlName="size" (keyup)="searchPrice()" ng-blur="searchPrice()" (blur)="calculateSpaces()">
                   <option *ngFor="let size of select.size"  [value]="size.value">{{size.size}}</option>
                 </select>
               </div>  
             </div>
-            <div class="col-2">
+            <div class="col-md-2">
               <label class="big">Otra:</label>
             </div>
-            <div class="col-4">
+            <div class="col-md-4">
               <div class="div-form"><input type="text" (keyup)="addSize($event)"></div>  
             </div>
           </div>
 
           <div class="row">
-            <div class="col-2">
+            <div class="col-md-2">
               <label class="big">Cantidad:</label>
             </div>
-            <div class="col-4">
+            <div class="col-md-4">
               <div class="div-form"><input type="text" formControlName="quantity" (blur)="calculateSpaces()"></div>  
             </div>
-            <div class="col-2">
+            <div class="col-md-2">
               <label class="big">Espacios:</label>
             </div>
-            <div class="col-4">
-              <div class="div-form"><input type="text" [value]="spaces"></div>  
+            <div class="col-md-4">
+              <div class="div-form"><input type="text" [value]="spaces" disabled></div>  
             </div>
           </div>
 
           <div class="row">
-            <div class="col-2">
+            <div class="col-md-2">
               <label class="big">Lados:</label>
             </div>
-            <div class="col-4">
+            <div class="col-md-4">
               <div class="div-form form-group">
                 <select formControlName="sides">                 
                   <option *ngFor="let side of select.sides"  [value]="side.value">{{side.text}}</option>
                 </select>
               </div>   
             </div>
-            <div class="col-2">
+            <div class="col-md-2">
               <label class="big">Diseño:</label>
             </div>
-            <div class="col-4">
+            <div class="col-md-4">
               <div class="div-form form-group">
                 <select formControlName="design">                 
                   <option *ngFor="let design of select.design"  [value]="design.value">{{design.text}}</option>
@@ -221,10 +232,10 @@
           </div>
 
           <div class="row">
-            <div class="col-2">
+            <div class="col-md-2">
               <label class="big">Gramage:</label>
             </div>
-            <div class="col-4">
+            <div class="col-md-4">
               <div class="div-form form-group">
                 <select style="width:40%" formControlName="garnet">
                   <option *ngFor="let garnet of select.garnet"  [value]="garnet">{{garnet}}</option>
@@ -232,10 +243,10 @@
                 <input type="text" style="width:50%" (keyup)="addGarnet($event)">
               </div>   
             </div>
-            <div class="col-2">
-              <label class="big">Contacto:</label>
+            <div class="col-md-2">
+              <label class="big">Contacto ok:</label>
             </div>
-            <div class="col-4">
+            <div class="col-md-4">
               <div class="div-form form-group">
                 <input type="text" formControlName="contact_design">
               </div>   
@@ -243,10 +254,10 @@
           </div>
 
           <div class="row">
-            <div class="col-3">
+            <div class="col-md-3">
               <label class="big">Especificaciones:</label>
             </div>
-            <div class="col-9">
+            <div class="col-md-9">
               <div class="div-form form-group">
                 <textarea rows="5" formControlName="specification"></textarea>
               </div>   
@@ -256,29 +267,29 @@
           <div class="separator text-center"><h4>Entrega</h4></div>
 
           <div class="row">
-            <div class="col-3">
+            <div class="col-md-3">
               <label class="big">Tiempo de entrega:</label>
             </div>
-            <div class="col-3">
+            <div class="col-md-3">
               <div class="div-form form-group">
                 <select formControlName="time_delivery">
                   <option *ngFor="let time of select.time"  [value]="time.value">{{time.text}}</option>
                 </select>
               </div>   
             </div>
-            <div class="col-2">
+            <div class="col-md-2">
               <label class="big">Especifique:</label>
             </div>
-            <div class="col-4">
+            <div class="col-md-4">
               <input type="date" class="form type2" (change)="addTime($event)">
             </div>
           </div>
 
           <div class="row">
-            <div class="col-3">
+            <div class="col-md-3">
               <label class="big">Enviamos:</label>
             </div>
-            <div class="col-3">
+            <div class="col-md-3">
               <div class="div-form form-group">
                 <select formControlName="we_send">
                   <option *ngFor="let send of select.send"  [value]="send.value">{{send.text}}</option>
@@ -286,10 +297,10 @@
               </div>   
             </div>
 
-            <div class="col-2">
+            <div class="col-md-2">
               <label class="big">Especifique:</label>
             </div>
-            <div class="col-4">
+            <div class="col-md-4">
               <input type="text" placeholder="Medio de envío"  class="type2" formControlName="description_send">
             </div>
           </div>
@@ -297,41 +308,41 @@
           <div class="separator text-center"><h4>Precios</h4></div>
             
           <div class="row">
-            <div class="col-2">
+            <div class="col-md-2">
               <label class="big">Base: <button type="button" class="btn btn-info" (click)="searchPrice()"><i class="fas fa-calculator"></i></button></label>
             </div>
-            <div class="col-4">
+            <div class="col-md-4">
               <div class="div-form form-group">
                 <select formControlName="price_flyer">
                   <option *ngFor="let price of select.price"  [value]="price.value">{{price.text}}</option>
                 </select>
               </div>   
             </div>
-            <div class="col-2">
+            <div class="col-md-2">
               <label class="big">Especifique:</label>
             </div>
-            <div class="col-4">
+            <div class="col-md-4">
               <input type="text" (keyup)="addPrice($event)">
             </div>
           </div>
 
           <div class="row">
-            <div class="col-2">
+            <div class="col-md-2">
               <label class="big">Diseño:</label>
             </div>
-            <div class="col-2">
+            <div class="col-md-2">
               <input type="text" formControlName="price_design">
             </div>
-            <div class="col-2">
+            <div class="col-md-2">
               <label class="big">Envio:</label>
             </div>
-            <div class="col-2">
+            <div class="col-md-2">
               <input type="text" formControlName="price_send">
             </div>
-            <div class="col-2">
+            <div class="col-md-2">
               <label class="big">Total:</label>
             </div>
-            <div class="col-2">
+            <div class="col-md-2">
               <input type="text" [value]="calculateTotal()  | number:'1.1-2'" disabled>
             </div>
           </div>
@@ -340,25 +351,25 @@
           <div class="separator text-center"><h4>Pagos</h4></div>
             
           <div class="row">
-            <div class="col-3">
+            <div class="col-md-3">
               <label class="big">Seña:</label>
             </div>
-            <div class="col-3">
+            <div class="col-md-3">
               <input type="text" formControlName="trace">
             </div>
-            <div class="col-3">
+            <div class="col-md-3">
               <label class="big">Deuda:</label>
             </div>
-            <div class="col-3">
+            <div class="col-md-3">
               <input type="text" [value]="calculateDebit()  | number:'1.1-2'" disabled>
             </div>
           </div>
 
           <div class="row">
-            <div class="col-3">
+            <div class="col-md-3">
               <label class="big">Medio de pago:</label>
             </div>
-            <div class="col-3">
+            <div class="col-md-3">
               <input type="text" formControlName="method_payment">
             </div>
           </div>
@@ -384,155 +395,103 @@
             </button>
           </div>
           <div class="modal-body" *ngIf="request=='false'">
-            <div class="col-12 text-center">
-              <h5 style="background: black;     color: white;">Especificaciones generales</h5>
-              <div class="row"  style="padding:10px;">
-                <div class="col-3 text-center confirm">
-                  <strong>Trabajo</strong>
-                </div>
-                <div class="col-3 text-center  confirm-elemnt">
-                  <strong>{{this.formaOrder.value.product}}</strong>
-                </div>
-                <div class="col-3 text-center confirm">
-                  <strong>Medida</strong>
-                </div>
-                <div class="col-3 text-center  confirm-elemnt">
-                  <strong>{{parseSize()}}</strong>
-                </div>
-                <div class="col-3 text-center confirm">
-                  <strong>Cantidad</strong>
-                </div>
-                <div class="col-3 text-center  confirm-elemnt">
-                  <strong>{{this.formaOrder.value.quantity  | number:'1.1-2'}}</strong>
-                </div>
-                <div class="col-3 text-center confirm">
-                  <strong>Lados</strong>
-                </div>    
-                <div class="col-3 text-center confirm-elemnt">
-                  <strong>{{this.formaOrder.value.sides}}</strong>
-                </div>
-                <div class="col-3 text-center confirm">
-                  <strong>Diseño</strong>
-                </div>
-                <div class="col-3 text-center confirm-elemnt">
-                  <strong>{{parseDesign()}}</strong>
-                </div>
-                <div class="col-3 text-center confirm">
-                  <strong>Gramage</strong>
-                </div>
-                <div class="col-3 text-center confirm-elemnt">
-                  <strong>{{parseGarnet()}}</strong>
-                </div>
-                <div class="col-3 text-center confirm">
-                  <strong>Contacto diseño</strong>
-                </div>
-                <div class="col-3 text-center confirm-elemnt">
-                  <strong>{{this.formaOrder.value.contact_design}}</strong>
-                </div>
-                <div class="col-3 text-center confirm">
-                  <strong>Espacios</strong>
-                </div>
-                <div class="col-3 text-center confirm-elemnt">
-                  <strong>{{spaces}}</strong>
-                </div>
-                <div class="col-12 text-center confirm">
-                  <strong>Especificaciones</strong>
-                </div>
-                <div class="col-12 text-center confirm-elemnt">
-                  <strong>{{this.formaOrder.value.specification}}</strong>
+            <div class="section-info">
+              <div class="separator text-center"><p>Especificaciones generales</p></div>
+              <div class="col-12">
+                <div class="row"  style="padding:10px;">
+                  <div class="col-md-6 confirm">
+                    <p>Trabajo: <b>{{this.formaOrder.value.product}}</b></p>
+                  </div>
+                  <div class="col-md-6 confirm">
+                    <p>Medida: <b>{{parseSize()}}</b></p>
+                  </div>
+                  <div class="col-md-6 confirm">
+                    <p>Cantidad: <b>{{this.formaOrder.value.quantity  | number:'1.1-2'}}</b></p>
+                  </div>
+                  <div class="col-md-6 confirm">
+                    <p>Lados: <b>{{parseSides()}}</b></p>
+                  </div>    
+                  <div class="col-md-6 confirm">
+                    <p>Diseño: <b>{{parseDesign()}}</b></p>
+                  </div>
+                  <div class="col-md-6 confirm">
+                    <p>Gramage: <b>{{parseGarnet()}}</b></p>
+                  </div>
+                  <div class="col-md-6 confirm">
+                    <p>Contacto diseño: <b>{{this.formaOrder.value.contact_design}}</b></p>
+                  </div>
+                  <div class="col-md-6 confirm">
+                    <p>Espacios: <b>{{spaces}}</b></p>
+                  </div>
+                  <div class="col-12 confirm">
+                    <p>Especificaciones: <b>{{this.formaOrder.value.specification}}</b></p>
+                  </div>
                 </div>
               </div>
             </div>
 
-
-            <div class="col-12 text-center">
-              <h5 style="background: black;     color: white;">Entrega</h5>
-              <div class="row" style="padding:10px;">
-                <div class="col-3 text-center confirm">
-                  <strong>Tiempo de entrega</strong>
-                </div>
-                <div class="col-3 text-center confirm-elemnt">
-                  <strong>{{this.formaOrder.value.time_delivery}}</strong>
-                </div>
-                <div class="col-3 text-center confirm">
-                  <strong>Enviamos</strong>
-                </div>
-                <div class="col-3 text-center confirm-elemnt">
-                  <strong *ngIf="formaOrder.value.we_send == 1">Si</strong>
-                  <strong *ngIf="formaOrder.value.we_send == 0">No</strong>
-                </div>
-                <div class="col-12 text-center confirm">
-                  <strong>Metodo de envío</strong>
-                </div>
-                <div class="col-12 text-center confirm-elemnt">
-                  <strong>{{this.formaOrder.value.description_send}}</strong>
+            <div class="section-info">
+              <div class="separator text-center"><p>Entrega</p></div>
+              <div class="col-12">
+                <div class="row" style="padding:10px;">
+                  <div class="col-md-6 confirm">
+                    <p *ngIf="formaOrder.value.special_time == 0">Tiempo de entrega: <b>{{this.formaOrder.value.time_delivery / 7}} Semana(s)</b></p>
+                    <p *ngIf="formaOrder.value.special_time == 1">Tiempo de entrega: <b>Especial {{this.formaOrder.value.time_delivery}}</b></p>
+                  </div>
+                  <div class="col-md-6 confirm">
+                    <p>Enviamos:
+                      <b *ngIf="formaOrder.value.we_send == 1">Si</b>
+                      <b *ngIf="formaOrder.value.we_send == 0">No</b>
+                    </p>
+                  </div>
+                  <div class="col-12 confirm">
+                    <p>Metodo de envío: <b>{{this.formaOrder.value.description_send}}</b></p>
+                  </div>
                 </div>
               </div>
             </div>
 
-
-            <div class="col-12 text-center">
-              <h5 style="background: black;     color: white;">Precios</h5>
-              <div class="row" style="padding:10px;">
-                <div class="col-3 text-center confirm">
-                  <strong>Precio base</strong>
-                </div>
-                <div class="col-3 text-center confirm-elemnt">
-                  <strong>{{parsePriceFlyer()}}</strong>
-                </div>
-                <div class="col-3 text-center confirm">
-                  <strong>Precio diseño</strong>
-                </div>
-                <div class="col-3 text-center confirm-elemnt">
-                  <strong>{{this.formaOrder.value.price_design}}</strong>
-                </div>
-                <div class="col-3 text-center confirm">
-                  <strong>Precio envío</strong>
-                </div>
-                <div class="col-3 text-center confirm-elemnt">
-                  <strong>{{this.formaOrder.value.price_send}}</strong>
-                </div>
-                <div class="col-3 text-center confirm">
-                  <strong>Precio total</strong>
-                </div>
-                <div class="col-3 text-center confirm-elemnt">
-                  <strong>{{calculateTotal()  | number:'1.1-2'}}</strong>
-                </div> 
-                <div class="col-4 text-center confirm">
-                  <strong>Seña</strong>
-                </div>
-                <div class="col-4 text-center confirm">
-                  <strong>Deuda</strong>
-                </div>
-                <div class="col-4 text-center confirm">
-                  <strong>Medio de pago</strong>
-                </div>
-                <div class="col-4 text-center confirm-elemnt">
-                  <strong>{{this.formaOrder.value.trace}}</strong>
-                </div>
-                <div class="col-4 text-center confirm-elemnt">
-                  <strong>{{calculateDebit()  | number:'1.1-2'}}</strong>
-                </div>
-                <div class="col-4 text-center confirm-elemnt">
-                  <strong>{{this.formaOrder.value.method_payment}}</strong>
+            <div class="section-info">
+              <div class="separator text-center"><p>Precios</p></div>
+              <div class="col-12">
+                <div class="row" style="padding:10px;">
+                  <div class="col-md-6 confirm">
+                    <p>Precio base: <b>{{parsePriceFlyer() | number:'1.1-2'}}</b></p>
+                  </div>
+                  <div class="col-md-6 confirm">
+                    <p>Precio diseño: <b>{{this.formaOrder.value.price_design  | number:'1.1-2'}}</b></p>
+                  </div>
+                  <div class="col-md-6 confirm">
+                    <p>Precio envío: <b>{{this.formaOrder.value.price_send  | number:'1.1-2'}}</b></p>
+                  </div>
+                  <div class="col-md-6 confirm">
+                    <p>Precio total: <b>{{calculateTotal()  | number:'1.1-2'}}</b></p>
+                  </div>
+                  <div class="col-md-6 confirm">
+                    <p>Seña: <b>{{this.formaOrder.value.trace  | number:'1.1-2'}}</b></p>
+                  </div>
+                  <div class="col-md-6 confirm">
+                    <p>Deuda: <b>{{calculateDebit()  | number:'1.1-2'}}</b></p>
+                  </div>
+                  <div class="col-md-6 confirm">
+                    <p>Medio de pago: <b>{{this.formaOrder.value.method_payment}}</b></p>
+                  </div>
                 </div>
               </div>
             </div>
+            <div class="section-info">
+              <div class="separator text-center"><p>Caracteristicas especiales</p></div>
+              <div class="col-12 alert alert-info alert-dismissible fade show text-center" role="alert" *ngIf="formaOrder.value.price_flyer_special == 1">
+                <strong>Precio especial.</strong>
+              </div>
 
-            <div class="col-12 text-center confirm">
-              <strong>Caracteristicas especiales</strong>
-            </div>
+              <div class="col-12 alert alert-info alert-dismissible fade show text-center" role="alert" *ngIf="formaOrder.value.special_time == 1">
+                <strong>Fecha especial.</strong>
+              </div>
 
-            <div class="col-12 alert alert-info alert-dismissible fade show text-center" role="alert" *ngIf="formaOrder.value.price_flyer_special == 1">
-              <strong>Precio especial.</strong>
-            </div>
-
-            <div class="col-12 alert alert-info alert-dismissible fade show text-center" role="alert" *ngIf="formaOrder.value.special_time == 1">
-              <strong>Fecha especial.</strong>
-            </div>
-
-            <div class="col-12 alert alert-info alert-dismissible fade show text-center" role="alert" *ngIf="formaOrder.value.size_special == 1">
-              <strong>Medida especial.</strong>
+              <div class="col-12 alert alert-info alert-dismissible fade show text-center" role="alert" *ngIf="formaOrder.value.size_special == 1">
+                <strong>Medida especial.</strong>
+              </div>
             </div>
                 
               
@@ -554,7 +513,7 @@
                 </div>
                 <div class="col-12 text-center">
                   <div class="row">
-                    <div class="col-6">
+                    <div class="col-md-6">
                       <h3 *ngFor="let branch of formaBranch.controls['name'].controls;let i = index">
                         Sucursal {{formaBranch.value.name[i]}}
                         <label *ngIf="requestBranch[i] === 'send'"><i class="fas fa-spinner fa-spin"></i></label>
@@ -562,7 +521,7 @@
                         <label *ngIf="requestBranch[i] === 'error'"><i class="far fa-times"></i></label>
                       </h3>
                     </div>
-                    <div class="col-6">
+                    <div class="col-md-6">
                       <h3 *ngFor="let req of requestOrder;let i = index">
                         Pedido
                         <label *ngIf="req.status === 'send'"><i class="fas fa-spinner fa-spin"></i></label>

@@ -152,11 +152,11 @@ li.active > .log,
 .pub{
 	border-bottom-width: 10px;
 	border-bottom-style: solid;
-	border-bottom-color:#FF0;	
+	border-bottom-color:#ecec3c;	
 	}
 li.active > .pub,
 .pub:hover{
-	background-color:#FF0;
+	background-color:#ecec3c;
 	color:white;
 	text-decoration: none;
 	}
@@ -431,10 +431,10 @@ nav li a:hover {color:#000;}
 .pub{
 	border-bottom-width: 10px;
 	border-bottom-style: solid;
-	border-bottom-color:#FF0;	
+	border-bottom-color:#ecec3c;	
 	}
 .pub:hover{
-	background-color:#FF0;
+	background-color:#ecec3c;
 	}
 
 	div.nav-responsive{
@@ -494,12 +494,44 @@ nav li a:hover {color:#000;}
 			background:#999;
 		}
 		.pub:hover{
-			background:#FF0;
+			background:#ecec3c;
 		}
+
+		input[type="checkbox"]{
+			width:20% !important;
+		}
+
+		select, textarea, input[type="text"], input[type="date"]{
+			width: 100% !important;
+		}
+
+		table{
+			display: block;
+			overflow: scroll;
+		}
+
+		div.max-width{
+			overflow: scroll;
+		}
+
+		tr.max-width{
+			display: none;
+		}
+		tr.min-width{
+			display: contents;
+		}
+
+		
 
 
 	}
 
+	tr.max-width{
+		display: contents;
+	}
+	tr.min-width{
+		display: none;
+	}
 
 /*  cuerpo CSS  */
 
@@ -608,7 +640,17 @@ input[type="date"].form{
 	-ms-transition: box-shadow .5s ease;
 	transition: box-shadow .5s ease;
 }
-input:focus { box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgba(255,255,255,0.2); }
+input:focus,
+textarea:focus,
+select:focus { 
+	color:black; 
+	box-shadow: inset 0 -5px 45px rgba(220, 247, 66, 0.897), 0 1px 1px rgba(244, 247, 90, 0.2); 
+}
+
+tr.none{
+	display:none;
+}
+
 
 select,
 textarea{
@@ -707,8 +749,27 @@ h4{
 	padding: 10px;
 }
 
+.nav-search{
+	width: 100%;
+	height: 40vw;
+	overflow-y: scroll;
+	background: #9b9ea0;
+}
+
+.nav-search-simple{
+	height: calc(40vw - 30px) !important;
+}
+
+.nav-search-width-footer{
+	height: calc(40vw - 45px) !important;
+}
+
+.nav-search-width-footer-and-nav-search{
+	height: calc(40vw - 70px) !important;
+}
+
 .search{
-	height: auto;
+	height: 40vw;
 	min-height: 75vh;
 	padding: 0px;
 	background: transparent;
@@ -717,10 +778,12 @@ h4{
 }
 
 .searchTD{
-	color: white; background: #9b9ea0;
+	color: white; background: #9b9ea0; overflow: hidden;width: 100%;height: 45px;padding-top: 10px;padding-left: 5px;
 }
 
-.searchTD:hover{
+
+
+.searchTD:hover, .searchTD.select{
 	color: white; background: #81bde6; cursor:pointer;
 }
 
@@ -760,7 +823,7 @@ h4{
 }
 input.searchResults{
 	margin: 0px;
-	border: 2px solid black;
+	border-radius: 0;
 }
 input.type2,
 input[type="date"].type2{
@@ -862,8 +925,6 @@ input.error_2{
 	margin-bottom: 10px;
 	padding-top: 5px;
 	padding-bottom: 5px;
-    background: #b9b6b6;
-    color: white;
 }
 
 .confirm-elemnt{
@@ -871,6 +932,18 @@ input.error_2{
 	margin-bottom: 10px;
 	padding-top: 5px;
 	padding-bottom: 5px;
+	font-weight: bold;
+	color:black;
+}
+
+p > b,
+.confirm > p > b{
+	color: black;
+	font-weight: bold;
+}
+
+b.red{
+	color:red !important;
 }
 
 .confirm > strong,

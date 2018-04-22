@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../../services/http.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Observable } from 'rxjs/Rx';
+
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -15,6 +17,8 @@ export class UserComponent implements OnInit {
   sucess:boolean = false;
   errorInit:boolean = false;
   types:any[]=[];
+  actived:any[]=[];
+  exist:boolean=false;
 
   constructor(public _http:HttpService) {
     this.createForma(this.userPosition,this.action);
@@ -28,6 +32,10 @@ export class UserComponent implements OnInit {
       {value:3,text:"Vendedor nuevos"},
       {value:4,text:"Vendedor clientes"},
       {value:5,text:"Entregas"},
+    ]
+    this.actived=[
+      {value:0,text:"No"},
+      {value:1,text:"Si"}
     ]
   }
 
@@ -57,19 +65,26 @@ export class UserComponent implements OnInit {
   createForma(i, action){
     this.sucess = false;
     this.errorInit = false;
+    this.exist = false;
     this.action = action;
     if(action === "update"){
       this.forma = new FormGroup({
         'id': new FormControl(this.users[i].id,[Validators.required]),
-        'email':new FormControl(this.users[i].email,[Validators.required,Validators.email]),
+        'email':new FormControl(this.users[i].email),
         'name':new FormControl(this.users[i].name,Validators.required),
         'type':new FormControl(this.users[i].type,Validators.required),
+        'actived':new FormControl(this.users[i].actived,Validators.required),
       });
     }else if(action === "create"){
       this.forma = new FormGroup({
-        'email':new FormControl('',[Validators.required,Validators.email]),
+        'email':new FormControl('',[Validators.required,Validators.email],this.existEmail.bind(this)),
         'name':new FormControl('',Validators.required),
         'type':new FormControl('',Validators.required),
+        'password':new FormControl('',Validators.required),
+      });
+    }else if(action === "key"){
+      this.forma = new FormGroup({
+        'id': new FormControl(this.users[i].id,[Validators.required]),
         'password':new FormControl('',Validators.required),
       });
     }
@@ -96,13 +111,28 @@ export class UserComponent implements OnInit {
   update(){
     this.forma.value.type = parseInt(this.forma.value.type);
     this._http.putRequest('user/'+this.forma.value.id, this.forma.value).subscribe(
-      (res)=>{ 
-        this.users[this.userPosition] = res.data;
+      (res)=>{        
+        this.searchUsers();
         this.sucess = true;
       },
       (error)=>{
         if(this.verifyError(error.json())){        
           this.update();
+        }else{
+          this.errorInit = true;
+        }
+      }
+    ) 
+  }
+
+  updatePassword(){
+    this._http.putRequest('user/'+this.forma.value.id+'/password', this.forma.value).subscribe(
+      (res)=>{ 
+        this.sucess = true;
+      },
+      (error)=>{
+        if(this.verifyError(error.json())){        
+          this.updatePassword();
         }else{
           this.errorInit = true;
         }
@@ -130,4 +160,28 @@ export class UserComponent implements OnInit {
     return this.types[type-1].text;
   }
 
+  existEmail(control:FormControl):Promise<any>|Observable<any>{
+    let $this = this;    
+    let promise = new Promise(
+      (resolve, reject)=>{
+        $this._http.getRequest("verifyEmail?q="+control.value).subscribe(
+          (res)=>{
+            if(res.data == true){
+              $this.exist = true;
+              resolve({exist:true});
+            }else{
+              $this.exist = false;
+              resolve(null)
+            }
+          },
+          (error)=>{
+            reject({exist:true})
+          }
+        )
+      }
+    )
+    return promise;
+  }
+
 }
+
