@@ -73,7 +73,7 @@ export class DeliveryComponent implements OnInit {
   mountValidity(control: FormControl):{[s:string]:boolean}{
     let $this:any = this;
     if($this.show){
-      if(control.value <= 0 || control.value > $this.calculate(1)){
+      if(control.value < 0 || control.value > $this.calculate(1)){
         return{
          noQuantity:true
         }

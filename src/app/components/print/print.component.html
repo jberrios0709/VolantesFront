@@ -3,11 +3,10 @@
   <div class="row">
     <div class="col-md-6 offset-md-1 text-left">
       <h4 class="title">Impresión</h4>
-      <h5>Espacios totales que faltan por enviar a taller: {{countSpacesTotal()}}</h5>
     </div>
     <div class="col-md-4 offset-md-1 text-left">
       <label style="font-size: 16px;">Espacios asignados en nuevo pliego: <b>{{spaces}}</b></label>
-      <button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"  (click)="select(0,'confirm')">Crear Pliego</button>
+      <button *ngIf="spaces > 0" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"  (click)="select(0,'confirm')">Crear Pliego</button>
     </div>
   </div> 
   
@@ -27,7 +26,10 @@
       <table class="table  table-hover max-width">
         <thead class="thead-dark">
           <tr>
-            <th colspan="13" class="text-center">Gramage 115gr</th>
+            <th colspan="13" class="text-center"><h4>Gramage 115gr</h4></th>
+          </tr>
+          <tr>
+            <th colspan="13" class="text-center">Espacios totales que faltan por enviar a taller: {{countSpacesTotal(1)}}</th>
           </tr>
           <tr >
             <th scope="col">N° cliente</th>
@@ -59,7 +61,7 @@
             <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.created_at  | date}}</td>
             <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.date_delivery  | date}}</td>
             <td><input type="checkbox" (change)="selects(1,i)"></td>
-            <td><input type="number" style="width:45px" (change)="addSpaces(1,i,$event)" [ngClass]="{error:orderFirstSelect[i].spaces > order.spacesInMissing, error_2: (orderFirstSelect[i].isDone && orderFirstSelect[i].spaces <= 0)}"></td>
+            <td><input type="text" style="width:45px" (change)="addSpaces(1,i,$event)" [ngClass]="{error:orderFirstSelect[i].spaces > order.spacesInMissing, error_2: (orderFirstSelect[i].isDone && orderFirstSelect[i].spaces <= 0)}"></td>
           </tr>
         </tbody>
       </table>
@@ -67,7 +69,10 @@
       <table class="table  table-hover max-width">
           <thead class="thead-dark">
             <tr>
-              <th colspan="13" class="text-center">Gramage 150gr</th>
+              <th colspan="13" class="text-center"><h4>Gramage 150gr</h4></th>
+            </tr>
+            <tr>
+              <th colspan="13" class="text-center">Espacios totales que faltan por enviar a taller: {{countSpacesTotal(2)}}</th>
             </tr>
             <tr>
               <th scope="col">N° cliente</th>
@@ -99,7 +104,7 @@
               <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.created_at  | date}}</td>
               <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.date_delivery  | date}}</td>
               <td><input type="checkbox" (change)="selects(2,i)"></td>
-              <td><input type="number" style="width:45px" (change)="addSpaces(2,i,$event)" [ngClass]="{error:orderSecondSelect[i].spaces > order.spacesInMissing, error_2: (orderSecondSelect[i].isDone && orderSecondSelect[i].spaces <= 0)}"></td>
+              <td><input type="text" style="width:45px" (change)="addSpaces(2,i,$event)" [ngClass]="{error:orderSecondSelect[i].spaces > order.spacesInMissing, error_2: (orderSecondSelect[i].isDone && orderSecondSelect[i].spaces <= 0)}"></td>
             </tr>
           </tbody>
         </table>
@@ -107,7 +112,7 @@
         <table class="table  table-hover max-width">
           <thead class="thead-dark">
             <tr>
-              <th colspan="10" class="text-center">Otros productos</th>
+              <th colspan="10" class="text-center"><h4>Otros productos</h4></th>
             </tr>
             <tr >
               <th scope="col">Número de cliente</th>
@@ -262,7 +267,7 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
           <button type="button" class="btn btn-success" *ngIf="show==='folio' && requestStatus!='good'" (click)="jobPrint()">Trabajo impreso</button>
-          <button type="button" class="btn btn-success" *ngIf="show==='confirm' && requestStatus!='good'" (click)="sendTaller()">Enviar a taller</button>
+          <button type="button" class="btn btn-success" *ngIf="show==='confirm' && requestStatus!='good' && spaces > 0" (click)="sendTaller()">Enviar a taller</button>
           <button type="button" class="btn btn-success" *ngIf="show==='taller' && requestStatus!='good'" (click)="sendTallerOthers()">Continuar</button>
         </div>
       </div>

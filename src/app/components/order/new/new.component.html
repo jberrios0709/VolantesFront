@@ -48,11 +48,11 @@
               <textarea type="text" formControlName="comments" style="width:100%"></textarea>
             </div>
             <section class="col-12 text-center">
-              <h5>Teléfonos   <label (click)="addPhone()"><i class="fas fa-plus-square add" ></i></label></h5>
+              <h5>Teléfonos   <label *ngIf="formaClient.value.phones.length < 20" (click)="addPhone()"><i class="fas fa-plus-square add" ></i></label></h5>
               <div class="row" style="justify-content:center">
                 <div class="col-6" formArrayName="phones">
-                  <div class="col-md-12" *ngFor="let email of formaClient.controls['phones'].controls; let i = index">
-                    <label *ngIf="formaClient.value.phones.length > 1" (click)="deleteAttr('phone',i)"><i class="fas fa-times fa-2x remove"></i></label>
+                  <div class="col-md-12 number" *ngFor="let email of formaClient.controls['phones'].controls; let i = index">
+                    <label *ngIf="formaClient.value.phones.length > 1" (click)="deleteAttr('phone',i)"><i class="fas fa-times fa-1x remove"></i></label>
                     <input type="text" placeholder="Número" [formControlName]="i" style="width:90%">
                   </div>
                 </div>
@@ -64,10 +64,10 @@
               </div>
             </section>
             <section class="col-12 text-center">
-                <h5>Emails  <label (click)="addEmail()"><i class="fas fa-plus-square add" ></i></label></h5>
+                <h5>Emails  <label *ngIf="formaClient.value.emails.length < 20" (click)="addEmail()"><i class="fas fa-plus-square add" ></i></label></h5>
                 <div class="row" formArrayName="emails">
                   <div class="col-md-6" *ngFor="let email of formaClient.controls['emails'].controls; let i = index">
-                    <label *ngIf="formaClient.value.emails.length > 1" (click)="deleteAttr('email',i)"><i class="fas fa-times fa-2x remove"></i></label>
+                    <label *ngIf="formaClient.value.emails.length > 1" (click)="deleteAttr('email',i)"><i class="fas fa-times fa-1x remove"></i></label>
                     <input type="text" placeholder="Email" [formControlName]="i"  style="width:90%">
                   </div>
                 </div>

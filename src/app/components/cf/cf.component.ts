@@ -324,6 +324,7 @@ export class CfComponent implements OnInit {
     }else if(this.resourceDelete.resource ==="email"){
       uri="client/"+this.client["emails"][this.resourceDelete.index]["client_id"]+"/email/"+this.client["emails"][this.resourceDelete.index]["id"]
     }
+    console.log(uri)
     this.request = "send";
     this._http.deleteRequest(uri).subscribe(
       (res)=>{

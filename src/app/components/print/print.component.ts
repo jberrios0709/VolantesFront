@@ -28,18 +28,28 @@ export class PrintComponent implements OnInit {
   }
 
   searchAndOrderData(){
+    this.ordersFirst = [];
+    this.ordersSecond = [];
+    this.ordersOthers = [];
     let promise = new Promise((resolve, reject)=>{           
-      if(this.searchOrders() && this.searchOrdersOtherTaller()){
+      if(this.searchOrders()){
         resolve(true);
       }
     })
 
-    promise.then((data)=>{
-     
-      this.ordersFirst = this.orderArray(this.ordersFirst);
-      this.ordersSecond = this.orderArray(this.ordersSecond);
-      this.ordersOthers = this.orderArray(this.ordersOthers);
-      
+    let promise2 = new Promise((resolve, reject)=>{           
+      if(this.searchOrdersOtherTaller()){
+        resolve(true);
+      }
+    })
+
+
+    promise2.then((data)=>{      
+      promise.then((data)=>{       
+        this.ordersFirst = this.orderArray(this.ordersFirst);
+        this.ordersSecond = this.orderArray(this.ordersSecond);
+        this.ordersOthers = this.orderArray(this.ordersOthers);
+      })
     })
   }
   
@@ -52,6 +62,7 @@ export class PrintComponent implements OnInit {
           this.requestStatus='good';
           this.searchAndOrderData();
           this.searchFolios();
+          this.spaces = 0;
         },
         (error)=>{
           if(this.verifyError(error.json())){        
@@ -155,9 +166,6 @@ export class PrintComponent implements OnInit {
   searchOrders(){
     this._http.getRequest('orders?q=3').subscribe(
       (res)=>{
-        this.ordersFirst = [];
-        this.ordersSecond = [];
-        this.ordersOthers = [];
         return this.filterOrders(res.data);
       },
       (error)=>{
@@ -170,8 +178,13 @@ export class PrintComponent implements OnInit {
 
   searchOrdersOtherTaller(){
     this._http.getRequest('orders?q=4').subscribe(
-      (res)=>{        
-        return this.filterOrders(res.data);
+      (res)=>{   
+        res.data.map((elem)=>{
+          if(elem.product != "Volantes"){
+            this.ordersOthers.push(elem);
+          }
+        })
+        return true;
       },
       (error)=>{
         if(this.verifyError(error.json())){        
@@ -205,7 +218,7 @@ export class PrintComponent implements OnInit {
   }
 
   filterOrders(orders){
-    let listArray = {"first":[],"second":[],"others":[]};
+    let listArray = {"first":[],"second":[],"others": this.ordersOthers};
     for (let order of orders) {
       if(order.product === "Volantes"){
         if(order.garnet == "115gr"){
@@ -237,9 +250,9 @@ export class PrintComponent implements OnInit {
 
   addSpaces(array,index,event){
     if(array == 1){
-      this.orderFirstSelect[index].spaces = event.target.value;
+      this.orderFirstSelect[index].spaces = parseFloat(event.target.value.replace(',','.'));
     }else if(array == 2){
-      this.orderSecondSelect[index].spaces = event.target.value;
+      this.orderSecondSelect[index].spaces =  parseFloat(event.target.value.replace(',','.'));
     }
     this.countSpaces();
   }
@@ -248,25 +261,28 @@ export class PrintComponent implements OnInit {
     let spaces = 0;
     this.orderFirstSelect.map((elem)=>{
       if(elem.isDone){
-        spaces = spaces + parseInt(elem.spaces);
+        spaces = spaces + parseFloat(elem.spaces);
       }
     })
     this.orderSecondSelect.map((elem)=>{
       if(elem.isDone){    
-        spaces = spaces + parseInt(elem.spaces);
+        spaces = spaces + parseFloat(elem.spaces);
       }
     })
     this.spaces = spaces;
   }
 
-  countSpacesTotal(){
+  countSpacesTotal(type){
     let spaces = 0;
-    this.ordersFirst.map((elem)=>{
-      spaces = spaces + parseInt(elem.spacesInMissing); 
-    })
-    this.ordersSecond.map((elem)=>{
-      spaces = spaces + parseInt(elem.spacesInMissing);       
-    })
+    if(type == 1){
+      this.ordersFirst.map((elem)=>{
+        spaces = spaces + parseInt(elem.spacesInMissing); 
+      })
+    }else if(type == 2){
+      this.ordersSecond.map((elem)=>{
+        spaces = spaces + parseInt(elem.spacesInMissing);       
+      })
+    }
     return spaces;
   }
 

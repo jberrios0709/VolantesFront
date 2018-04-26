@@ -12,7 +12,7 @@
   <table class="table  table-hover">
     <thead class="thead-dark">
       <tr class="text-center max-width">
-        <th scope="col" colspan="4"><p>Seleccione el rango de fecha</p></th>
+        <th scope="col" colspan="5"><p>Seleccione el rango de fecha</p></th>
         <th scope="col" colspan="5">
           Desde <input [(ngModel)]="desde" name="desde" type="date" style="background:white;color:black;border:none">
           Hasta <input [(ngModel)]="hasta" [min]="desde" name="hasta" type="date" style="background:white;color:black;border:none">
@@ -21,10 +21,10 @@
         </th>
       </tr>
       <tr class="text-center min-width">
-        <th scope="col" colspan="9"><p>Seleccione el rango de fecha</p></th>
+        <th scope="col" colspan="10"><p>Seleccione el rango de fecha</p></th>
       </tr>
       <tr class="text-center min-width">
-        <th scope="col" colspan="9">
+        <th scope="col" colspan="10">
           Desde <input [(ngModel)]="desde" name="desde" type="date" style="background:white;color:black;border:none">
           Hasta <input [(ngModel)]="hasta" [min]="desde" name="hasta" type="date" style="background:white;color:black;border:none">
           <button (click)="searchsOrdersDate()">Buscar</button>
@@ -33,8 +33,9 @@
       </tr>
       <tr>
         <th scope="col">Fecha</th>
-        <th scope="col">Número de cliente</th>
+        <th scope="col">N° de cliente</th>
         <th scope="col">Cliente</th>
+        <th scope="col">N° de pedido</th>
         <th scope="col">Sucursal</th>
         <th scope="col">Producto</th>
         <th scope="col">Cantidad</th>
@@ -48,16 +49,18 @@
         <td>{{order.date_sell.date | date}}</td>
         <td>{{order.branch.client.id}}</td>
         <td>{{order.branch.client.name}}</td>
+        <td>{{order.id}}</td>
         <td>{{order.branch.name}}</td>
         <td>{{order.product}}</td>
         <td>{{order.quantity | number:'1.0'}}</td>
         <td>{{payment(i)  | number:'3.1-2'}}</td>
         <td>{{paymentWhere(i)}}</td>
-        <td>{{order.method_payment}}</td>
+        <td *ngIf="!order.abono">{{order.method_payment}}</td>
+        <td *ngIf="order.abono">{{order.abono.method_payment}}</td>
       </tr>
       <tr class="text-center" style="background:#212529; color:white">
         <td colspan="5">Total ingresos</td>
-        <td colspan="4">${{total()  | number:'3.1-2'}}</td>
+        <td colspan="5">${{total()  | number:'3.1-2'}}</td>
       </tr>
     </tbody>
   </table>
