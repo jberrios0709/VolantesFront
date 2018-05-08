@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { HttpService } from '../../services/http.service';
+import { InfoSharedService } from '../../services/info-shared.service';
 
 @Component({
   selector: 'app-delivery',
@@ -22,7 +23,7 @@ export class DeliveryComponent implements OnInit {
   empty:boolean = false;
   showAbono:boolean = false;
 
-  constructor(public _http:HttpService) { }
+  constructor(public _http:HttpService, public _infoShared:InfoSharedService) { }
 
   ngOnInit() {
     this.createForma();
@@ -43,7 +44,6 @@ export class DeliveryComponent implements OnInit {
     this._http.getRequest("order/"+this.numberSearch).subscribe(
       (res)=>{
         if(res.data != null){
-          console.log(res.data)
           this.selectOrder(0,res.data)
         }else{
           this.empty = true;
@@ -136,6 +136,7 @@ export class DeliveryComponent implements OnInit {
       this.order = this.ordersDebit[index];
       this.delivery = false;
     }else{
+      this.delivery = false;
       this.showAbono = true;
       this.order = type;
     }
@@ -146,11 +147,7 @@ export class DeliveryComponent implements OnInit {
   }
 
   parseSides(value){
-    switch(parseInt(value)){
-      case 1: return "Un solo lado";
-      case 2: return "Dos lados diferentes" ;
-      case 3: return "Dos lados iguales";
-    }
+    return this._infoShared.parseSides(parseInt(value));
   }
 
   calculate(option){
@@ -163,6 +160,14 @@ export class DeliveryComponent implements OnInit {
     }else if(option == 2){
       return parseFloat(this.order.price_flyer) + parseFloat(this.order.price_design) + parseFloat(this.order.price_send) - parseFloat(this.order.trace) - abonos - parseFloat(this.forma.value.mount)
     }
+  }
+
+  calculateAbonos(){
+    let abonos = 0;
+    for (let abono of this.order.abonos) {
+      abonos+=parseFloat(abono.mount);
+    }
+    return abonos;
   }
 
   calculateForIndex(index,option){

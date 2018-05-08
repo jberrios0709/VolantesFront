@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../../../services/http.service'
+import { InfoSharedService } from '../../../services/info-shared.service';
 import { FormGroup, FormControl, FormArray, Validators, FormBuilder } from '@angular/forms';
 
 @Component({
@@ -21,7 +22,7 @@ export class NewComponent implements OnInit {
   spaces:string = "0";
   phones:any[] = [];
 
-  constructor(public _http:HttpService) { }
+  constructor(public _http:HttpService, public _infoShared:InfoSharedService) { }
 
   ngOnInit() {
     this.createForma();
@@ -29,16 +30,7 @@ export class NewComponent implements OnInit {
   }
 
   initSelect(){
-    this.select = {
-      "product":["Volantes"],
-      "size":[{"value":1,"size":"10x7.5"},{"value":2,"size":"10x15"},{"value":3,"size":"20x15"},{"value":4,"size":"20x30"}],
-      "garnet":["115gr","150gr"],
-      "time":[{"value":7,"text":"1 semana"},{"value":21,"text":"3 semanas"}],
-      "send":[{"value":0,"text":"No"},{"value":1,"text":"Si"}],
-      "design":[{"value":1,"text":"Nuevo"},{"value":2,"text":"Correción"},{"value":3,"text":"Mismo"},{"value":4,"text":"Envia el cliente"}],
-      "sides":[{"value":1,"text":"Un solo lado"},{"value":2,"text":"Dos lados diferentes"},{"value":3,"text":"Dos lados iguales"}],
-      "price":[{"value":"default", "text": "0"}]
-    }
+    this.select = this._infoShared.infoSelects();
   }
 
   next(){
@@ -134,10 +126,10 @@ export class NewComponent implements OnInit {
       new FormControl('', Validators.required)
     );
     (<FormArray>this.formaBranch.controls['address']).push(
-      new FormControl('', Validators.required)
+      new FormControl('')
     );
     (<FormArray>this.formaBranch.controls['phone']).push(
-      new FormControl('', Validators.required)
+      new FormControl('')
     );
     (<FormArray>this.formaBranch.controls['isDone']).push(
       new FormControl(false)
@@ -145,6 +137,7 @@ export class NewComponent implements OnInit {
   }
 
   changeSelect(index){
+    
     this.formaBranch.value.isDone[index]=!this.formaBranch.value.isDone[index];
   }
 
@@ -185,9 +178,13 @@ export class NewComponent implements OnInit {
       this._http.postRequest('client/'+clientId+'/branch',body).subscribe(
         (res)=>{
           if(this.formaBranch.value.isDone[index]){
+            this.requestOrder.push({status:"send"});
             this.createOrder(res.data.id,index);
-            this.requestBranch[index]="good";
+          }else{
+            this.requestOrder.push({status:"not"});
           }
+          this.requestBranch[index]="good";
+          
         },
         (error)=>{
           if(this.verifyError(error.json())){        
@@ -202,8 +199,6 @@ export class NewComponent implements OnInit {
   }
 
   createOrder(branchId,index){
-    this.requestOrder.push({status:"send"});
-    
     this._http.postRequest('branch/'+branchId+'/order',this.formaOrder.value).subscribe(
       (res)=>{
         //this.request="finish";
@@ -330,6 +325,7 @@ export class NewComponent implements OnInit {
 
    searchPrice(){
     let body = {
+      "product":this.formaOrder.value.product,
       "size":this.formaOrder.value.size,
       "time_delivery":this.formaOrder.value.time_delivery,
       "quantity":this.formaOrder.value.quantity,
@@ -362,39 +358,19 @@ export class NewComponent implements OnInit {
   //Parses views
 
   parseSize(){
-    switch (this.formaOrder.value.size){
-      case 1: return "10x7.5";
-      case 2: return "10x15";
-      case 3: return "15x20";
-      case 4: return "15x30";
-      default: return this.formaOrder.value.size;
-    }
+    return this._infoShared.parseSize(this.formaOrder.value.size);
   }
 
   parseSides(){
-    switch(parseInt(this.formaOrder.value.sides)){
-      case 1: return "Un solo lado";
-      case 2: return "Dos lados diferentes" ;
-      case 3: return "Dos lados iguales";
-    }
+    return this._infoShared.parseSides(parseInt(this.formaOrder.value.sides));
   }
 
   parseDesign(){
-    switch (parseInt(this.formaOrder.value.design)){
-      case 1: return "Nuevo";
-      case 2: return "Correción";
-      case 3: return "Mismo";
-      case 4: return "Envia el cliente";
-      default: return this.formaOrder.value.design;
-    }
+    return this._infoShared.parseDesign(parseInt(this.formaOrder.value.design));
   }
 
   parseGarnet(){
-    switch (this.formaOrder.value.garnet){
-      case 1: return "115gr";
-      case 2: return "150gr";
-      default: return this.formaOrder.value.garnet;
-    }
+    return this._infoShared.parseGarnet(this.formaOrder.value.garnet);
   }
 
   parsePriceFlyer(){

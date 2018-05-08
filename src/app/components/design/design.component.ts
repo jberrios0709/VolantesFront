@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../../services/http.service';
 import { FormGroup, FormControl, Validators} from '@angular/forms';
+import { InfoSharedService } from '../../services/info-shared.service';
+
 
 @Component({
   selector: 'app-design',
@@ -17,7 +19,7 @@ export class DesignComponent implements OnInit {
   indexSelect:number;
   selects:any[] = [{"value":0,"text":"No"},{"value":1,"text":"Si"}];
   
-  constructor(public _http:HttpService) { }
+  constructor(public _http:HttpService, public _infoShared:InfoSharedService) { }
 
   ngOnInit() {
     this.searchOrders();
@@ -67,11 +69,7 @@ export class DesignComponent implements OnInit {
   }
 
   parseSides(value){
-    switch(parseInt(value)){
-      case 1: return "Un solo lado";
-      case 2: return "Dos lados diferentes" ;
-      case 3: return "Dos lados iguales";
-    }
+    return this._infoShared.parseSides(parseInt(value));
   }
 
   orderArray(tmp){
@@ -95,12 +93,7 @@ export class DesignComponent implements OnInit {
   }
 
   parseDesign(value){
-    switch (parseInt(value)){
-      case 1: return "Nuevo";
-      case 2: return "Correción";
-      case 3: return "Ultimo diseño";
-      case 4: return "Envia el cliente";
-    }
+    return this._infoShared.parseDesign(parseInt(value));
   }
 
   selectOrder(index){

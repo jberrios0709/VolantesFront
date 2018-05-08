@@ -3,6 +3,7 @@ import { HttpService } from '../../../services/http.service'
 import { FormGroup, FormControl, FormArray, Validators, FormBuilder } from '@angular/forms';
 import { log } from 'util';
 import { Router, ActivatedRoute, Params} from '@angular/router';
+import { InfoSharedService } from '../../../services/info-shared.service';
 
 @Component({
   selector: 'app-old',
@@ -24,7 +25,7 @@ export class OldComponent implements OnInit {
   requestSend:any[]=[]; 
   spaces:string = "0";
 
-  constructor(public _http:HttpService, public activatedRoute:ActivatedRoute) {
+  constructor(public _http:HttpService, public activatedRoute:ActivatedRoute, public _infoShared:InfoSharedService) {
     this.activatedRoute.params.subscribe((params: Params) => {
       if(params['q']==="true"){
         this.getClient(params['id']);
@@ -42,16 +43,7 @@ console.log(this.forma)   }
   }
 
   initSelect(){
-    this.select = {
-      "product":["Volantes"],
-      "size":[{"value":1,"size":"10x7.5"},{"value":2,"size":"10x15"},{"value":3,"size":"20x15"},{"value":4,"size":"20x30"}],
-      "garnet":["115gr","150gr"],
-      "time":[{"value":7,"text":"1 semana"},{"value":21,"text":"3 semanas"}],
-      "send":[{"value":0,"text":"No"},{"value":1,"text":"Si"}],
-      "design":[{"value":1,"text":"Nuevo"},{"value":2,"text":"Correción"},{"value":3,"text":"Mismo"},{"value":4,"text":"Envia el cliente"}],
-      "sides":[{"value":1,"text":"Un solo lado"},{"value":2,"text":"Dos lados diferentes"},{"value":3,"text":"Dos lados iguales"}],
-      "price":[{"value":"default", "text": "0"}]
-    }
+    this.select = this._infoShared.infoSelects();
   }
 
   createForma(){
@@ -283,11 +275,11 @@ console.log(this.forma)   }
 
   searchPrice(){
     let body = {
+      "product":this.forma.value.product,
       "size":this.forma.value.size,
       "time_delivery":this.forma.value.time_delivery,
       "quantity":this.forma.value.quantity,
       "garnet":this.forma.value.garnet
-      
     }
     this._http.postRequestNotToken('calculatePrice',body).subscribe(
       (res)=>{
@@ -349,39 +341,19 @@ console.log(this.forma)   }
 
   //Parses views
   parseSides(){
-    switch(parseInt(this.forma.value.sides)){
-      case 1: return "Un solo lado";
-      case 2: return "Dos lados diferentes" ;
-      case 3: return "Dos lados iguales";
-    }
+    return this._infoShared.parseSides(parseInt(this.forma.value.sides));
   }
 
   parseSize(){
-    switch (parseInt(this.forma.value.size)){
-      case 1: return "10x7.5";
-      case 2: return "10x15";
-      case 3: return "15x20";
-      case 4: return "15x30";
-      default: return this.forma.value.size;
-    }
+    return this._infoShared.parseSize(parseInt(this.forma.value.size));
   }
 
   parseDesign(){
-    switch (parseInt(this.forma.value.design)){
-      case 1: return "Nuevo";
-      case 2: return "Correción";
-      case 3: return "Mismo";
-      case 4: return "Envia el cliente";
-      default: return this.forma.value.design;
-    }
+    return this._infoShared.parseDesign(parseInt(this.forma.value.design));
   }
 
   parseGarnet(){
-    switch (this.forma.value.garnet){
-      case 1: return "115gr";
-      case 2: return "150gr";
-      default: return this.forma.value.garnet;
-    }
+    return this._infoShared.parseGarnet(this.forma.value.garnet);
   }
 
   parsePriceFlyer(){

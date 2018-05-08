@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../../services/http.service';
+import { InfoSharedService } from '../../services/info-shared.service';
 
 @Component({
   selector: 'app-print',
@@ -20,7 +21,7 @@ export class PrintComponent implements OnInit {
   orderSecondSelect:any=[];
   spacesTotal:number = 10;
 
-  constructor(public _http:HttpService) { }
+  constructor(public _http:HttpService, public _infoShared:InfoSharedService) { }
 
   ngOnInit() {
     this.searchAndOrderData();
@@ -154,11 +155,8 @@ export class PrintComponent implements OnInit {
   }
 
   parseSides(value){
-    switch(parseInt(value)){
-      case 1: return "Un solo lado";
-      case 2: return "Dos lados diferentes" ;
-      case 3: return "Dos lados iguales";
-    }
+    return this._infoShared.parseSides(parseInt(value));
+    
   }
 
   

@@ -8,6 +8,7 @@ import {APP_ROUTING} from './app.routes';
 import { HttpService } from './services/http.service';
 import { AuthGuardService } from './services/auth-guard.service';
 import { AuthService } from './services/auth.service';
+import { InfoSharedService } from './services/info-shared.service';
 import { AuthViewService } from './services/auth-view.service';
 //Components
 import { AppComponent } from './app.component';
@@ -55,7 +56,8 @@ import { InComponent } from './components/in/in.component';
     HttpService,
     AuthGuardService,
     AuthService,
-    AuthViewService
+    AuthViewService,
+    InfoSharedService
   ],
   bootstrap: [AppComponent]
 })

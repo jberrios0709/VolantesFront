@@ -51,7 +51,7 @@
               <h5>Teléfonos   <label *ngIf="formaClient.value.phones.length < 20" (click)="addPhone()"><i class="fas fa-plus-square add" ></i></label></h5>
               <div class="row" style="justify-content:center">
                 <div class="col-6" formArrayName="phones">
-                  <div class="col-md-12 number" *ngFor="let email of formaClient.controls['phones'].controls; let i = index">
+                  <div class="col-md-12 number deleteLabel" *ngFor="let email of formaClient.controls['phones'].controls; let i = index">
                     <label *ngIf="formaClient.value.phones.length > 1" (click)="deleteAttr('phone',i)"><i class="fas fa-times fa-1x remove"></i></label>
                     <input type="text" placeholder="Número" [formControlName]="i" style="width:90%">
                   </div>
@@ -82,29 +82,25 @@
         
         <div class="row max-width">
 
-          <div class="col-3 text-center">
+          <div class="col-4 text-center">
             <label>Nombre</label>
           </div>
           <div class="col-4 text-center">
             <label>Dirección</label>
           </div>
-          <div class="col-3 text-center">
+          <div class="col-2 text-center">
             <label>Teléfono</label>
           </div>
           <div class="col-2 text-center">
             <label>Seleccionar</label>
           </div>
           
-          <div class="col-3">
+          <div class="col-4">
             <form [formGroup]='formaBranch'>
               <div class="row" formArrayName="name">
-                <div class="row" *ngFor="let branch of formaBranch.controls['name'].controls; let i = index" style="margin-left:0;margin-right:0">
-                  <div class="col-2">
-                    <label *ngIf="formaBranch.value.name.length > 1" (click)="deleteAttr('branch',i)"><i class="fas fa-times fa-2x remove"></i></label>
-                  </div>
-                  <div class="col-10" >
-                    <input type="text" [formControlName]="i">
-                  </div>
+                <div class="col-12 deleteLabel" *ngFor="let branch of formaBranch.controls['name'].controls; let i = index">
+                  <label *ngIf="formaBranch.value.name.length > 1" (click)="deleteAttr('branch',i)"><i class="fas fa-times remove"></i></label>
+                  <input type="text" [formControlName]="i">
                 </div>
               </div>
             </form>
@@ -120,7 +116,7 @@
             </form>
           </div>
 
-          <div class="col-3">
+          <div class="col-2">
             <form [formGroup]='formaBranch'>
               <div class="row" formArrayName="phone">
                 <div class="col-12" *ngFor="let branch of formaBranch.controls['phone'].controls; let i = index">
@@ -133,11 +129,9 @@
           <div class="col-2 text-center">
             <form [formGroup]='formaBranch'>
               <div class="row" formArrayName="isDone">
-                <div class="col-12" *ngFor="let branch of formaBranch.value.isDone; let i = index" style="margin-bottom:8px;">
-                  <select (change)="changeSelect(i)" style="height:90%;">
-                    <option value="false">No</option>
-                    <option value="false">Si</option>
-                  </select>
+                <div class="col-12" *ngFor="let branch of formaBranch.value.isDone; let i = index" style="height:25px;margin-bottom:12px;padding-top:7px;">
+                  <label *ngIf="!formaBranch.value.isDone[i]" style="font-size:100%;" (click)="changeSelect(i)"><i class="fas fa-circle"></i></label>
+                  <label *ngIf="formaBranch.value.isDone[i]" style="font-size:100%;" (click)="changeSelect(i)"><i class="fas fa-dot-circle"></i></label>
                 </div>
               </div>
             </form>
@@ -156,7 +150,7 @@
         <div class="separator text-center"><h4>Datos del pedido</h4></div>
         <form [formGroup]='formaOrder'>
           <div class="row">
-            <div class="col-md-2" (click)="test()">
+            <div class="col-md-2">
               <label class="big">Trabajo:</label>
             </div>
             <div class="col-md-4">
@@ -523,10 +517,11 @@
                     </div>
                     <div class="col-md-6">
                       <h3 *ngFor="let req of requestOrder;let i = index">
-                        Pedido
-                        <label *ngIf="req.status === 'send'"><i class="fas fa-spinner fa-spin"></i></label>
-                        <label *ngIf="req.status === 'good'"><i class="fas fa-check"></i> Número {{req.id}}</label>
-                        <label *ngIf="req.status === 'error'"><i class="far fa-times"></i></label>
+                        
+                        <label *ngIf="req.status === 'not'">Sin Pedido</label>
+                        <label *ngIf="req.status === 'send'">Pedido<i class="fas fa-spinner fa-spin"></i></label>
+                        <label *ngIf="req.status === 'good'">Pedido <i class="fas fa-check"></i> Número {{req.id}}</label>
+                        <label *ngIf="req.status === 'error'">Pedido <i class="far fa-times"></i></label>
                       </h3>
                     </div>
                   </div>

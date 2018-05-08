@@ -148,6 +148,7 @@ li.active > .log,
 	background-color:rgb(250, 2, 2);
 	color:white;
 	text-decoration: none;
+	cursor:pointer;
 	}
 .pub{
 	border-bottom-width: 10px;
@@ -505,10 +506,7 @@ nav li a:hover {color:#000;}
 			width: 100% !important;
 		}
 
-		table{
-			display: block;
-			overflow: scroll;
-		}
+		
 
 		div.max-width{
 			overflow: scroll;
@@ -521,9 +519,20 @@ nav li a:hover {color:#000;}
 			display: contents;
 		}
 
-		
+		div.branch-section{
+			overflow-x: auto;
+		}
 
+	}
 
+	div.deleteLabel > label {
+		width: 5px;
+		display: inline-block;
+		margin-right: 5px;
+	}
+
+	div.deleteLabel > input{
+		width: calc(100% - 15px)!important;
 	}
 
 	tr.max-width{
@@ -757,15 +766,15 @@ h4{
 }
 
 .nav-search-simple{
-	height: calc(40vw - 30px) !important;
+	height: calc(100% - 30px) !important;
 }
 
 .nav-search-width-footer{
-	height: calc(40vw - 45px) !important;
+	height: calc(100% - 45px) !important;
 }
 
 .nav-search-width-footer-and-nav-search{
-	height: calc(40vw - 70px) !important;
+	height: calc(100% - 70px) !important;
 }
 
 .search{
@@ -796,7 +805,7 @@ h4{
 }
 
 .trHover:hover > td.view {
-	background:#81bde6;cursor: pointer; display: table-cell;
+	background:#81bde6;cursor: pointer; display: table-cell;padding-top: 20px;padding-bottom: 20px;
 }
 
 .section-info{

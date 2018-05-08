@@ -23,50 +23,53 @@
       </div>
     </div>
     <div class="col-md-11 offset-md-1 text-center ">
-      <table class="table  table-hover max-width">
-        <thead class="thead-dark">
-          <tr>
-            <th colspan="13" class="text-center"><h4>Gramage 115gr</h4></th>
-          </tr>
-          <tr>
-            <th colspan="13" class="text-center">Espacios totales que faltan por enviar a taller: {{countSpacesTotal(1)}}</th>
-          </tr>
-          <tr >
-            <th scope="col">N° cliente</th>
-            <th scope="col">Cliente</th>
-            <th scope="col">Sucursal</th>
-            <th scope="col">N° Pedido</th>
-            <th scope="col">Lados</th>
-            <th scope="col">Tamaño</th>
-            <th scope="col">Cantidad</th>
-            <th scope="col">Espacios</th>
-            <th scope="col">Restantes</th>
-            <th scope="col">Fecha del pedido</th>
-            <th scope="col">Entrega</th>
-            <th scope="col">Sel.</th>
-            <th scope="col">Esp.</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let order of ordersFirst; let i = index" class="fadeInAnimated" style="cursor:pointer" [ngClass]="{none: order.spacesInMissing == null}">
-            <th scope="row" data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.branch.client.id}}</th>
-            <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.branch.client.name}}</td>
-            <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.branch.name}}</td>
-            <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.id}}</td>
-            <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{parseSides(order.sides)}}</td>
-            <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.size}}</td>
-            <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.quantity | number:'1.0'}}</td>
-            <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.spaces}}</td>
-            <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.spacesInMissing}}</td>
-            <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.created_at  | date}}</td>
-            <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.date_delivery  | date}}</td>
-            <td><input type="checkbox" (change)="selects(1,i)"></td>
-            <td><input type="text" style="width:45px" (change)="addSpaces(1,i,$event)" [ngClass]="{error:orderFirstSelect[i].spaces > order.spacesInMissing, error_2: (orderFirstSelect[i].isDone && orderFirstSelect[i].spaces <= 0)}"></td>
-          </tr>
-        </tbody>
-      </table>
-
-      <table class="table  table-hover max-width">
+      <div class="table-responsive">
+        <table class="table  table-hover max-width">
+          <thead class="thead-dark">
+            <tr>
+              <th colspan="13" class="text-center"><h4>Gramage 115gr</h4></th>
+            </tr>
+            <tr>
+              <th colspan="13" class="text-center">Espacios totales que faltan por enviar a taller: {{countSpacesTotal(1)}}</th>
+            </tr>
+            <tr >
+              <th scope="col">N° cliente</th>
+              <th scope="col">Cliente</th>
+              <th scope="col">Sucursal</th>
+              <th scope="col">N° Pedido</th>
+              <th scope="col">Lados</th>
+              <th scope="col">Tamaño</th>
+              <th scope="col">Cantidad</th>
+              <th scope="col">Espacios</th>
+              <th scope="col">Restantes</th>
+              <th scope="col">Fecha del pedido</th>
+              <th scope="col">Entrega</th>
+              <th scope="col">Sel.</th>
+              <th scope="col">Esp.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let order of ordersFirst; let i = index" class="fadeInAnimated" style="cursor:pointer" [ngClass]="{none: order.spacesInMissing == null}">
+              <th scope="row" data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.branch.client.id}}</th>
+              <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.branch.client.name}}</td>
+              <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.branch.name}}</td>
+              <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.id}}</td>
+              <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{parseSides(order.sides)}}</td>
+              <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.size}}</td>
+              <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.quantity | number:'1.0'}}</td>
+              <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.spaces}}</td>
+              <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.spacesInMissing}}</td>
+              <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.created_at  | date}}</td>
+              <td data-toggle="modal" data-target="#exampleModal" (click)="select(order.id,'view')">{{order.date_delivery  | date}}</td>
+              <td><input type="checkbox" (change)="selects(1,i)"></td>
+              <td><input type="text" style="width:45px" (change)="addSpaces(1,i,$event)" [ngClass]="{error:orderFirstSelect[i].spaces > order.spacesInMissing, error_2: (orderFirstSelect[i].isDone && orderFirstSelect[i].spaces <= 0)}"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="table-responsive">
+        <table class="table  table-hover max-width">
           <thead class="thead-dark">
             <tr>
               <th colspan="13" class="text-center"><h4>Gramage 150gr</h4></th>
@@ -108,7 +111,9 @@
             </tr>
           </tbody>
         </table>
+      </div>
 
+      <div class="table-responsive">
         <table class="table  table-hover max-width">
           <thead class="thead-dark">
             <tr>
@@ -147,6 +152,7 @@
         </table>
       </div>
     </div>
+  </div>
 
 
       <!-- Modal -->
@@ -223,7 +229,7 @@
             </div>
             <div class="col-md-6">
               <p>Fecha de pedido: <b>{{objectShow.created_at | date}}</b></p>
-              <p>Fecha de diseño: <b>{{objectShow.status_order[2].updated_at | date}}</b></p>
+              <p>Fecha de diseño: <b *ngIf="objectShow.status_order.length >= 2">{{objectShow.status_order[2].updated_at | date}}</b></p>
               <p>Fecha de entrega: <b class="red">{{objectShow.date_delivery | date}}</b></p>
             </div>
           </div>

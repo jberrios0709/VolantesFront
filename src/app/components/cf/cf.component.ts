@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpService } from '../../services/http.service'
+import { HttpService } from '../../services/http.service';
+import { InfoSharedService } from '../../services/info-shared.service';
 import { FormGroup, FormControl, FormArray, Validators, FormBuilder } from '@angular/forms';
 import 'rxjs/add/operator/map';
 //import { log } from 'util';
@@ -29,7 +30,7 @@ export class CfComponent implements OnInit {
   resourceDelete:any;
   ordersShowLoading:boolean=false;
 
-  constructor(public _http:HttpService) { }
+  constructor(public _http:HttpService, public _infoShared:InfoSharedService) { }
 
   ngOnInit() {
     this.searchClients();
@@ -266,37 +267,21 @@ export class CfComponent implements OnInit {
   }
 
   parseStatus(index){
-    switch(parseInt(this.orders[index].status_order[this.orders[index].status_order.length - 1].status)){
-      case 1: return "Venta";
-      case 2: return "Diseño";
-      case 3: return "Impresion";
-      case 4: return "Taller";
-      case 5: return "Entrega";
-      case 6: return "Terminado";
-      case 7: return "Deudor";
-      case 8: return "Cancelada";
-    }
+    return this._infoShared.parseStatus(parseInt(this.orders[index].status_order[this.orders[index].status_order.length - 1].status));
   }
 
-  parseStatusLog(value){
-    switch(parseInt(value)){
-      case 1: return "Venta";
-      case 2: return "Diseño";
-      case 3: return "Impresion";
-      case 4: return "Taller";
-      case 5: return "Entrega";
-      case 6: return "Terminado";
-      case 7: return "Deudor";
-    }
+  parseStatusLog(value){   
+    return this._infoShared.parseStatusLog(parseInt(value));
   }
 
   parseDesign(value){
-    switch (parseInt(value)){
-      case 1: return "Nuevo";
-      case 2: return "Correción";
-      case 3: return "Ultimo diseño";
-      case 4: return "Envia el cliente";
-    }
+    return this._infoShared.parseDesign(parseInt(value));
+  }
+
+  parseSides(value){
+    console.log(value);
+    
+    return this._infoShared.parseSides(parseInt(value));
   }
 
   removePhone(index){
@@ -349,7 +334,6 @@ export class CfComponent implements OnInit {
       (res)=>{
         this.request = "good";
         this.order.status_order.push(res.data);        
-        
       },
       (error)=>{
         this.request = "error";
